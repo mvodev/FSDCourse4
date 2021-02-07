@@ -69,9 +69,6 @@ var $sl1_input = $('.input-result1');
   isRange: false,
   isVertical: false,
   hideThumbLabel: false,
-  onStart: undefined,
-  onChange: undefined,
-  onUpdate:undefined,
  };
  ```
  ## API:
