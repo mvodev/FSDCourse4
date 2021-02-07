@@ -1,13 +1,11 @@
-export interface ISettings {
+interface ISettings {
  min: number;
  max: number;
  from: number;
- to?: number;
- step?: number;
+ to?: number|undefined;
+ step: number;
  isVertical?: boolean;
  isRange?: boolean;
- hideThumbLabel?: boolean | undefined;
- onStart?: Function | undefined;
- onChange?: Function | undefined;
- onUpdate?: Function | undefined;
+ hideThumbLabel?: boolean;
 }
+export {ISettings}

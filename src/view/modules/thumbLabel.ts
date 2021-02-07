@@ -1,25 +1,26 @@
-export class ThumbLabel {
+class ThumbLabel {
  private thumbLabelContainer: HTMLDivElement;
  private thumbLabelValue: HTMLSpanElement;
- constructor(thumbRootElen: HTMLDivElement) {
-  let div = document.createElement('div');
-  let divValue = document.createElement('div');
+ constructor() {
+  const div = document.createElement('div');
+  const divValue = document.createElement('div');
   this.thumbLabelContainer = div;
   this.thumbLabelContainer.classList.add('fsd-slider__thumb-label');
   this.thumbLabelValue = divValue;
   this.thumbLabelValue.classList.add('fsd-slider__thumb-label-value');
   this.thumbLabelContainer.appendChild(this.thumbLabelValue);
  }
- getThumbLabelContainer() {
+ getThumbLabelContainer():HTMLDivElement {
   return this.thumbLabelContainer;
  }
- setValueToLabel(value: number) {
+ setValueToLabel(value: number) :void{
   this.thumbLabelValue.innerText = '' + value;
  }
- hideLabel() {
+ hideLabel():void {
   this.thumbLabelContainer.style.display = 'none';
  }
- showLabel() {
+ showLabel() :void{
   this.thumbLabelContainer.style.display = 'block';
  }
 }
+export {ThumbLabel}

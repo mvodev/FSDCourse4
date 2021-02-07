@@ -1,4 +1,4 @@
-export const enum Messages {
+const enum Messages {
  INIT,
  UPDATE,
  FROM_IS_SET,
@@ -6,3 +6,4 @@ export const enum Messages {
  SET_FROM,
  SET_TO,
 }
+export {Messages}

@@ -1,12 +1,15 @@
 @import './styles/fsdSlider.scss';
 @import './modules/controlpanel/controlpanel.scss';
+
+body{
+  background-color:lightgreen;
+}
 .sliders{
-font-family: "Arial";
-font-weight: 500;
-background-color:lightgreen;
-margin-top: 50px;
-display: flex;
-flex-direction: column;
+  font-family: "Arial";
+  font-weight: 500;
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
 }
 .sliders input{
   max-height: 20px;
@@ -16,11 +19,11 @@ flex-direction: column;
   flex-direction: row;
   justify-content: space-around;
   margin-bottom: 50px;
- }
- .fsd-slider{
-  width: 300px;
-  height: 300px;
-  margin-right: 30px;
-  margin-top: 30px;
- }
+  }
+  .fsd-slider{
+    width: 300px;
+    height: 300px;
+    margin-right: 30px;
+    margin-top: 30px;
+  }
 

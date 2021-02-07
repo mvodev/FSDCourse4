@@ -23,7 +23,6 @@ module.exports = {
   mode: 'development',
   entry: {
     main: './index.js',
-    test: './test/test.ts',
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
@@ -43,13 +42,6 @@ module.exports = {
       {
         template: './index.pug',
         chunks: ['main'],
-      }
-    ),
-    new HTMLWebpackPlugin(
-      {
-        template: './test/test.html',
-        filename: 'test.html',
-        chunks: ['test'],
       }
     ),
     new CopyPlugin({
@@ -78,11 +70,6 @@ module.exports = {
       {
         test: /\.pug$/,
         use: ["pug-loader"],
-      },
-      {
-        test: /test\.ts$/,
-        use: 'mocha-loader',
-        exclude: /node_modules/,
       },
       {
         test: /\.(png|jpg|svg|gif)$/,

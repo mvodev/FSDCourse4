@@ -1,28 +1,21 @@
 {
- "compilerOptions": {
-  "sourceMap": true,
-  "noImplicitReturns": true,
-  "module": "commonjs",
-  "moduleResolution": "node",
-  "target": "ESNext",
-  "lib": [
-   "es2015",
-   "es2019",
-   "dom"
+  "compilerOptions": {
+    "sourceMap": true,
+    //"strict": true,
+    "noImplicitReturns": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "ESNext",
+    "lib": [
+      "es2017",
+      "dom"
+    ],
+  },
+  "exclude": [
+    "./node_modules",
+    "node_modules",
+    "docs",
+    "./dist",
+    "./docs",
   ],
-  "typeRoots": [
-   "./typings",
-   "node_modules/@types"
-  ]
- },
- "exclude": [
-  "./node_modules",
-  "./test",
-  "./dist",
-  "./docs",
- ],
- "include": [
-  "src/**/*.ts",
-  "src/index.js"
-, "src/test/test.ts" ]
 }

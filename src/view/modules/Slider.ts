@@ -4,7 +4,7 @@ import { ThumbLabel } from './thumbLabel';
 import { RangeLabel } from './rangeLabel';
 import { ColoredRange } from './coloredRange';
 import { ISettings } from '../../model/ISettings';
-export class Slider {
+class Slider {
 
  private thumbFrom: Thumb;
  private thumbTo: Thumb;
@@ -22,18 +22,18 @@ export class Slider {
   this.settings = s;
   this.rootElem = rootElem;
   this.numberOfMarking = numberOfMarking;
-  this.numberOfMarking = this.numberOfMarking;
   this.thumbTo = new Thumb('fsd-slider__thumb-to');
-  this.thumbLabelTo = new ThumbLabel(this.thumbTo.getThumb());
+  this.thumbLabelTo = new ThumbLabel();
   this.thumbFrom = new Thumb('fsd-slider__thumb-from');
-  this.thumbLabelFrom = new ThumbLabel(this.thumbFrom.getThumb());
+  this.thumbLabelFrom = new ThumbLabel();
   this.range = new Range();
   this.coloredRange = new ColoredRange();
-  this.rangeLabel = new RangeLabel(this.numberOfMarking, this.settings.isVertical);
+  this.rangeLabel = new RangeLabel(this.numberOfMarking,
+   this.settings.isVertical !== undefined ? this.settings.isVertical : false);
   this.container = document.createElement('div');
  }
 
- render() {
+ render() :void{
   this.container.classList.add('fsd-slider');
   this.container.appendChild(this.range.getRange());
   this.range.getRange().appendChild(this.coloredRange.getColoredRange());
@@ -46,40 +46,40 @@ export class Slider {
   this.container.appendChild(this.rangeLabel.getRangeLabel());
   this.rootElem.appendChild(this.container);
  }
- getRange() {
+ getRange():HTMLDivElement {
   return this.range.getRange();
  }
- getThumbFrom() {
+ getThumbFrom():HTMLDivElement {
   return this.thumbFrom.getThumb();
  }
- getThumbTo() {
+ getThumbTo() :HTMLDivElement{
   return this.thumbTo.getThumb();
  }
- getThumbLabelFrom() {
+ getThumbLabelFrom() :ThumbLabel{
   return this.thumbLabelFrom;
  }
- getThumbLabelTo() {
+ getThumbLabelTo():ThumbLabel {
   return this.thumbLabelTo;
  }
- getColoredRange() {
+ getColoredRange():HTMLDivElement {
   return this.coloredRange.getColoredRange();
  }
- setMaxRange(value: number) {
+ setMaxRange(value: number) :void{
   this.rangeLabel.setMaxRange(value);
  }
- setMinRange(value: number) {
+ setMinRange(value: number) :void{
   this.rangeLabel.setMinRange(value);
  }
- setValueToLabelThumbFrom(value: number) {
+ setValueToLabelThumbFrom(value: number):void {
   this.thumbLabelFrom.setValueToLabel(value);
  }
- setValueToLabelThumbTo(value: number) {
+ setValueToLabelThumbTo(value: number) :void{
   this.thumbLabelTo.setValueToLabel(value);
  }
  getRangeLabel(): HTMLDivElement {
   return this.rangeLabel.getRangeLabel();
  }
- setVertical() {
+ setVertical():void {
   this.container.classList.add('fsd-slider_is_vertical');
   this.range.getRange().classList.add('fsd-slider__range_is_vertical');
   this.coloredRange.getColoredRange().classList.add('fsd-slider__colored-range_is_vertical');
@@ -90,3 +90,4 @@ export class Slider {
   }
  }
 }
+export {Slider}

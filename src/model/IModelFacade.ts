@@ -1,15 +1,13 @@
-export interface IModelFacade {
+interface IModelFacade {
  getMin(): number;
  getMax(): number;
- showThumbLabel(): boolean | undefined;
+ showThumbLabel(): boolean;
  setFrom(pos: number): void;
  getFrom(): number;
  setTo(value: number): void;
  getTo(): number | undefined;
- isRange(): boolean | undefined;
- isVertical(): boolean | undefined;
+ isRange(): boolean;
+ isVertical(): boolean;
  getStep(): number;
- getOnChange(): Function | undefined;
- getOnUpdate(): Function | undefined;
- getOnStart(): Function | undefined;
 }
+export { IModelFacade }

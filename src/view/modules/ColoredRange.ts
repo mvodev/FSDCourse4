@@ -1,4 +1,4 @@
-export class ColoredRange {
+class ColoredRange {
  private coloredRange: HTMLDivElement;
  constructor() {
   this.coloredRange = document.createElement('div');
@@ -8,3 +8,4 @@ export class ColoredRange {
   return this.coloredRange;
  }
 }
+export {ColoredRange}

@@ -1,23 +1,345 @@
-/******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	var __webpack_modules__ = ({
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// install a JSONP callback for chunk loading
+/******/ 	function webpackJsonpCallback(data) {
+/******/ 		var chunkIds = data[0];
+/******/ 		var moreModules = data[1];
+/******/ 		var executeModules = data[2];
+/******/
+/******/ 		// add "moreModules" to the modules object,
+/******/ 		// then flag all "chunkIds" as loaded and fire callback
+/******/ 		var moduleId, chunkId, i = 0, resolves = [];
+/******/ 		for(;i < chunkIds.length; i++) {
+/******/ 			chunkId = chunkIds[i];
+/******/ 			if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) {
+/******/ 				resolves.push(installedChunks[chunkId][0]);
+/******/ 			}
+/******/ 			installedChunks[chunkId] = 0;
+/******/ 		}
+/******/ 		for(moduleId in moreModules) {
+/******/ 			if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
+/******/ 				modules[moduleId] = moreModules[moduleId];
+/******/ 			}
+/******/ 		}
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(data);
+/******/
+/******/ 		while(resolves.length) {
+/******/ 			resolves.shift()();
+/******/ 		}
+/******/
+/******/ 		// add entry modules from loaded chunk to deferred list
+/******/ 		deferredModules.push.apply(deferredModules, executeModules || []);
+/******/
+/******/ 		// run deferred modules when all chunks ready
+/******/ 		return checkDeferredModules();
+/******/ 	};
+/******/ 	function checkDeferredModules() {
+/******/ 		var result;
+/******/ 		for(var i = 0; i < deferredModules.length; i++) {
+/******/ 			var deferredModule = deferredModules[i];
+/******/ 			var fulfilled = true;
+/******/ 			for(var j = 1; j < deferredModule.length; j++) {
+/******/ 				var depId = deferredModule[j];
+/******/ 				if(installedChunks[depId] !== 0) fulfilled = false;
+/******/ 			}
+/******/ 			if(fulfilled) {
+/******/ 				deferredModules.splice(i--, 1);
+/******/ 				result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
+/******/ 			}
+/******/ 		}
+/******/
+/******/ 		return result;
+/******/ 	}
+/******/
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// object to store loaded and loading chunks
+/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 	// Promise = chunk loading, 0 = chunk loaded
+/******/ 	var installedChunks = {
+/******/ 		"main": 0
+/******/ 	};
+/******/
+/******/ 	var deferredModules = [];
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
+/******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
+/******/ 	jsonpArray.push = webpackJsonpCallback;
+/******/ 	jsonpArray = jsonpArray.slice();
+/******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
+/******/ 	var parentJsonpFunction = oldJsonpFunction;
+/******/
+/******/
+/******/ 	// add entry module to deferred list
+/******/ 	deferredModules.push(["./index.js","vendors~main"]);
+/******/ 	// run deferred modules when ready
+/******/ 	return checkDeferredModules();
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./fsdSlider.js":
+/*!**********************!*\
+  !*** ./fsdSlider.js ***!
+  \**********************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(jQuery) {/* harmony import */ var _view_View__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./view/View */ "./view/View.ts");
+/* harmony import */ var _view_View__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_view_View__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _model_Model__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./model/Model */ "./model/Model.ts");
+/* harmony import */ var _model_Model__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_model_Model__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _presenter_presenter__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./presenter/presenter */ "./presenter/presenter.ts");
+/* harmony import */ var _presenter_presenter__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_presenter_presenter__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+(function ($) {
+ var FsdSlider = function (root, settings,callback) {
+  let model = new _model_Model__WEBPACK_IMPORTED_MODULE_1__["Model"](settings);
+  let view = new _view_View__WEBPACK_IMPORTED_MODULE_0__["View"](settings, root);
+  this.presenter = new _presenter_presenter__WEBPACK_IMPORTED_MODULE_2__["Presenter"](view, model);
+  model.addObserver(this.presenter);
+  view.addObserver(this.presenter);
+  this.presenter.addObserver(callback);
+  this.presenter.initialize();
+ };
+ FsdSlider.prototype = {
+  update: function (newSettings) {
+   this.presenter.update(newSettings);
+  },
+ };
+ $.fn.fsdSlider = function (settings,callback) {
+  return this.each(function () {
+   if (!$.data(this, "fsdSlider")) {
+    $.data(this, "fsdSlider", new FsdSlider(this, settings,callback));
+   }
+  });
+ };
+})(jQuery);
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! jquery */ "../node_modules/jquery/dist/jquery.js")))
+
+/***/ }),
+
+/***/ "./index.js":
+/*!******************!*\
+  !*** ./index.js ***!
+  \******************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function($) {/* harmony import */ var _index_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index.scss */ "./index.scss");
+/* harmony import */ var _fsdSlider_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./fsdSlider.js */ "./fsdSlider.js");
+
+
+var $sl1 = $('.slider1');
+var $sl1_input = $('.input-result1');
+$sl1.fsdSlider({
+ min: -15,
+ max: -10,
+ from: -14,
+ step: 0,
+ to: -11,
+ isVertical: false,
+ hideThumbLabel: false,
+ isRange: true
+}, 
+{
+ handleEvent: (message, result) => {
+  var s = JSON.parse(result)
+  if (s.isRange) {
+   $sl1_input.val(s.from + '  -  ' + s.to);
+  }
+  else {
+   $sl1_input.val(s.from);
+  }
+ }
+});
+var $sl2 = $('.slider2');
+var $sl2_input = $('.input-result2');
+$sl2.fsdSlider({
+ min: 5,
+ max: 10,
+ from: 7,
+ step: 0.2,
+ to: -11,
+ isVertical: true,
+ hideThumbLabel: true,
+ isRange: false,
+},
+{
+ handleEvent: (message, result) => {
+  var s = JSON.parse(result);
+  if (s.isRange) {
+   $sl2_input.val(s.from + '    -    ' + s.to);
+  }
+  else {
+   $sl2_input.val(s.from);
+  }
+ }
+});
+var $sl3 = $('.slider3');
+var $sl3_input = $('.input-result3');
+$sl3.fsdSlider({
+ min: -15,
+ max: 100,
+ from: -14,
+ step: 4,
+ to: 11,
+ isVertical: false,
+ hideThumbLabel: false,
+ isRange: true,
+}, {
+ handleEvent: (message, result) => {
+  var s = JSON.parse(result);
+  if (s.isRange) {
+   $sl3_input.val(s.from + '    -    ' + s.to);
+  }
+  else {
+   $sl3_input.val(s.from);
+  }
+ }
+});
+var sl1_instance = $sl1.data("fsdSlider");
+var sl2_instance = $sl2.data("fsdSlider");
+var sl3_instance = $sl3.data("fsdSlider");
+
+$("input").on("change",function inputHandler(){
+ if ($(this).parent().parent().hasClass("form_slider1"))//slider1
+ {
+  sl1_instance.update(collectData('slider1'));
+ }
+ else if ($(this).parent().parent().hasClass("form_slider2"))//slider1
+ {
+  sl2_instance.update(collectData('slider2'));
+ }
+ else if ($(this).parent().parent().hasClass("form_slider3"))//slider1
+ {
+  sl3_instance.update(collectData('slider3'));
+ }  
+});
+function collectData(sliderNumber) {
+ return {
+  min: $('.control-panel__min-' + sliderNumber).val(),
+  max: $('.control-panel__max-' + sliderNumber).val(),
+  from: $('.control-panel__from-' + sliderNumber).val(),
+  to: $('.control-panel__to-' + sliderNumber).val(),
+  hideThumbLabel: $('.control-panel__hide-thumb-label-' + sliderNumber).is(':checked'),
+ }
+}
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! jquery */ "../node_modules/jquery/dist/jquery.js")))
+
+/***/ }),
+
+/***/ "./index.scss":
+/*!********************!*\
+  !*** ./index.scss ***!
+  \********************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
 
 /***/ "./model/Model.ts":
 /*!************************!*\
   !*** ./model/Model.ts ***!
   \************************/
-/*! flagged exports */
-/*! export Model [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export __esModule [provided] [no usage info] [missing usage info prevents renaming] */
-/*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_exports__, __webpack_require__ */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 
 
-
-Object.defineProperty(exports, "__esModule", ({
+Object.defineProperty(exports, "__esModule", {
   value: true
-}));
+});
 exports.Model = void 0;
 
 const EventObservable_1 = __webpack_require__(/*! ../observers/EventObservable */ "./observers/EventObservable.ts");
@@ -31,23 +353,40 @@ class Model extends EventObservable_1.EventObservable {
       min: 0,
       max: 10,
       from: 5,
+      step: 0,
       isRange: false,
       isVertical: false,
-      hideThumbLabel: false,
-      onStart: undefined,
-      onChange: undefined,
-      onUpdate: undefined
+      hideThumbLabel: false
     };
     this.settings = Object.assign(this.defaultSettings, settings);
     this.validateSettings(this.settings);
   }
 
   getSettings() {
-    return Object.assign({}, this.settings);
+    return JSON.stringify(this.settings);
   }
 
   updateSettings(settings) {
-    this.settings = Object.assign(this.settings, settings);
+    if (settings.min) {
+      this.settings.min = settings.min;
+    }
+
+    if (settings.max) {
+      this.settings.max = settings.max;
+    }
+
+    if (settings.from) {
+      this.settings.from = settings.from;
+    }
+
+    if (settings.to) {
+      this.settings.to = settings.to;
+    }
+
+    if (settings.hideThumbLabel === true || settings.hideThumbLabel === false) {
+      this.settings.hideThumbLabel = settings.hideThumbLabel;
+    }
+
     this.validateSettings(this.settings);
     this.notifyObservers(1
     /* UPDATE */
@@ -76,7 +415,6 @@ class Model extends EventObservable_1.EventObservable {
 
   setTo(valueInPercent) {
     this.settings.to = this.convertFromPercentToValue(valueInPercent);
-    ;
   }
 
   getTo() {
@@ -84,27 +422,15 @@ class Model extends EventObservable_1.EventObservable {
   }
 
   isRange() {
-    return this.settings.isRange;
+    return this.settings.isRange !== undefined ? this.settings.isRange : false;
   }
 
   isVertical() {
-    return this.settings.isVertical;
+    return this.settings.isVertical !== undefined ? this.settings.isVertical : false;
   }
 
   getStep() {
     return this.settings.step ? this.settings.step : 0;
-  }
-
-  getOnStart() {
-    return this.settings.onStart;
-  }
-
-  getOnChange() {
-    return this.settings.onChange;
-  }
-
-  getOnUpdate() {
-    return this.settings.onUpdate;
   }
 
   validateSettings(settings) {
@@ -118,19 +444,32 @@ class Model extends EventObservable_1.EventObservable {
       console.error('unacceptable value,`to` value must be established');
     }
 
-    if (settings.from < settings.min) {
+    if (+settings.from < +settings.min) {
       console.error('unacceptable value,from must be more than min');
       this.settings.from = settings.min;
     }
 
-    if (settings.from > settings.max) {
+    if (+settings.from > +settings.max) {
       console.error('unacceptable value,from must be lower than max');
       this.settings.from = settings.min;
     }
 
-    if (settings.to < settings.min && settings.isRange) {
-      this.settings.to = settings.max;
-      console.error('unacceptable value,`to` value must be between min and max');
+    if (settings.to) {
+      if (settings.isRange) {
+        if (settings.to < settings.min) {
+          this.settings.to = settings.max;
+          console.error('unacceptable value,`to` value must be between min and max');
+        }
+      }
+    }
+
+    if (settings.to) {
+      if (settings.isRange) {
+        if (settings.to < settings.from) {
+          console.error('unacceptable value,`to` value must be more than from');
+          this.settings.to = this.settings.max;
+        }
+      }
     }
 
     if (this.getStep() < 0) {
@@ -143,24 +482,22 @@ class Model extends EventObservable_1.EventObservable {
       this.settings.step = +(Math.abs(this.getMax() - this.getMin()) / 2).toFixed(1);
     }
 
-    if (settings.isRange && settings.to > settings.max) {
-      console.error('unacceptable value,to must be lower than max');
-      this.settings.to = settings.max;
+    if (settings.isRange) {
+      if (settings.to) {
+        if (settings.to > settings.max) {
+          console.error('unacceptable value,to must be lower than max');
+          this.settings.to = settings.max;
+        }
+      }
     }
 
-    if (settings.isRange && settings.from >= settings.to) {
-      console.error('unacceptable value,from must be lower than to');
-      this.settings.to = this.settings.from + this.settings.step ? this.settings.step : 0;
-    }
-
-    if (settings.onChange && typeof settings.onChange != 'function') {
-      console.error('unacceptable value,callback onChange must be function');
-      this.settings.onChange = undefined;
-    }
-
-    if (settings.onUpdate && typeof settings.onUpdate != 'function') {
-      console.error('unacceptable value,callback onUpdate must be function');
-      this.settings.onUpdate = undefined;
+    if (settings.isRange) {
+      if (settings.to) {
+        if (settings.from > settings.to) {
+          console.error('unacceptable value,from must be lower than to');
+          this.settings.to = this.settings.from + this.settings.step ? this.settings.step : 0;
+        }
+      }
     }
   }
 
@@ -179,7 +516,7 @@ class Model extends EventObservable_1.EventObservable {
       del = 1.0 / this.getStep();
     }
 
-    let res = Math.round(+(Math.abs(this.getMax() - this.getMin()) * valueInPercent / 100 + this.getMin()).toFixed(Utils_1.Utils.numDigitsAfterDecimal(this.getStep())) * del) / del;
+    const res = Math.round(+(Math.abs(this.getMax() - this.getMin()) * valueInPercent / 100 + this.getMin()).toFixed(Utils_1.Utils.numDigitsAfterDecimal(this.getStep())) * del) / del;
     if (res < this.getMin()) return this.getMin();
     if (res > this.getMax()) return this.getMax();
     return res;
@@ -195,18 +532,15 @@ exports.Model = Model;
 /*!**************************************!*\
   !*** ./observers/EventObservable.ts ***!
   \**************************************/
-/*! flagged exports */
-/*! export EventObservable [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export __esModule [provided] [no usage info] [missing usage info prevents renaming] */
-/*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_exports__ */
-/***/ ((__unused_webpack_module, exports) => {
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 
 
-
-Object.defineProperty(exports, "__esModule", ({
+Object.defineProperty(exports, "__esModule", {
   value: true
-}));
+});
 exports.EventObservable = void 0;
 
 class EventObservable {
@@ -223,7 +557,11 @@ class EventObservable {
   }
 
   notifyObservers(msg, settings) {
-    this.observers.forEach(elem => elem.handleEvent(msg, settings));
+    this.observers.forEach(elem => {
+      if (elem) {
+        elem.handleEvent(msg, settings);
+      }
+    });
   }
 
 }
@@ -236,45 +574,36 @@ exports.EventObservable = EventObservable;
 /*!********************************!*\
   !*** ./presenter/presenter.ts ***!
   \********************************/
-/*! flagged exports */
-/*! export Presenter [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export __esModule [provided] [no usage info] [missing usage info prevents renaming] */
-/*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_exports__ */
-/***/ ((__unused_webpack_module, exports) => {
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 
 
-
-Object.defineProperty(exports, "__esModule", ({
+Object.defineProperty(exports, "__esModule", {
   value: true
-}));
+});
 exports.Presenter = void 0;
 
-class Presenter {
+const EventObservable_1 = __webpack_require__(/*! ../observers/EventObservable */ "./observers/EventObservable.ts");
+
+class Presenter extends EventObservable_1.EventObservable {
   constructor(view, model) {
+    super();
     this.view = view;
     this.model = model;
   }
 
   handleEvent(msg, s) {
-    if (msg === 0
-    /* INIT */
-    ) {
-        this.initialize();
-
-        if (this.model.getOnStart()) {
-          this.model.getOnStart().call(JSON.parse(s));
-        }
-      } else if (msg === 1
+    if (msg === 1
     /* UPDATE */
     ) {
         this.view.refreshView(1
         /* UPDATE */
         , JSON.parse(s));
-
-        if (this.model.getOnUpdate()) {
-          this.model.getOnUpdate().call(JSON.parse(s));
-        }
+        this.notifyObservers(1
+        /* UPDATE */
+        , this.model.getSettings());
       } else if (msg === 4
     /* SET_FROM */
     ) {
@@ -285,12 +614,12 @@ class Presenter {
           from: this.model.getFrom(),
           to: 0,
           min: 0,
-          max: 0
+          max: 0,
+          step: 0
         });
-
-        if (this.model.getOnChange()) {
-          this.model.getOnChange().call(this, JSON.stringify(this.model.getSettings()));
-        }
+        this.notifyObservers(1
+        /* UPDATE */
+        , this.model.getSettings());
       } else if (msg === 5
     /* SET_TO */
     ) {
@@ -301,35 +630,26 @@ class Presenter {
           to: this.model.getTo(),
           from: 0,
           min: 0,
-          max: 0
+          max: 0,
+          step: 0
         });
-
-        if (this.model.getOnChange()) {
-          this.model.getOnChange().call(this, JSON.stringify(this.model.getSettings()));
-        }
+        this.notifyObservers(1
+        /* UPDATE */
+        , this.model.getSettings());
       }
   }
 
   initialize() {
     this.view.refreshView(0
     /* INIT */
+    , JSON.parse(this.model.getSettings()));
+    this.notifyObservers(1
+    /* UPDATE */
     , this.model.getSettings());
   }
 
   update(newSettings) {
     this.model.updateSettings(newSettings);
-  }
-
-  isVerticalSlider() {
-    return this.model.isVertical();
-  }
-
-  isRangeSlider() {
-    return this.model.isRange();
-  }
-
-  withThumbLabel() {
-    return this.model.showThumbLabel();
   }
 
 }
@@ -342,19 +662,17 @@ exports.Presenter = Presenter;
 /*!****************************!*\
   !*** ./utils/Constants.ts ***!
   \****************************/
-/*! flagged exports */
-/*! export Constants [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export __esModule [provided] [no usage info] [missing usage info prevents renaming] */
-/*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_exports__ */
-/***/ ((__unused_webpack_module, exports) => {
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 
 
-
-Object.defineProperty(exports, "__esModule", ({
+Object.defineProperty(exports, "__esModule", {
   value: true
-}));
-exports.Constants = void 0;
+});
+exports.Constants = void 0; // eslint-disable-next-line @typescript-eslint/no-namespace
+
 var Constants;
 
 (function (Constants) {
@@ -367,23 +685,22 @@ var Constants;
 /*!************************!*\
   !*** ./utils/Utils.ts ***!
   \************************/
-/*! flagged exports */
-/*! export Utils [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export __esModule [provided] [no usage info] [missing usage info prevents renaming] */
-/*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_exports__ */
-/***/ ((__unused_webpack_module, exports) => {
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 
 
-
-Object.defineProperty(exports, "__esModule", ({
+Object.defineProperty(exports, "__esModule", {
   value: true
-}));
+});
 exports.Utils = void 0;
 
 class Utils {
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   static numDigitsAfterDecimal(value) {
     if (value) {
+      // eslint-disable-next-line prefer-const
       let afterDecimalStr = value.toString().split('.')[1] || '';
       return afterDecimalStr.length;
     } else return 0;
@@ -399,18 +716,15 @@ exports.Utils = Utils;
 /*!**********************!*\
   !*** ./view/View.ts ***!
   \**********************/
-/*! flagged exports */
-/*! export View [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export __esModule [provided] [no usage info] [missing usage info prevents renaming] */
-/*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_exports__, __webpack_require__ */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 
 
-
-Object.defineProperty(exports, "__esModule", ({
+Object.defineProperty(exports, "__esModule", {
   value: true
-}));
+});
 exports.View = void 0;
 
 const Slider_1 = __webpack_require__(/*! ./modules/Slider */ "./view/modules/Slider.ts");
@@ -454,11 +768,11 @@ class View extends EventObservable_1.EventObservable {
   }
 
   bindEvents() {
-    this.getThumbFrom().onmousedown = this.mouseFromHandler.bind(this);
-    this.getRangeLabel().onmousedown = this.mouseRangeHandler.bind(this);
+    this.getThumbFrom().onmousedown = this.handleFromThumb.bind(this);
+    this.getRangeLabel().onmousedown = this.handleRange.bind(this);
 
     if (this.settings.isRange) {
-      this.getThumbTo().onmousedown = this.mouseToHandler.bind(this);
+      this.getThumbTo().onmousedown = this.handleToThumb.bind(this);
     }
   }
 
@@ -539,13 +853,13 @@ class View extends EventObservable_1.EventObservable {
         this.slider.setValueToLabelThumbFrom(s.from);
 
         if (s.isRange) {
-          this.slider.setValueToLabelThumbTo(s.to);
+          this.slider.setValueToLabelThumbTo(s.to !== undefined ? s.to : s.from);
 
           if (s.isVertical) {
-            this.getThumbTo().style.top = Math.abs(s.to - s.min) / Math.abs(s.max - s.min) * 100 - this.getThumbLengthInPercentage() + '%';
+            this.getThumbTo().style.top = Math.abs((s.to !== undefined ? s.to : s.from) - s.min) / Math.abs(s.max - s.min) * 100 - this.getThumbLengthInPercentage() + '%';
             this.getThumbFrom().style.top = Math.abs(s.from - s.min) / Math.abs(s.max - s.min) * 100 + '%';
           } else {
-            this.getThumbTo().style.left = Math.abs(s.to - s.min) / Math.abs(s.max - s.min) * 100 - this.getThumbLengthInPercentage() + '%';
+            this.getThumbTo().style.left = Math.abs((s.to !== undefined ? s.to : s.from) - s.min) / Math.abs(s.max - s.min) * 100 - this.getThumbLengthInPercentage() + '%';
             this.getThumbFrom().style.left = Math.abs(s.from - s.min) / Math.abs(s.max - s.min) * 100 + '%';
           }
 
@@ -567,7 +881,7 @@ class View extends EventObservable_1.EventObservable {
       } else if (msg === 3
     /* TO_IS_SET */
     ) {
-        this.slider.setValueToLabelThumbTo(s.to);
+        this.slider.setValueToLabelThumbTo(s.to !== undefined ? s.to : s.from);
         this.setColoredRange();
       }
   }
@@ -590,14 +904,15 @@ class View extends EventObservable_1.EventObservable {
     }
   }
 
-  mouseFromHandler(e) {
+  handleFromThumb(e) {
     e.preventDefault();
 
     if (this.settings.isVertical) {
-      let shiftY = e.clientY - this.getThumbFrom().getBoundingClientRect().top;
+      const shiftY = e.clientY - this.getThumbFrom().getBoundingClientRect().top;
       document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp);
-      let that = this;
+      document.addEventListener('mouseup', onMouseUp); // eslint-disable-next-line @typescript-eslint/no-this-alias
+
+      const that = this; // eslint-disable-next-line no-inner-declarations
 
       function onMouseMove(event) {
         let newTop = event.clientY - shiftY - that.getRange().getBoundingClientRect().top;
@@ -609,7 +924,7 @@ class View extends EventObservable_1.EventObservable {
         let bottom = that.getSliderLengthInPx() - that.getThumbLengthInPx() / 4;
 
         if (that.settings.isRange) {
-          let toPos = that.getThumbTo().getBoundingClientRect().top - (that.getRange().getBoundingClientRect().top - that.getThumbLengthInPx() / 4);
+          const toPos = that.getThumbTo().getBoundingClientRect().top - (that.getRange().getBoundingClientRect().top - that.getThumbLengthInPx() / 4);
           bottom = toPos;
         }
 
@@ -627,17 +942,19 @@ class View extends EventObservable_1.EventObservable {
           max: that.settings.max
         }));
         that.setColoredRange();
-      }
+      } // eslint-disable-next-line no-inner-declarations
+
 
       function onMouseUp() {
         document.removeEventListener('mouseup', onMouseUp);
         document.removeEventListener('mousemove', onMouseMove);
       }
     } else {
-      let shiftX = e.clientX - this.getThumbFrom().getBoundingClientRect().left;
+      const shiftX = e.clientX - this.getThumbFrom().getBoundingClientRect().left;
       document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp);
-      let that = this;
+      document.addEventListener('mouseup', onMouseUp); // eslint-disable-next-line @typescript-eslint/no-this-alias
+
+      const that = this; // eslint-disable-next-line no-inner-declarations
 
       function onMouseMove(e) {
         let newLeft = e.clientX - shiftX - that.getRange().getBoundingClientRect().left;
@@ -649,7 +966,7 @@ class View extends EventObservable_1.EventObservable {
         let rightEdge = that.getSliderLengthInPx() - that.getThumbFrom().offsetWidth / 4;
 
         if (that.settings.isRange) {
-          let toPos = that.getThumbTo().getBoundingClientRect().left - (that.getRange().getBoundingClientRect().left - that.getThumbLengthInPx() / 4);
+          const toPos = that.getThumbTo().getBoundingClientRect().left - (that.getRange().getBoundingClientRect().left - that.getThumbLengthInPx() / 4);
           rightEdge = toPos;
         }
 
@@ -667,7 +984,8 @@ class View extends EventObservable_1.EventObservable {
           max: that.settings.max
         }));
         that.setColoredRange();
-      }
+      } // eslint-disable-next-line no-inner-declarations
+
 
       function onMouseUp() {
         document.removeEventListener('mouseup', onMouseUp);
@@ -676,24 +994,25 @@ class View extends EventObservable_1.EventObservable {
     }
   }
 
-  mouseToHandler(e) {
+  handleToThumb(e) {
     e.preventDefault();
 
     if (this.settings.isVertical) {
-      let shiftY = e.clientY - this.getThumbTo().getBoundingClientRect().top;
+      const shiftY = e.clientY - this.getThumbTo().getBoundingClientRect().top;
       document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp);
-      let that = this;
+      document.addEventListener('mouseup', onMouseUp); // eslint-disable-next-line @typescript-eslint/no-this-alias
+
+      const that = this; // eslint-disable-next-line no-inner-declarations
 
       function onMouseMove(event) {
         let newTop = event.clientY - shiftY - that.getRange().getBoundingClientRect().top;
-        let fromPos = that.getThumbFrom().getBoundingClientRect().top - (that.getRange().getBoundingClientRect().top - that.getThumbLengthInPx() / 2);
+        const fromPos = that.getThumbFrom().getBoundingClientRect().top - (that.getRange().getBoundingClientRect().top - that.getThumbLengthInPx() / 2);
 
         if (newTop < fromPos) {
           newTop = fromPos;
         }
 
-        let bottom = that.getSliderLengthInPx() - that.getThumbFrom().offsetWidth / 4;
+        const bottom = that.getSliderLengthInPx() - that.getThumbFrom().offsetWidth / 4;
 
         if (newTop > bottom) {
           newTop = bottom;
@@ -710,27 +1029,29 @@ class View extends EventObservable_1.EventObservable {
           max: that.settings.max
         }));
         that.setColoredRange();
-      }
+      } // eslint-disable-next-line no-inner-declarations
+
 
       function onMouseUp() {
         document.removeEventListener('mouseup', onMouseUp);
         document.removeEventListener('mousemove', onMouseMove);
       }
     } else {
-      let shiftX = e.clientX - this.getThumbTo().getBoundingClientRect().left;
+      const shiftX = e.clientX - this.getThumbTo().getBoundingClientRect().left;
       document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp);
-      let that = this;
+      document.addEventListener('mouseup', onMouseUp); // eslint-disable-next-line @typescript-eslint/no-this-alias
+
+      const that = this; // eslint-disable-next-line no-inner-declarations
 
       function onMouseMove(e) {
         let newLeft = e.clientX - shiftX - that.getRange().getBoundingClientRect().left;
-        let fromPos = that.getThumbFrom().getBoundingClientRect().left - (that.getRange().getBoundingClientRect().left - that.getThumbLengthInPx() / 2);
+        const fromPos = that.getThumbFrom().getBoundingClientRect().left - (that.getRange().getBoundingClientRect().left - that.getThumbLengthInPx() / 2);
 
         if (newLeft < fromPos) {
           newLeft = fromPos;
         }
 
-        let rightEdge = that.getSliderLengthInPx() - that.getThumbFrom().offsetWidth / 4;
+        const rightEdge = that.getSliderLengthInPx() - that.getThumbFrom().offsetWidth / 4;
 
         if (newLeft > rightEdge) {
           newLeft = rightEdge;
@@ -747,7 +1068,8 @@ class View extends EventObservable_1.EventObservable {
           max: that.settings.max
         }));
         that.setColoredRange();
-      }
+      } // eslint-disable-next-line no-inner-declarations
+
 
       function onMouseUp() {
         document.removeEventListener('mouseup', onMouseUp);
@@ -756,14 +1078,14 @@ class View extends EventObservable_1.EventObservable {
     }
   }
 
-  mouseRangeHandler(e) {
+  handleRange(e) {
     if (this.settings.isVertical) {
       //vertical mode
-      let shiftY = e.clientY - this.getRange().getBoundingClientRect().top;
-      let fromPos = this.getThumbFrom().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2);
+      const shiftY = e.clientY - this.getRange().getBoundingClientRect().top;
+      const fromPos = this.getThumbFrom().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2);
 
       if (this.settings.isRange) {
-        let toPos = this.getThumbTo().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2);
+        const toPos = this.getThumbTo().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2);
 
         if (shiftY < fromPos) {
           this.resPercentage = this.convertFromPxToPercent(shiftY);
@@ -790,7 +1112,7 @@ class View extends EventObservable_1.EventObservable {
           }));
           this.setColoredRange();
         } else if (shiftY >= fromPos && shiftY <= toPos) {
-          let pivot = toPos - fromPos;
+          const pivot = toPos - fromPos;
 
           if (shiftY < pivot) {
             this.resPercentage = this.convertFromPxToPercent(shiftY);
@@ -848,11 +1170,11 @@ class View extends EventObservable_1.EventObservable {
       }
     } else {
       //horizontal mode
-      let shiftX = e.clientX - this.getRange().getBoundingClientRect().left;
-      let fromPos = this.getThumbFrom().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2);
+      const shiftX = e.clientX - this.getRange().getBoundingClientRect().left;
+      const fromPos = this.getThumbFrom().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2);
 
       if (this.settings.isRange) {
-        let toPos = this.getThumbTo().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2);
+        const toPos = this.getThumbTo().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2);
 
         if (shiftX < fromPos) {
           this.resPercentage = this.convertFromPxToPercent(shiftX);
@@ -879,7 +1201,7 @@ class View extends EventObservable_1.EventObservable {
           }));
           this.setColoredRange();
         } else if (shiftX >= fromPos && shiftX <= toPos) {
-          let pivot = toPos - fromPos;
+          const pivot = toPos - fromPos;
 
           if (shiftX < pivot) {
             this.resPercentage = this.convertFromPxToPercent(shiftX);
@@ -925,11 +1247,11 @@ class View extends EventObservable_1.EventObservable {
   }
 
   convertFromPxToPercent(valueInPX) {
-    return valueInPX / this.getSliderLengthInPx() * 100;
+    return +(valueInPX / this.getSliderLengthInPx() * 100).toFixed(2);
   }
 
   convertFromValueToPercent(value) {
-    return 100 / Math.abs(this.settings.max - this.settings.min) * Math.abs(value - this.settings.min);
+    return +(100 / Math.abs(this.settings.max - this.settings.min) * Math.abs(value - this.settings.min)).toFixed(2);
   }
 
   setThumbToValue(type) {
@@ -943,9 +1265,9 @@ class View extends EventObservable_1.EventObservable {
       this.setColoredRange();
     } else {
       if (this.settings.isVertical) {
-        this.getThumbTo().style.top = this.convertFromValueToPercent(this.settings.to) + '%';
+        this.getThumbTo().style.top = this.convertFromValueToPercent(this.settings.to !== undefined ? this.settings.to : this.settings.from) + '%';
       } else {
-        this.getThumbTo().style.left = this.convertFromValueToPercent(this.settings.to) + '%';
+        this.getThumbTo().style.left = this.convertFromValueToPercent(this.settings.to !== undefined ? this.settings.to : this.settings.from) + '%';
       }
 
       this.setColoredRange();
@@ -962,18 +1284,15 @@ exports.View = View;
 /*!********************************!*\
   !*** ./view/modules/Slider.ts ***!
   \********************************/
-/*! flagged exports */
-/*! export Slider [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export __esModule [provided] [no usage info] [missing usage info prevents renaming] */
-/*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_exports__, __webpack_require__ */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 
 
-
-Object.defineProperty(exports, "__esModule", ({
+Object.defineProperty(exports, "__esModule", {
   value: true
-}));
+});
 exports.Slider = void 0;
 
 const range_1 = __webpack_require__(/*! ./range */ "./view/modules/range.ts");
@@ -991,14 +1310,13 @@ class Slider {
     this.settings = s;
     this.rootElem = rootElem;
     this.numberOfMarking = numberOfMarking;
-    this.numberOfMarking = this.numberOfMarking;
     this.thumbTo = new thumb_1.Thumb('fsd-slider__thumb-to');
-    this.thumbLabelTo = new thumbLabel_1.ThumbLabel(this.thumbTo.getThumb());
+    this.thumbLabelTo = new thumbLabel_1.ThumbLabel();
     this.thumbFrom = new thumb_1.Thumb('fsd-slider__thumb-from');
-    this.thumbLabelFrom = new thumbLabel_1.ThumbLabel(this.thumbFrom.getThumb());
+    this.thumbLabelFrom = new thumbLabel_1.ThumbLabel();
     this.range = new range_1.Range();
     this.coloredRange = new coloredRange_1.ColoredRange();
-    this.rangeLabel = new rangeLabel_1.RangeLabel(this.numberOfMarking, this.settings.isVertical);
+    this.rangeLabel = new rangeLabel_1.RangeLabel(this.numberOfMarking, this.settings.isVertical !== undefined ? this.settings.isVertical : false);
     this.container = document.createElement('div');
   }
 
@@ -1084,18 +1402,15 @@ exports.Slider = Slider;
 /*!**************************************!*\
   !*** ./view/modules/coloredRange.ts ***!
   \**************************************/
-/*! flagged exports */
-/*! export ColoredRange [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export __esModule [provided] [no usage info] [missing usage info prevents renaming] */
-/*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_exports__ */
-/***/ ((__unused_webpack_module, exports) => {
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 
 
-
-Object.defineProperty(exports, "__esModule", ({
+Object.defineProperty(exports, "__esModule", {
   value: true
-}));
+});
 exports.ColoredRange = void 0;
 
 class ColoredRange {
@@ -1118,23 +1433,20 @@ exports.ColoredRange = ColoredRange;
 /*!*******************************!*\
   !*** ./view/modules/range.ts ***!
   \*******************************/
-/*! flagged exports */
-/*! export Range [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export __esModule [provided] [no usage info] [missing usage info prevents renaming] */
-/*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_exports__ */
-/***/ ((__unused_webpack_module, exports) => {
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 
 
-
-Object.defineProperty(exports, "__esModule", ({
+Object.defineProperty(exports, "__esModule", {
   value: true
-}));
+});
 exports.Range = void 0;
 
 class Range {
   constructor() {
-    let div = document.createElement('div');
+    const div = document.createElement('div');
     div.classList.add('fsd-slider__range');
     this.range = div;
   }
@@ -1153,18 +1465,15 @@ exports.Range = Range;
 /*!************************************!*\
   !*** ./view/modules/rangeLabel.ts ***!
   \************************************/
-/*! flagged exports */
-/*! export RangeLabel [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export __esModule [provided] [no usage info] [missing usage info prevents renaming] */
-/*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_exports__ */
-/***/ ((__unused_webpack_module, exports) => {
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 
 
-
-Object.defineProperty(exports, "__esModule", ({
+Object.defineProperty(exports, "__esModule", {
   value: true
-}));
+});
 exports.RangeLabel = void 0;
 
 class RangeLabel {
@@ -1175,7 +1484,7 @@ class RangeLabel {
     this.rangeLabelContainer.appendChild(this.minLabel);
 
     for (let i = 0; i < numberOfMarking; i++) {
-      let marking = document.createElement('span');
+      const marking = document.createElement('span');
 
       if (isVertical) {
         marking.innerText = '-';
@@ -1218,18 +1527,15 @@ exports.RangeLabel = RangeLabel;
 /*!*******************************!*\
   !*** ./view/modules/thumb.ts ***!
   \*******************************/
-/*! flagged exports */
-/*! export Thumb [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export __esModule [provided] [no usage info] [missing usage info prevents renaming] */
-/*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_exports__ */
-/***/ ((__unused_webpack_module, exports) => {
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 
 
-
-Object.defineProperty(exports, "__esModule", ({
+Object.defineProperty(exports, "__esModule", {
   value: true
-}));
+});
 exports.Thumb = void 0;
 
 class Thumb {
@@ -1252,24 +1558,21 @@ exports.Thumb = Thumb;
 /*!************************************!*\
   !*** ./view/modules/thumbLabel.ts ***!
   \************************************/
-/*! flagged exports */
-/*! export ThumbLabel [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export __esModule [provided] [no usage info] [missing usage info prevents renaming] */
-/*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_exports__ */
-/***/ ((__unused_webpack_module, exports) => {
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 
 
-
-Object.defineProperty(exports, "__esModule", ({
+Object.defineProperty(exports, "__esModule", {
   value: true
-}));
+});
 exports.ThumbLabel = void 0;
 
 class ThumbLabel {
-  constructor(thumbRootElen) {
-    let div = document.createElement('div');
-    let divValue = document.createElement('div');
+  constructor() {
+    const div = document.createElement('div');
+    const divValue = document.createElement('div');
     this.thumbLabelContainer = div;
     this.thumbLabelContainer.classList.add('fsd-slider__thumb-label');
     this.thumbLabelValue = divValue;
@@ -1297,287 +1600,7 @@ class ThumbLabel {
 
 exports.ThumbLabel = ThumbLabel;
 
-/***/ }),
-
-/***/ "./index.scss":
-/*!********************!*\
-  !*** ./index.scss ***!
-  \********************/
-/*! namespace exports */
-/*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-// extracted by mini-css-extract-plugin
-
-
-/***/ }),
-
-/***/ "./fsdSlider.js":
-/*!**********************!*\
-  !*** ./fsdSlider.js ***!
-  \**********************/
-/*! namespace exports */
-/*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _view_View__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./view/View */ "./view/View.ts");
-/* harmony import */ var _model_Model__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./model/Model */ "./model/Model.ts");
-/* harmony import */ var _presenter_presenter__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./presenter/presenter */ "./presenter/presenter.ts");
-/* provided dependency */ var jQuery = __webpack_require__(/*! jquery */ "../node_modules/jquery/dist/jquery.js");
-;
-
-
-(function ($) {
- var FsdSlider = function (root, settings) {
-  let model = new _model_Model__WEBPACK_IMPORTED_MODULE_1__.Model(settings);
-  let view = new _view_View__WEBPACK_IMPORTED_MODULE_0__.View(settings, root);
-  this.presenter = new _presenter_presenter__WEBPACK_IMPORTED_MODULE_2__.Presenter(view, model);
-  model.addObserver(this.presenter);
-  view.addObserver(this.presenter);
-  this.presenter.initialize();
- };
- FsdSlider.prototype = {
-  update: function (newSettings) {
-   this.presenter.update(newSettings);
-  },
- };
- $.fn.fsdSlider = function (settings) {
-  return this.each(function () {
-   if (!$.data(this, "fsdSlider")) {
-    $.data(this, "fsdSlider", new FsdSlider(this, settings));
-   }
-  });
- };
-})(jQuery);
-
-/***/ }),
-
-/***/ "./index.js":
-/*!******************!*\
-  !*** ./index.js ***!
-  \******************/
-/*! namespace exports */
-/*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _index_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index.scss */ "./index.scss");
-/* harmony import */ var _fsdSlider_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./fsdSlider.js */ "./fsdSlider.js");
-/* provided dependency */ var $ = __webpack_require__(/*! jquery */ "../node_modules/jquery/dist/jquery.js");
-;
-
-//import test from './test/test';
-var $sl1 = $('.slider1');
-$sl1.fsdSlider({
- min: -15,
- max: -10,
- from: -14,
- step: 0,
- to: -11,
- isVertical: false,
- hideThumbLabel: false,
- isRange: true,
- onChange: callback,
- onStart: callback,
-});
-var sl1_instance = $sl1.data("fsdSlider");
-var $sl2 = $('.slider2');
-$sl2.fsdSlider({
- min: 5,
- max: 10,
- from: 7,
- step: 0.2,
- to: -11,
- isVertical: true,
- hideThumbLabel: false,
- isRange: false,
- onChange: callback,
- onStart: callback,
-});
-var $sl3 = $('.slider3');
-$sl3.fsdSlider({
- min: -15,
- max: 100,
- from: -14,
- step: 4,
- to: 11,
- isVertical: false,
- hideThumbLabel: false,
- isRange: true,
- onChange: callback,
- onStart: callback,
-});
-//sl1_instance.update({ min: 0, max: 22, from: -5, });
-// var $sl2 = $('.slider2');
-// $sl2.fsdSlider({
-//  min: 5,
-//  max: 50,
-//  from: 7,
-//  step: 0.5,
-//  to: -11,
-//  isVertical: false,
-//  isRange: false,
-//  hideThumbLabel: false,
-//  onChange: callback2,
-// });
-// var sl2_instance = $sl2.data('fsdSlider');
-// sl2_instance.update({ min: 0, max: 6, from: 3, step: 1, });
-function callback(result) {
- var s = JSON.parse(result);
- $('.result1').val(s.from + '  -  ' + s.to);
-}
-
-
 /***/ })
 
-/******/ 	});
-/************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = __webpack_modules__;
-/******/ 	
-/************************************************************************/
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/jsonp chunk loading */
-/******/ 	(() => {
-/******/ 		// no baseURI
-/******/ 		
-/******/ 		// object to store loaded and loading chunks
-/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
-/******/ 		// Promise = chunk loading, 0 = chunk loaded
-/******/ 		var installedChunks = {
-/******/ 			"main": 0
-/******/ 		};
-/******/ 		
-/******/ 		var deferredModules = [
-/******/ 			["./index.js","vendors-node_modules_jquery_dist_jquery_js"]
-/******/ 		];
-/******/ 		// no chunk on demand loading
-/******/ 		
-/******/ 		// no prefetching
-/******/ 		
-/******/ 		// no preloaded
-/******/ 		
-/******/ 		// no HMR
-/******/ 		
-/******/ 		// no HMR manifest
-/******/ 		
-/******/ 		var checkDeferredModules = () => {
-/******/ 		
-/******/ 		};
-/******/ 		function checkDeferredModulesImpl() {
-/******/ 			var result;
-/******/ 			for(var i = 0; i < deferredModules.length; i++) {
-/******/ 				var deferredModule = deferredModules[i];
-/******/ 				var fulfilled = true;
-/******/ 				for(var j = 1; j < deferredModule.length; j++) {
-/******/ 					var depId = deferredModule[j];
-/******/ 					if(installedChunks[depId] !== 0) fulfilled = false;
-/******/ 				}
-/******/ 				if(fulfilled) {
-/******/ 					deferredModules.splice(i--, 1);
-/******/ 					result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
-/******/ 				}
-/******/ 			}
-/******/ 			if(deferredModules.length === 0) {
-/******/ 				__webpack_require__.x();
-/******/ 				__webpack_require__.x = () => {
-/******/ 		
-/******/ 				}
-/******/ 			}
-/******/ 			return result;
-/******/ 		}
-/******/ 		__webpack_require__.x = () => {
-/******/ 			// reset startup function so it can be called again when more startup code is added
-/******/ 			__webpack_require__.x = () => {
-/******/ 		
-/******/ 			}
-/******/ 			chunkLoadingGlobal = chunkLoadingGlobal.slice();
-/******/ 			for(var i = 0; i < chunkLoadingGlobal.length; i++) webpackJsonpCallback(chunkLoadingGlobal[i]);
-/******/ 			return (checkDeferredModules = checkDeferredModulesImpl)();
-/******/ 		};
-/******/ 		
-/******/ 		// install a JSONP callback for chunk loading
-/******/ 		var webpackJsonpCallback = (data) => {
-/******/ 			var [chunkIds, moreModules, runtime, executeModules] = data;
-/******/ 			// add "moreModules" to the modules object,
-/******/ 			// then flag all "chunkIds" as loaded and fire callback
-/******/ 			var moduleId, chunkId, i = 0, resolves = [];
-/******/ 			for(;i < chunkIds.length; i++) {
-/******/ 				chunkId = chunkIds[i];
-/******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
-/******/ 					resolves.push(installedChunks[chunkId][0]);
-/******/ 				}
-/******/ 				installedChunks[chunkId] = 0;
-/******/ 			}
-/******/ 			for(moduleId in moreModules) {
-/******/ 				if(__webpack_require__.o(moreModules, moduleId)) {
-/******/ 					__webpack_require__.m[moduleId] = moreModules[moduleId];
-/******/ 				}
-/******/ 			}
-/******/ 			if(runtime) runtime(__webpack_require__);
-/******/ 			parentChunkLoadingFunction(data);
-/******/ 			while(resolves.length) {
-/******/ 				resolves.shift()();
-/******/ 			}
-/******/ 		
-/******/ 			// add entry modules from loaded chunk to deferred list
-/******/ 			if(executeModules) deferredModules.push.apply(deferredModules, executeModules);
-/******/ 		
-/******/ 			// run deferred modules when all chunks ready
-/******/ 			return checkDeferredModules();
-/******/ 		}
-/******/ 		
-/******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
-/******/ 		var parentChunkLoadingFunction = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
-/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback;
-/******/ 	})();
-/******/ 	
-/************************************************************************/
-/******/ 	// run startup
-/******/ 	return __webpack_require__.x();
-/******/ })()
-;
-//# sourceMappingURL=main.99a6ccbdacdec67db6b0.js.map
+/******/ });
+//# sourceMappingURL=main.66c8a0a343a7b9b21444.js.map

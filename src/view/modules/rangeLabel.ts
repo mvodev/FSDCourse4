@@ -1,4 +1,4 @@
-export class RangeLabel {
+class RangeLabel {
  private rangeLabelContainer: HTMLDivElement;
  private minLabel: HTMLSpanElement;
  private maxLabel: HTMLSpanElement;
@@ -9,7 +9,7 @@ export class RangeLabel {
   this.minLabel = document.createElement('span');
   this.rangeLabelContainer.appendChild(this.minLabel);
   for (let i = 0; i < numberOfMarking; i++) {
-   let marking = document.createElement('span');
+   const marking = document.createElement('span');
    if (isVertical) {
     marking.innerText = '-';
    } else marking.innerText = '|';
@@ -18,20 +18,20 @@ export class RangeLabel {
   this.maxLabel = document.createElement('span');
   this.rangeLabelContainer.appendChild(this.maxLabel);
  }
- getRangeLabel() {
+ getRangeLabel():HTMLDivElement {
   return this.rangeLabelContainer;
  }
- setMinRange(value: number) {
-
+ setMinRange(value: number) :void{
   this.minLabel.innerText = '' + value;
  }
- setMaxRange(value: number) {
+ setMaxRange(value: number):void {
   this.maxLabel.innerText = '' + value;
  }
- getMinRange() {
+ getMinRange():HTMLSpanElement {
   return this.minLabel;
  }
- getMaxRange() {
+ getMaxRange():HTMLSpanElement {
   return this.maxLabel;
  }
 }
+export {RangeLabel}

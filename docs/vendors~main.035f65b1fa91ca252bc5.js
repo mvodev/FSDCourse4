@@ -1,15 +1,11 @@
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["vendors-node_modules_jquery_dist_jquery_js"],{
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["vendors~main"],{
 
 /***/ "../node_modules/jquery/dist/jquery.js":
 /*!*********************************************!*\
   !*** ../node_modules/jquery/dist/jquery.js ***!
   \*********************************************/
-/*! unknown exports (runtime-defined) */
-/*! runtime requirements: module, top-level-this-exports, __webpack_exports__ */
-/*! CommonJS bailout: this is used directly at 40:46-50 */
-/*! CommonJS bailout: module.exports is used directly at 18:43-57 */
-/*! CommonJS bailout: module.exports is used directly at 27:2-16 */
-/***/ (function(module, exports) {
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
  * jQuery JavaScript Library v3.5.1
@@ -10846,7 +10842,7 @@ if ( true ) {
 	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = (function() {
 		return jQuery;
 	}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 }
 
 
@@ -10889,4 +10885,4 @@ return jQuery;
 /***/ })
 
 }]);
-//# sourceMappingURL=vendors-node_modules_jquery_dist_jquery_js.eb66385f279eeb914a4c.js.map
+//# sourceMappingURL=vendors~main.035f65b1fa91ca252bc5.js.map

@@ -1,4 +1,4 @@
-export class Thumb {
+class Thumb {
  private thumb: HTMLDivElement;
  constructor(className:string) {
   this.thumb = document.createElement('div');
@@ -8,3 +8,4 @@ export class Thumb {
   return this.thumb;
  }
 }
+export {Thumb}

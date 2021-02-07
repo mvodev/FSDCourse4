@@ -1,7 +1,8 @@
 import { IObserver } from './IObserver';
 import { Messages } from '../utils/Messages';
-export interface IObservable {
- addObserver(o: IObserver);
- removeObserver(o: IObserver);
- notifyObservers(type: Messages, data: string);
+interface IObservable {
+ addObserver(o: IObserver):void;
+ removeObserver(o: IObserver):void;
+ notifyObservers(type: Messages, data: string):void;
 }
+export {IObservable}
