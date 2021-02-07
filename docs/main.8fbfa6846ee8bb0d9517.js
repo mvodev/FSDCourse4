@@ -558,7 +558,7 @@ class EventObservable {
 
   notifyObservers(msg, settings) {
     this.observers.forEach(elem => {
-      if (elem) {
+      if (elem && "handleEvent" in elem) {
         elem.handleEvent(msg, settings);
       }
     });
@@ -1603,4 +1603,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.66c8a0a343a7b9b21444.js.map
+//# sourceMappingURL=main.8fbfa6846ee8bb0d9517.js.map

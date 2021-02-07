@@ -1,6 +1,5 @@
 import { Model } from '../model/model';
 import * as chai from 'chai';
-import { Messages } from '../utils/Messages';
 import { Presenter } from '../presenter/presenter';
 import { View } from '../view/view';
 let assert = chai.assert;

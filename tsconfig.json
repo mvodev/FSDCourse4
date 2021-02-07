@@ -1,21 +1,19 @@
 {
   "compilerOptions": {
     "sourceMap": true,
-    //"strict": true,
+    "strict": true,
     "noImplicitReturns": true,
     "module": "commonjs",
     "moduleResolution": "node",
-    "target": "ESNext",
+    "target": "ES6",
     "lib": [
       "es2017",
       "dom"
     ],
   },
   "exclude": [
-    "./node_modules",
     "node_modules",
     "docs",
-    "./dist",
-    "./docs",
+    "./src/test",
   ],
 }
