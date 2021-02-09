@@ -9,7 +9,7 @@ class Model extends EventObservable implements IModelFacade {
   min: 0,
   max: 10,
   from: 5,
-  step:0,
+  step:1,
   isRange: false,
   isVertical: false,
   hideThumbLabel: false
