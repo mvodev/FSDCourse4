@@ -42,7 +42,7 @@ class Model extends EventObservable implements IModelFacade {
     this.notifyObservers(Messages.UPDATE, JSON.stringify(this.settings));
   }
   getMin(): number {
-    return this.settings.min;
+      return this.settings.min;
   }
   getMax() :number{
     return this.settings.max;
