@@ -73,8 +73,8 @@ class Model extends EventObservable implements IModelFacade {
   }
   private validateSettings(settings: ISettings) {
     if (settings.min >= settings.max) {
-    console.error('unacceptable value,min value in settings more than max value');
-    this.settings.min = settings.max - 10;
+      console.error('unacceptable value,min value in settings more than max value');
+      this.settings.min = settings.from - 10;
     }
     if (!settings.to && settings.isRange) {
       this.settings.to = settings.max;

@@ -436,7 +436,7 @@ class Model extends EventObservable_1.EventObservable {
   validateSettings(settings) {
     if (settings.min >= settings.max) {
       console.error('unacceptable value,min value in settings more than max value');
-      this.settings.min = settings.max - 10;
+      this.settings.min = settings.from - 10;
     }
 
     if (!settings.to && settings.isRange) {
@@ -1603,4 +1603,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.8fbfa6846ee8bb0d9517.js.map
+//# sourceMappingURL=main.d868414b7bbe22fbd8bf.js.map
