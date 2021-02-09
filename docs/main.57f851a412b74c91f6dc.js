@@ -353,7 +353,7 @@ class Model extends EventObservable_1.EventObservable {
       min: 0,
       max: 10,
       from: 5,
-      step: 0,
+      step: 1,
       isRange: false,
       isVertical: false,
       hideThumbLabel: false
@@ -1603,4 +1603,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.d868414b7bbe22fbd8bf.js.map
+//# sourceMappingURL=main.57f851a412b74c91f6dc.js.map
