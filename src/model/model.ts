@@ -17,16 +17,17 @@ class Model extends EventObservable implements IModelFacade {
   constructor(settings: ISettings) {
     super();
     this.settings = Object.assign({},this.defaultSettings);
-    console.log(JSON.stringify(this.settings));
+    console.log("inside constructor model before validate"+JSON.stringify(this.settings));
     this.validateSettings(settings);
-    console.log(JSON.stringify(this.settings));
+    console.log("inside constructor model after validate" +JSON.stringify(this.settings));
   }
   getSettings(): string {
     return JSON.stringify(this.settings);
   }
   updateSettings(settings: ISettings):void {
+    console.log('inside update settings model '+JSON.stringify(settings));
     this.validateSettings(settings);
-    this.notifyObservers(Messages.UPDATE, JSON.stringify(this.settings));
+    this.notifyObservers(Messages.UPDATE, this.getSettings());
   }
   getMin(): number {
       return this.settings.min;
@@ -64,10 +65,9 @@ class Model extends EventObservable implements IModelFacade {
     const validatedFrom = Utils.isNumber(settings.from);
     const validatedTo = Utils.isNumber(settings.to);
     const validatedStep = Utils.isNumber(settings.step);
-    const validatedIsRange = Utils.isBoolean(settings.isRange);
     const validatedIsVertical = Utils.isBoolean(settings.isVertical);
     const validatedHideThumbLabel = Utils.isBoolean(settings.hideThumbLabel);
-    this.settings.isRange = validatedIsRange;
+    this.settings.isRange = settings.isRange ? Utils.isBoolean(settings.isRange):this.settings.isRange;
     if(validatedMin!==undefined){
       if (validatedMin >= this.settings.max) {
         console.error('unacceptable value,min value in settings more than max value');
@@ -93,7 +93,7 @@ class Model extends EventObservable implements IModelFacade {
           console.error('from must be lower than max');
           this.settings.from = this.settings.min;
       }
-      else if(validatedIsRange){
+      else if(this.settings.isRange){
         if(this.settings.to!==undefined){
           if (validatedFrom >= this.settings.to) {
             console.error('from must be lower than to');
@@ -113,7 +113,7 @@ class Model extends EventObservable implements IModelFacade {
         console.error('to must be lower than max');
         this.settings.to = this.settings.max;
       }
-      else if(validatedIsRange){
+      else if(this.settings.isRange){
         if(validatedTo<=this.settings.from){
           console.error('to must be lower than max');
           this.settings.to = this.settings.max;

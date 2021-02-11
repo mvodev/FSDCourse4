@@ -84,6 +84,7 @@ class View extends EventObservable {
     return this.slider.getThumbTo();
   }
   refreshView(msg: Messages, s: ISettings):void {
+    console.log('inside refresh view '+JSON.stringify(s));
     if (msg === Messages.INIT) {
       this.render();
     }

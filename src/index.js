@@ -9,7 +9,7 @@ $sl1.fsdSlider({
  step: 1,
  to: -11,
  isVertical: false,
- hideThumbLabel: false,
+ hideThumbLabel: true,
  isRange: true
 }, 
 {

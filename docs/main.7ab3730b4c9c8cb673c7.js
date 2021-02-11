@@ -222,7 +222,7 @@ $sl1.fsdSlider({
  step: 1,
  to: -11,
  isVertical: false,
- hideThumbLabel: false,
+ hideThumbLabel: true,
  isRange: true
 }, 
 {
@@ -359,9 +359,9 @@ class Model extends EventObservable_1.EventObservable {
       hideThumbLabel: false
     };
     this.settings = Object.assign({}, this.defaultSettings);
-    console.log(JSON.stringify(this.settings));
+    console.log("inside constructor model before validate" + JSON.stringify(this.settings));
     this.validateSettings(settings);
-    console.log(JSON.stringify(this.settings));
+    console.log("inside constructor model after validate" + JSON.stringify(this.settings));
   }
 
   getSettings() {
@@ -369,10 +369,11 @@ class Model extends EventObservable_1.EventObservable {
   }
 
   updateSettings(settings) {
+    console.log('inside update settings model ' + JSON.stringify(settings));
     this.validateSettings(settings);
     this.notifyObservers(1
     /* UPDATE */
-    , JSON.stringify(this.settings));
+    , this.getSettings());
   }
 
   getMin() {
@@ -421,10 +422,9 @@ class Model extends EventObservable_1.EventObservable {
     const validatedFrom = Utils_1.Utils.isNumber(settings.from);
     const validatedTo = Utils_1.Utils.isNumber(settings.to);
     const validatedStep = Utils_1.Utils.isNumber(settings.step);
-    const validatedIsRange = Utils_1.Utils.isBoolean(settings.isRange);
     const validatedIsVertical = Utils_1.Utils.isBoolean(settings.isVertical);
     const validatedHideThumbLabel = Utils_1.Utils.isBoolean(settings.hideThumbLabel);
-    this.settings.isRange = validatedIsRange;
+    this.settings.isRange = settings.isRange ? Utils_1.Utils.isBoolean(settings.isRange) : this.settings.isRange;
 
     if (validatedMin !== undefined) {
       if (validatedMin >= this.settings.max) {
@@ -449,7 +449,7 @@ class Model extends EventObservable_1.EventObservable {
       } else if (validatedFrom > this.settings.max) {
         console.error('from must be lower than max');
         this.settings.from = this.settings.min;
-      } else if (validatedIsRange) {
+      } else if (this.settings.isRange) {
         if (this.settings.to !== undefined) {
           if (validatedFrom >= this.settings.to) {
             console.error('from must be lower than to');
@@ -466,7 +466,7 @@ class Model extends EventObservable_1.EventObservable {
       } else if (validatedTo <= this.settings.min) {
         console.error('to must be lower than max');
         this.settings.to = this.settings.max;
-      } else if (validatedIsRange) {
+      } else if (this.settings.isRange) {
         if (validatedTo <= this.settings.from) {
           console.error('to must be lower than max');
           this.settings.to = this.settings.max;
@@ -821,6 +821,8 @@ class View extends EventObservable_1.EventObservable {
   }
 
   refreshView(msg, s) {
+    console.log('inside refresh view ' + JSON.stringify(s));
+
     if (msg === 0
     /* INIT */
     ) {
@@ -1603,4 +1605,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.dd2d9f91ab692ee22024.js.map
+//# sourceMappingURL=main.7ab3730b4c9c8cb673c7.js.map
