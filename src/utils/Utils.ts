@@ -6,12 +6,16 @@ class Utils {
   }
   else return 0;
  }
- static isNumber(value:string|number|boolean):number|null{
+ static isNumber(value:string|number|boolean|undefined):number|undefined{
   const number = parseFloat(String(value));
   if(isNaN(number)){
-   return null;
+   return undefined;
   }
   return number;
+ }
+ static isBoolean(value:boolean|undefined):boolean{
+  return Boolean(value);
+
  }
 }
 export {Utils}

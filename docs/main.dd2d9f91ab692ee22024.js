@@ -219,8 +219,8 @@ $sl1.fsdSlider({
  min: -15,
  max: -10,
  from: -14,
- step: 0,
- to: "qwe",
+ step: 1,
+ to: -11,
  isVertical: false,
  hideThumbLabel: false,
  isRange: true
@@ -236,68 +236,68 @@ $sl1.fsdSlider({
   }
  }
 });
-var $sl2 = $('.slider2');
-var $sl2_input = $('.input-result2');
-$sl2.fsdSlider({
- min: 5,
- max: 10,
- from: 7,
- step: 0.2,
- to: -11,
- isVertical: true,
- hideThumbLabel: true,
- isRange: false,
-},
-{
- handleEvent: (message, result) => {
-  var s = JSON.parse(result);
-  if (s.isRange) {
-   $sl2_input.val(s.from + '    -    ' + s.to);
-  }
-  else {
-   $sl2_input.val(s.from);
-  }
- }
-});
-var $sl3 = $('.slider3');
-var $sl3_input = $('.input-result3');
-$sl3.fsdSlider({
- min: -15,
- max: 100,
- from: -14,
- step: 4,
- to: 11,
- isVertical: false,
- hideThumbLabel: false,
- isRange: true,
-}, {
- handleEvent: (message, result) => {
-  var s = JSON.parse(result);
-  if (s.isRange) {
-   $sl3_input.val(s.from + '    -    ' + s.to);
-  }
-  else {
-   $sl3_input.val(s.from);
-  }
- }
-});
+// var $sl2 = $('.slider2');
+// var $sl2_input = $('.input-result2');
+// $sl2.fsdSlider({
+//  min: 5,
+//  max: 10,
+//  from: 7,
+//  step: 0.2,
+//  to: -11,
+//  isVertical: true,
+//  hideThumbLabel: true,
+//  isRange: false,
+// },
+// {
+//  handleEvent: (message, result) => {
+//   var s = JSON.parse(result);
+//   if (s.isRange) {
+//    $sl2_input.val(s.from + '    -    ' + s.to);
+//   }
+//   else {
+//    $sl2_input.val(s.from);
+//   }
+//  }
+// });
+// var $sl3 = $('.slider3');
+// var $sl3_input = $('.input-result3');
+// $sl3.fsdSlider({
+//  min: -15,
+//  max: 100,
+//  from: -14,
+//  step: 4,
+//  to: 11,
+//  isVertical: false,
+//  hideThumbLabel: false,
+//  isRange: true,
+// }, {
+//  handleEvent: (message, result) => {
+//   var s = JSON.parse(result);
+//   if (s.isRange) {
+//    $sl3_input.val(s.from + '    -    ' + s.to);
+//   }
+//   else {
+//    $sl3_input.val(s.from);
+//   }
+//  }
+// });
 var sl1_instance = $sl1.data("fsdSlider");
-var sl2_instance = $sl2.data("fsdSlider");
-var sl3_instance = $sl3.data("fsdSlider");
+// var sl2_instance = $sl2.data("fsdSlider");
+// var sl3_instance = $sl3.data("fsdSlider");
 
 $("input").on("change",function inputHandler(){
  if ($(this).parent().parent().hasClass("form_slider1"))//slider1
  {
   sl1_instance.update(collectData('slider1'));
  }
- else if ($(this).parent().parent().hasClass("form_slider2"))//slider1
- {
-  sl2_instance.update(collectData('slider2'));
- }
- else if ($(this).parent().parent().hasClass("form_slider3"))//slider1
- {
-  sl3_instance.update(collectData('slider3'));
- }  
+ // else if ($(this).parent().parent().hasClass("form_slider2"))//slider1
+ // {
+ //  sl2_instance.update(collectData('slider2'));
+ // }
+ // else if ($(this).parent().parent().hasClass("form_slider3"))//slider1
+ // {
+ //  sl3_instance.update(collectData('slider3'));
+ // }  
 });
 function collectData(sliderNumber) {
  return {
@@ -358,8 +358,10 @@ class Model extends EventObservable_1.EventObservable {
       isVertical: false,
       hideThumbLabel: false
     };
-    this.settings = Object.assign(this.defaultSettings, settings);
-    this.validateSettings(this.settings);
+    this.settings = Object.assign({}, this.defaultSettings);
+    console.log(JSON.stringify(this.settings));
+    this.validateSettings(settings);
+    console.log(JSON.stringify(this.settings));
   }
 
   getSettings() {
@@ -367,27 +369,7 @@ class Model extends EventObservable_1.EventObservable {
   }
 
   updateSettings(settings) {
-    if (settings.min) {
-      this.settings.min = settings.min;
-    }
-
-    if (settings.max) {
-      this.settings.max = settings.max;
-    }
-
-    if (settings.from) {
-      this.settings.from = settings.from;
-    }
-
-    if (settings.to) {
-      this.settings.to = settings.to;
-    }
-
-    if (settings.hideThumbLabel === true || settings.hideThumbLabel === false) {
-      this.settings.hideThumbLabel = settings.hideThumbLabel;
-    }
-
-    this.validateSettings(this.settings);
+    this.validateSettings(settings);
     this.notifyObservers(1
     /* UPDATE */
     , JSON.stringify(this.settings));
@@ -434,71 +416,78 @@ class Model extends EventObservable_1.EventObservable {
   }
 
   validateSettings(settings) {
-    if (settings.min >= settings.max) {
-      console.error('unacceptable value,min value in settings more than max value');
-      this.settings.min = settings.from - 10;
-    }
+    const validatedMin = Utils_1.Utils.isNumber(settings.min);
+    const validatedMax = Utils_1.Utils.isNumber(settings.max);
+    const validatedFrom = Utils_1.Utils.isNumber(settings.from);
+    const validatedTo = Utils_1.Utils.isNumber(settings.to);
+    const validatedStep = Utils_1.Utils.isNumber(settings.step);
+    const validatedIsRange = Utils_1.Utils.isBoolean(settings.isRange);
+    const validatedIsVertical = Utils_1.Utils.isBoolean(settings.isVertical);
+    const validatedHideThumbLabel = Utils_1.Utils.isBoolean(settings.hideThumbLabel);
+    this.settings.isRange = validatedIsRange;
 
-    if (!settings.to && settings.isRange) {
-      this.settings.to = settings.max;
-      console.error('unacceptable value,`to` value must be established');
-    }
-
-    if (+settings.from < +settings.min) {
-      console.error('unacceptable value,from must be more than min');
-      this.settings.from = settings.min;
-    }
-
-    if (+settings.from > +settings.max) {
-      console.error('unacceptable value,from must be lower than max');
-      this.settings.from = settings.min;
-    }
-
-    if (settings.to) {
-      if (settings.isRange) {
-        if (settings.to < settings.min) {
-          this.settings.to = settings.max;
-          console.error('unacceptable value,`to` value must be between min and max');
-        }
+    if (validatedMin !== undefined) {
+      if (validatedMin >= this.settings.max) {
+        console.error('unacceptable value,min value in settings more than max value');
+      } else {
+        this.settings.min = validatedMin;
       }
     }
 
-    if (settings.to) {
-      if (settings.isRange) {
-        if (settings.to < settings.from) {
-          console.error('unacceptable value,`to` value must be more than from');
+    if (validatedMax !== undefined) {
+      if (validatedMax <= this.settings.min) {
+        console.error('unacceptable value,max value in settings lower than min value');
+      } else {
+        this.settings.max = validatedMax;
+      }
+    }
+
+    if (validatedFrom !== undefined) {
+      if (validatedFrom < this.settings.min) {
+        console.error('from must be more than min');
+        this.settings.from = this.settings.min;
+      } else if (validatedFrom > this.settings.max) {
+        console.error('from must be lower than max');
+        this.settings.from = this.settings.min;
+      } else if (validatedIsRange) {
+        if (this.settings.to !== undefined) {
+          if (validatedFrom >= this.settings.to) {
+            console.error('from must be lower than to');
+            this.settings.from = this.settings.min;
+          }
+        } else this.settings.from = validatedFrom;
+      }
+    }
+
+    if (validatedTo !== undefined) {
+      if (validatedTo > this.settings.max) {
+        console.error('to must be lower than max');
+        this.settings.to = this.settings.max;
+      } else if (validatedTo <= this.settings.min) {
+        console.error('to must be lower than max');
+        this.settings.to = this.settings.max;
+      } else if (validatedIsRange) {
+        if (validatedTo <= this.settings.from) {
+          console.error('to must be lower than max');
           this.settings.to = this.settings.max;
+        } else {
+          this.settings.to = validatedTo;
         }
       }
     }
 
-    if (this.getStep() < 0) {
-      console.error('unacceptable value,`step` value must be positive number');
-      this.settings.step = this.settings.step * -1;
-    }
-
-    if (this.getStep() > Math.abs(this.getMax() - this.getMin())) {
-      console.error('unacceptable value,`step` value must be lower than difference between max and min');
-      this.settings.step = +(Math.abs(this.getMax() - this.getMin()) / 2).toFixed(1);
-    }
-
-    if (settings.isRange) {
-      if (settings.to) {
-        if (settings.to > settings.max) {
-          console.error('unacceptable value,to must be lower than max');
-          this.settings.to = settings.max;
-        }
+    if (validatedStep !== undefined) {
+      if (validatedStep < 0) {
+        console.error('step must be positive');
+      } else if (validatedStep > Math.abs(this.settings.max - this.settings.min)) {
+        console.error('step must be lower than difference between max and min');
+      } else {
+        this.settings.step = validatedStep;
       }
     }
 
-    if (settings.isRange) {
-      if (settings.to) {
-        if (settings.from > settings.to) {
-          console.error('unacceptable value,from must be lower than to');
-          this.settings.to = this.settings.from + this.settings.step ? this.settings.step : 0;
-        }
-      }
-    }
+    this.settings.isVertical = validatedIsVertical;
+    this.settings.hideThumbLabel = validatedHideThumbLabel;
   }
 
   convertFromPercentToValue(valueInPercent) {
@@ -697,13 +686,24 @@ Object.defineProperty(exports, "__esModule", {
 exports.Utils = void 0;
 
 class Utils {
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   static numDigitsAfterDecimal(value) {
     if (value) {
-      // eslint-disable-next-line prefer-const
-      let afterDecimalStr = value.toString().split('.')[1] || '';
-      return afterDecimalStr.length;
+      return (value.toString().split('.')[1] || '').length;
     } else return 0;
+  }
+
+  static isNumber(value) {
+    const number = parseFloat(String(value));
+
+    if (isNaN(number)) {
+      return undefined;
+    }
+
+    return number;
+  }
+
+  static isBoolean(value) {
+    return Boolean(value);
   }
 
 }
@@ -1603,4 +1603,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.62284d73610af21ba6be.js.map
+//# sourceMappingURL=main.dd2d9f91ab692ee22024.js.map

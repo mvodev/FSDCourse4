@@ -16,29 +16,16 @@ class Model extends EventObservable implements IModelFacade {
   };
   constructor(settings: ISettings) {
     super();
-    this.settings = Object.assign(this.defaultSettings, settings);
-    this.validateSettings(this.settings);
+    this.settings = Object.assign({},this.defaultSettings);
+    console.log(JSON.stringify(this.settings));
+    this.validateSettings(settings);
+    console.log(JSON.stringify(this.settings));
   }
   getSettings(): string {
     return JSON.stringify(this.settings);
   }
   updateSettings(settings: ISettings):void {
-    if (settings.min) {
-      this.settings.min = settings.min;
-    }
-    if (settings.max) {
-      this.settings.max = settings.max;
-    }
-    if (settings.from) {
-      this.settings.from = settings.from;
-    }
-    if (settings.to) {
-      this.settings.to = settings.to;
-    }
-    if (settings.hideThumbLabel === true || settings.hideThumbLabel === false) {
-      this.settings.hideThumbLabel = settings.hideThumbLabel;
-    }
-    this.validateSettings(this.settings);
+    this.validateSettings(settings);
     this.notifyObservers(Messages.UPDATE, JSON.stringify(this.settings));
   }
   getMin(): number {
@@ -71,63 +58,84 @@ class Model extends EventObservable implements IModelFacade {
   getStep() :number{
     return this.settings.step ? this.settings.step : 0;
   }
-  private validateSettings(settings: ISettings) {
-    if (settings.min >= settings.max) {
-      console.error('unacceptable value,min value in settings more than max value');
-      this.settings.min = settings.from - 10;
-    }
-    if (!settings.to && settings.isRange) {
-      this.settings.to = settings.max;
-      console.error('unacceptable value,`to` value must be established');
-    }
-    if (+settings.from < +settings.min) {
-      console.error('unacceptable value,from must be more than min');
-      this.settings.from = settings.min;
-    }
-    if (+settings.from > +settings.max) {
-      console.error('unacceptable value,from must be lower than max');
-      this.settings.from = settings.min;
-    }
-    if(settings.to){
-      if(settings.isRange){
-        if(settings.to<settings.min){
-          this.settings.to = settings.max;
-          console.error('unacceptable value,`to` value must be between min and max');
-        }
+  private validateSettings(settings: ISettings):void {
+    const validatedMin = Utils.isNumber(settings.min);
+    const validatedMax = Utils.isNumber(settings.max);
+    const validatedFrom = Utils.isNumber(settings.from);
+    const validatedTo = Utils.isNumber(settings.to);
+    const validatedStep = Utils.isNumber(settings.step);
+    const validatedIsRange = Utils.isBoolean(settings.isRange);
+    const validatedIsVertical = Utils.isBoolean(settings.isVertical);
+    const validatedHideThumbLabel = Utils.isBoolean(settings.hideThumbLabel);
+    this.settings.isRange = validatedIsRange;
+    if(validatedMin!==undefined){
+      if (validatedMin >= this.settings.max) {
+        console.error('unacceptable value,min value in settings more than max value');
+      }
+      else{
+        this.settings.min = validatedMin;
       }
     }
-    if(settings.to){
-      if(settings.isRange){
-        if(settings.to<settings.from){
-          console.error('unacceptable value,`to` value must be more than from');
+    if(validatedMax!==undefined){
+      if(validatedMax<=this.settings.min){
+        console.error('unacceptable value,max value in settings lower than min value');
+      }
+      else{
+        this.settings.max = validatedMax;
+      }
+    }
+    if(validatedFrom!==undefined){
+      if(validatedFrom<this.settings.min){
+        console.error('from must be more than min');
+        this.settings.from = this.settings.min;
+      }
+      else if (validatedFrom > this.settings.max){
+          console.error('from must be lower than max');
+          this.settings.from = this.settings.min;
+      }
+      else if(validatedIsRange){
+        if(this.settings.to!==undefined){
+          if (validatedFrom >= this.settings.to) {
+            console.error('from must be lower than to');
+            this.settings.from = this.settings.min;
+          }
+        }
+        else this.settings.from = validatedFrom;
+      }
+      
+    }
+    if(validatedTo!==undefined){
+      if(validatedTo>this.settings.max){
+        console.error('to must be lower than max');
+        this.settings.to = this.settings.max;
+      }
+      else if(validatedTo<=this.settings.min){
+        console.error('to must be lower than max');
+        this.settings.to = this.settings.max;
+      }
+      else if(validatedIsRange){
+        if(validatedTo<=this.settings.from){
+          console.error('to must be lower than max');
           this.settings.to = this.settings.max;
         }
-      }
-    }
-    if (this.getStep() < 0) {
-      console.error('unacceptable value,`step` value must be positive number');
-      this.settings.step = this.settings.step * (-1);
-    }
-    if (this.getStep() > Math.abs(this.getMax() - this.getMin())) {
-      console.error('unacceptable value,`step` value must be lower than difference between max and min');
-      this.settings.step = +(Math.abs(this.getMax() - this.getMin()) / 2).toFixed(1);
-    }
-    if(settings.isRange){
-      if(settings.to){
-        if(settings.to>settings.max){
-          console.error('unacceptable value,to must be lower than max');
-          this.settings.to = settings.max;
+        else{
+          this.settings.to = validatedTo;
         }
       }
     }
-    if(settings.isRange){
-      if(settings.to){
-        if(settings.from>settings.to){
-          console.error('unacceptable value,from must be lower than to');
-          this.settings.to = this.settings.from + this.settings.step ? this.settings.step : 0;
-        }
+    if(validatedStep!==undefined){
+      if(validatedStep<0){
+        console.error('step must be positive');
+      }
+      else if(validatedStep>(Math.abs(this.settings.max-this.settings.min))){
+        console.error('step must be lower than difference between max and min');
+      }
+      else{
+        this.settings.step = validatedStep;
       }
     }
+    this.settings.isVertical = validatedIsVertical;
+    this.settings.hideThumbLabel = validatedHideThumbLabel;
   }
   
   private convertFromPercentToValue(valueInPercent: number) {
