@@ -1,12 +1,17 @@
 class Utils {
- // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
- static numDigitsAfterDecimal(value: number) {
+ 
+ static numDigitsAfterDecimal(value: number):number {
   if(value){
-   // eslint-disable-next-line prefer-const
-   let afterDecimalStr = value.toString().split('.')[1] || '';
-   return afterDecimalStr.length;
+   return (value.toString().split('.')[1] || '').length;
   }
   else return 0;
+ }
+ static isNumber(value:string|number|boolean):number|null{
+  const number = parseFloat(String(value));
+  if(isNaN(number)){
+   return null;
+  }
+  return number;
  }
 }
 export {Utils}

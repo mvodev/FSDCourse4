@@ -129,6 +129,7 @@ class Model extends EventObservable implements IModelFacade {
       }
     }
   }
+  
   private convertFromPercentToValue(valueInPercent: number) {
     if (valueInPercent <= 0) {
       return this.getMin();

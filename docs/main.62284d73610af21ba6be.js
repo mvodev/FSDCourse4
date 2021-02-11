@@ -220,7 +220,7 @@ $sl1.fsdSlider({
  max: -10,
  from: -14,
  step: 0,
- to: -11,
+ to: "qwe",
  isVertical: false,
  hideThumbLabel: false,
  isRange: true
@@ -510,17 +510,13 @@ class Model extends EventObservable_1.EventObservable {
       return this.getMax();
     }
 
-    let del = 1.0;
+    let del = 1;
 
     if (this.getStep() != 0) {
       del = 1.0 / this.getStep();
     }
 
-    const min = Number(this.getMin());
-    const numbersAfterDecimalPoint = Utils_1.Utils.numDigitsAfterDecimal(this.getStep());
-    const mainBody = Number(Number(Math.abs(this.getMax() - this.getMin()) * valueInPercent / 100) + min);
-    const mainBodyWithMin = mainBody + min;
-    const res = Math.round(+mainBodyWithMin.toFixed(numbersAfterDecimalPoint) * del) / del;
+    const res = Math.round(+(Math.abs(this.getMax() - this.getMin()) * valueInPercent / 100 + this.getMin()).toFixed(Utils_1.Utils.numDigitsAfterDecimal(this.getStep())) * del) / del;
     if (res < this.getMin()) return this.getMin();
     if (res > this.getMax()) return this.getMax();
     return res;
@@ -1607,4 +1603,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.55d4aa2a6dafc845d2dc.js.map
+//# sourceMappingURL=main.62284d73610af21ba6be.js.map
