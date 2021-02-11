@@ -64,6 +64,7 @@ class Model extends EventObservable implements IModelFacade {
     const validatedMax = Utils.isNumber(settings.max);
     const validatedFrom = Utils.isNumber(settings.from);
     const validatedTo = Utils.isNumber(settings.to);
+    console.log("inside validateSettings validateTo="+validatedTo);
     const validatedStep = Utils.isNumber(settings.step);
     const validatedIsVertical = Utils.isBoolean(settings.isVertical);
     const validatedHideThumbLabel = Utils.isBoolean(settings.hideThumbLabel);
@@ -99,10 +100,9 @@ class Model extends EventObservable implements IModelFacade {
             console.error('from must be lower than to');
             this.settings.from = this.settings.min;
           }
+          else this.settings.from = validatedFrom;
         }
-        else this.settings.from = validatedFrom;
       }
-      
     }
     if(validatedTo!==undefined){
       if(validatedTo>this.settings.max){
@@ -120,6 +120,16 @@ class Model extends EventObservable implements IModelFacade {
         }
         else{
           this.settings.to = validatedTo;
+        }
+      }
+    }
+    else{
+      if(this.settings.isRange){
+        if (this.settings.to!==undefined){
+          if (this.settings.to<=settings.from){
+            this.settings.to = this.settings.max;
+            console.error('to must be more than from');
+          }
         }
       }
     }

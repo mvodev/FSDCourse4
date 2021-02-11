@@ -421,6 +421,7 @@ class Model extends EventObservable_1.EventObservable {
     const validatedMax = Utils_1.Utils.isNumber(settings.max);
     const validatedFrom = Utils_1.Utils.isNumber(settings.from);
     const validatedTo = Utils_1.Utils.isNumber(settings.to);
+    console.log("inside validateSettings validateTo=" + validatedTo);
     const validatedStep = Utils_1.Utils.isNumber(settings.step);
     const validatedIsVertical = Utils_1.Utils.isBoolean(settings.isVertical);
     const validatedHideThumbLabel = Utils_1.Utils.isBoolean(settings.hideThumbLabel);
@@ -454,8 +455,8 @@ class Model extends EventObservable_1.EventObservable {
           if (validatedFrom >= this.settings.to) {
             console.error('from must be lower than to');
             this.settings.from = this.settings.min;
-          }
-        } else this.settings.from = validatedFrom;
+          } else this.settings.from = validatedFrom;
+        }
       }
     }
 
@@ -472,6 +473,15 @@ class Model extends EventObservable_1.EventObservable {
           this.settings.to = this.settings.max;
         } else {
           this.settings.to = validatedTo;
+        }
+      }
+    } else {
+      if (this.settings.isRange) {
+        if (this.settings.to !== undefined) {
+          if (this.settings.to <= settings.from) {
+            this.settings.to = this.settings.max;
+            console.error('to must be more than from');
+          }
         }
       }
     }
@@ -1605,4 +1615,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.7ab3730b4c9c8cb673c7.js.map
+//# sourceMappingURL=main.3a92e7761601fb57774b.js.map
