@@ -2,7 +2,7 @@ interface ISettings {
  min: number;
  max: number;
  from: number;
- to?: number|undefined;
+ to: number;
  step: number;
  isVertical?: boolean;
  isRange?: boolean;

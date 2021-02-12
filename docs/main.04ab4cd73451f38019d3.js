@@ -216,14 +216,14 @@ __webpack_require__.r(__webpack_exports__);
 var $sl1 = $('.slider1');
 var $sl1_input = $('.input-result1');
 $sl1.fsdSlider({
- min: -15,
- max: -10,
- from: -14,
+ min: 5,
+ max: 25,
+ from: 8,
  step: 1,
- to: -11,
- isVertical: false,
- hideThumbLabel: true,
- isRange: true
+ to: 18,
+ isVertical: true,
+ hideThumbLabel: false,
+ isRange: true,
 }, 
 {
  handleEvent: (message, result) => {
@@ -354,14 +354,15 @@ class Model extends EventObservable_1.EventObservable {
       max: 10,
       from: 5,
       step: 1,
+      to: 8,
       isRange: false,
       isVertical: false,
       hideThumbLabel: false
     };
     this.settings = Object.assign({}, this.defaultSettings);
-    console.log("inside constructor model before validate" + JSON.stringify(this.settings));
+    console.log("inside model constructor before validate" + JSON.stringify(this.settings));
     this.validateSettings(settings);
-    console.log("inside constructor model after validate" + JSON.stringify(this.settings));
+    console.log("inside model constructor after validate" + JSON.stringify(this.settings));
   }
 
   getSettings() {
@@ -369,7 +370,6 @@ class Model extends EventObservable_1.EventObservable {
   }
 
   updateSettings(settings) {
-    console.log('inside update settings model ' + JSON.stringify(settings));
     this.validateSettings(settings);
     this.notifyObservers(1
     /* UPDATE */
@@ -421,7 +421,6 @@ class Model extends EventObservable_1.EventObservable {
     const validatedMax = Utils_1.Utils.isNumber(settings.max);
     const validatedFrom = Utils_1.Utils.isNumber(settings.from);
     const validatedTo = Utils_1.Utils.isNumber(settings.to);
-    console.log("inside validateSettings validateTo=" + validatedTo);
     const validatedStep = Utils_1.Utils.isNumber(settings.step);
     const validatedIsVertical = Utils_1.Utils.isBoolean(settings.isVertical);
     const validatedHideThumbLabel = Utils_1.Utils.isBoolean(settings.hideThumbLabel);
@@ -444,19 +443,13 @@ class Model extends EventObservable_1.EventObservable {
     }
 
     if (validatedFrom !== undefined) {
-      if (validatedFrom < this.settings.min) {
-        console.error('from must be more than min');
+      const max = this.settings.isRange ? this.settings.to : this.settings.max;
+
+      if (validatedFrom <= this.settings.min + this.settings.step || validatedFrom >= max + this.settings.step) {
+        console.error('from is invalid');
         this.settings.from = this.settings.min;
-      } else if (validatedFrom > this.settings.max) {
-        console.error('from must be lower than max');
-        this.settings.from = this.settings.min;
-      } else if (this.settings.isRange) {
-        if (this.settings.to !== undefined) {
-          if (validatedFrom >= this.settings.to) {
-            console.error('from must be lower than to');
-            this.settings.from = this.settings.min;
-          } else this.settings.from = validatedFrom;
-        }
+      } else {
+        this.settings.from = validatedFrom;
       }
     }
 
@@ -778,12 +771,156 @@ class View extends EventObservable_1.EventObservable {
   }
 
   bindEvents() {
-    this.getThumbFrom().onmousedown = this.handleFromThumb.bind(this);
+    this.getThumbFrom().addEventListener('mousedown', this.handleThumb.bind(this, "thumbFrom"));
     this.getRangeLabel().onmousedown = this.handleRange.bind(this);
 
     if (this.settings.isRange) {
-      this.getThumbTo().onmousedown = this.handleToThumb.bind(this);
+      this.getThumbTo().addEventListener('mousedown', this.handleThumb.bind(this, "thumbTo"));
     }
+  }
+
+  handleThumb(data, e) {
+    e.preventDefault();
+    let targetElem = this.getThumbFrom();
+
+    if (data === "thumbTo") {
+      targetElem = this.getThumbTo();
+    }
+
+    let shift;
+
+    if (this.settings.isVertical) {
+      shift = e.clientY - targetElem.getBoundingClientRect().top;
+    } else {
+      shift = e.clientX - targetElem.getBoundingClientRect().left;
+    }
+
+    if (this.settings.isVertical) {
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp); // eslint-disable-next-line @typescript-eslint/no-this-alias
+
+      const that = this; // eslint-disable-next-line no-inner-declarations
+
+      function onMouseMove(event) {
+        let newTop = event.clientY - shift - that.getRange().getBoundingClientRect().top;
+
+        if (data === "thumbTo") {
+          const fromPos = that.getThumbFrom().getBoundingClientRect().top - (that.getRange().getBoundingClientRect().top - that.getThumbLengthInPx() / 2);
+
+          if (newTop < fromPos) {
+            newTop = fromPos;
+          }
+        } else {
+          if (newTop < -that.getThumbFrom().offsetWidth / 2) {
+            newTop = -that.getThumbFrom().offsetWidth / 2;
+          }
+        }
+
+        let bottom = that.getSliderLengthInPx() - that.getThumbLengthInPx() / 4;
+
+        if (that.settings.isRange) {
+          const toPos = that.getThumbTo().getBoundingClientRect().top - (that.getRange().getBoundingClientRect().top - that.getThumbLengthInPx() / 4);
+
+          if (data === "thumbFrom") {
+            bottom = toPos;
+          }
+        }
+
+        if (newTop > bottom) {
+          newTop = bottom;
+        }
+
+        that.resPercentage = that.convertFromPxToPercent(newTop);
+        targetElem.style.top = that.resPercentage + '%';
+
+        if (data === "thumbFrom") {
+          that.notifyObservers(4
+          /* SET_FROM */
+          , JSON.stringify({
+            from: that.resPercentage
+          }));
+        } else if (data === "thumbTo") {
+          that.notifyObservers(5
+          /* SET_TO */
+          , JSON.stringify({
+            to: that.resPercentage
+          }));
+        }
+      } // eslint-disable-next-line no-inner-declarations
+
+
+      function onMouseUp() {
+        document.removeEventListener('mouseup', onMouseUp);
+        document.removeEventListener('mousemove', onMouseMove);
+      }
+    } else {
+      //horizontal slider view
+      console.log('horizontal mode');
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp); // eslint-disable-next-line @typescript-eslint/no-this-alias
+
+      const that = this; // eslint-disable-next-line no-inner-declarations
+
+      function onMouseMove(e) {
+        let newLeft = e.clientX - shift - that.getRange().getBoundingClientRect().left;
+        console.log('new left=' + newLeft);
+
+        if (data === "thumbTo") {
+          const fromPos = that.getThumbFrom().getBoundingClientRect().left - (that.getRange().getBoundingClientRect().left - that.getThumbLengthInPx() / 2);
+
+          if (newLeft < fromPos) {
+            newLeft = fromPos;
+          }
+        } else {
+          if (newLeft < -that.getThumbFrom().offsetWidth / 2) {
+            newLeft = -that.getThumbFrom().offsetWidth / 2;
+          }
+        }
+
+        let rightEdge = that.getSliderLengthInPx() - that.getThumbFrom().offsetWidth / 4;
+
+        if (that.settings.isRange) {
+          const toPos = that.getThumbTo().getBoundingClientRect().left - (that.getRange().getBoundingClientRect().left - that.getThumbLengthInPx() / 4);
+
+          if (data === "thumbFrom") {
+            rightEdge = toPos;
+          }
+        }
+
+        console.log('right edge=' + rightEdge);
+
+        if (newLeft > rightEdge) {
+          newLeft = rightEdge;
+        }
+
+        that.resPercentage = that.convertFromPxToPercent(newLeft);
+        targetElem.style.left = that.resPercentage + '%';
+
+        if (data === "thumbFrom") {
+          that.notifyObservers(4
+          /* SET_FROM */
+          , JSON.stringify({
+            from: that.resPercentage
+          }));
+        } else if (data === "thumbTo") {
+          that.notifyObservers(5
+          /* SET_TO */
+          , JSON.stringify({
+            to: that.resPercentage
+          }));
+        }
+
+        console.log('resPercentage=' + that.resPercentage + " targetElem" + targetElem);
+      } // eslint-disable-next-line no-inner-declarations
+
+
+      function onMouseUp() {
+        document.removeEventListener('mouseup', onMouseUp);
+        document.removeEventListener('mousemove', onMouseMove);
+      }
+    }
+
+    this.setColoredRange();
   }
 
   getRangeLabel() {
@@ -831,8 +968,6 @@ class View extends EventObservable_1.EventObservable {
   }
 
   refreshView(msg, s) {
-    console.log('inside refresh view ' + JSON.stringify(s));
-
     if (msg === 0
     /* INIT */
     ) {
@@ -1615,4 +1750,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.3a92e7761601fb57774b.js.map
+//# sourceMappingURL=main.04ab4cd73451f38019d3.js.map

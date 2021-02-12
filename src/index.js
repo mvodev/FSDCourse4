@@ -3,14 +3,14 @@ import './fsdSlider.js';
 var $sl1 = $('.slider1');
 var $sl1_input = $('.input-result1');
 $sl1.fsdSlider({
- min: -15,
- max: -10,
- from: -14,
+ min: 5,
+ max: 25,
+ from: 8,
  step: 1,
- to: -11,
- isVertical: false,
- hideThumbLabel: true,
- isRange: true
+ to: 18,
+ isVertical: true,
+ hideThumbLabel: false,
+ isRange: true,
 }, 
 {
  handleEvent: (message, result) => {

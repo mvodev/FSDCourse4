@@ -10,22 +10,22 @@ class Model extends EventObservable implements IModelFacade {
   max: 10,
   from: 5,
   step:1,
+  to:8,
   isRange: false,
   isVertical: false,
-  hideThumbLabel: false
+  hideThumbLabel: false,
   };
   constructor(settings: ISettings) {
     super();
     this.settings = Object.assign({},this.defaultSettings);
-    console.log("inside constructor model before validate"+JSON.stringify(this.settings));
+    console.log("inside model constructor before validate"+JSON.stringify(this.settings));
     this.validateSettings(settings);
-    console.log("inside constructor model after validate" +JSON.stringify(this.settings));
+    console.log("inside model constructor after validate" + JSON.stringify(this.settings));
   }
   getSettings(): string {
     return JSON.stringify(this.settings);
   }
   updateSettings(settings: ISettings):void {
-    console.log('inside update settings model '+JSON.stringify(settings));
     this.validateSettings(settings);
     this.notifyObservers(Messages.UPDATE, this.getSettings());
   }
@@ -47,7 +47,7 @@ class Model extends EventObservable implements IModelFacade {
   setTo(valueInPercent: number): void {
     this.settings.to = this.convertFromPercentToValue(valueInPercent);
   }
-  getTo(): number | undefined {
+  getTo() :number{
     return this.settings.to;
   }
   isRange(): boolean {
@@ -64,7 +64,6 @@ class Model extends EventObservable implements IModelFacade {
     const validatedMax = Utils.isNumber(settings.max);
     const validatedFrom = Utils.isNumber(settings.from);
     const validatedTo = Utils.isNumber(settings.to);
-    console.log("inside validateSettings validateTo="+validatedTo);
     const validatedStep = Utils.isNumber(settings.step);
     const validatedIsVertical = Utils.isBoolean(settings.isVertical);
     const validatedHideThumbLabel = Utils.isBoolean(settings.hideThumbLabel);
@@ -86,22 +85,13 @@ class Model extends EventObservable implements IModelFacade {
       }
     }
     if(validatedFrom!==undefined){
-      if(validatedFrom<this.settings.min){
-        console.error('from must be more than min');
+      const max = this.settings.isRange?this.settings.to:this.settings.max;
+      if(validatedFrom<=this.settings.min+this.settings.step||validatedFrom>=max+this.settings.step){
+        console.error('from is invalid');
         this.settings.from = this.settings.min;
       }
-      else if (validatedFrom > this.settings.max){
-          console.error('from must be lower than max');
-          this.settings.from = this.settings.min;
-      }
-      else if(this.settings.isRange){
-        if(this.settings.to!==undefined){
-          if (validatedFrom >= this.settings.to) {
-            console.error('from must be lower than to');
-            this.settings.from = this.settings.min;
-          }
-          else this.settings.from = validatedFrom;
-        }
+      else{
+        this.settings.from = validatedFrom;
       }
     }
     if(validatedTo!==undefined){

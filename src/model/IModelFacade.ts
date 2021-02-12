@@ -5,7 +5,7 @@ interface IModelFacade {
  setFrom(pos: number): void;
  getFrom(): number;
  setTo(value: number): void;
- getTo(): number | undefined;
+ getTo(): number;
  isRange(): boolean;
  isVertical(): boolean;
  getStep(): number;
