@@ -223,7 +223,7 @@ $sl1.fsdSlider({
  to: 18,
  isVertical: true,
  hideThumbLabel: false,
- isRange: true,
+ isRange: false,
 }, 
 {
  handleEvent: (message, result) => {
@@ -863,7 +863,6 @@ class View extends EventObservable_1.EventObservable {
 
       function onMouseMove(e) {
         let newLeft = e.clientX - shift - that.getRange().getBoundingClientRect().left;
-        console.log('new left=' + newLeft);
 
         if (data === "thumbTo") {
           const fromPos = that.getThumbFrom().getBoundingClientRect().left - (that.getRange().getBoundingClientRect().left - that.getThumbLengthInPx() / 2);
@@ -887,8 +886,6 @@ class View extends EventObservable_1.EventObservable {
           }
         }
 
-        console.log('right edge=' + rightEdge);
-
         if (newLeft > rightEdge) {
           newLeft = rightEdge;
         }
@@ -909,8 +906,6 @@ class View extends EventObservable_1.EventObservable {
             to: that.resPercentage
           }));
         }
-
-        console.log('resPercentage=' + that.resPercentage + " targetElem" + targetElem);
       } // eslint-disable-next-line no-inner-declarations
 
 
@@ -1036,7 +1031,9 @@ class View extends EventObservable_1.EventObservable {
   setColoredRange() {
     if (this.settings.isRange) {
       if (this.settings.isVertical) {
-        this.slider.getColoredRange().style.top = this.getThumbFrom().getBoundingClientRect().top - 2 * this.getThumbLengthInPx() + 'px';
+        const temp = this.getThumbFrom().getBoundingClientRect().top - this.getRange().getBoundingClientRect().top + this.getThumbLengthInPx() / 2 + 'px';
+        console.log("inside set colored range temp=" + temp);
+        this.slider.getColoredRange().style.top = temp;
         this.slider.getColoredRange().style.height = this.getThumbTo().getBoundingClientRect().top - this.getThumbFrom().getBoundingClientRect().top + this.getThumbLengthInPx() / 2 + 'px';
       } else {
         this.slider.getColoredRange().style.left = this.getThumbFrom().getBoundingClientRect().left - this.getRange().getBoundingClientRect().left + 'px';
@@ -1047,180 +1044,6 @@ class View extends EventObservable_1.EventObservable {
         this.slider.getColoredRange().style.height = this.getThumbFrom().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2) + 'px';
       } else {
         this.slider.getColoredRange().style.width = this.getThumbFrom().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2) + 'px';
-      }
-    }
-  }
-
-  handleFromThumb(e) {
-    e.preventDefault();
-
-    if (this.settings.isVertical) {
-      const shiftY = e.clientY - this.getThumbFrom().getBoundingClientRect().top;
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp); // eslint-disable-next-line @typescript-eslint/no-this-alias
-
-      const that = this; // eslint-disable-next-line no-inner-declarations
-
-      function onMouseMove(event) {
-        let newTop = event.clientY - shiftY - that.getRange().getBoundingClientRect().top;
-
-        if (newTop < -that.getThumbLengthInPx() / 2) {
-          newTop = -that.getThumbLengthInPx() / 2;
-        }
-
-        let bottom = that.getSliderLengthInPx() - that.getThumbLengthInPx() / 4;
-
-        if (that.settings.isRange) {
-          const toPos = that.getThumbTo().getBoundingClientRect().top - (that.getRange().getBoundingClientRect().top - that.getThumbLengthInPx() / 4);
-          bottom = toPos;
-        }
-
-        if (newTop > bottom) {
-          newTop = bottom;
-        }
-
-        that.resPercentage = that.convertFromPxToPercent(newTop);
-        that.getThumbFrom().style.top = that.resPercentage + '%';
-        that.notifyObservers(4
-        /* SET_FROM */
-        , JSON.stringify({
-          from: that.resPercentage,
-          min: that.settings.min,
-          max: that.settings.max
-        }));
-        that.setColoredRange();
-      } // eslint-disable-next-line no-inner-declarations
-
-
-      function onMouseUp() {
-        document.removeEventListener('mouseup', onMouseUp);
-        document.removeEventListener('mousemove', onMouseMove);
-      }
-    } else {
-      const shiftX = e.clientX - this.getThumbFrom().getBoundingClientRect().left;
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp); // eslint-disable-next-line @typescript-eslint/no-this-alias
-
-      const that = this; // eslint-disable-next-line no-inner-declarations
-
-      function onMouseMove(e) {
-        let newLeft = e.clientX - shiftX - that.getRange().getBoundingClientRect().left;
-
-        if (newLeft < -that.getThumbFrom().offsetWidth / 2) {
-          newLeft = -that.getThumbFrom().offsetWidth / 2;
-        }
-
-        let rightEdge = that.getSliderLengthInPx() - that.getThumbFrom().offsetWidth / 4;
-
-        if (that.settings.isRange) {
-          const toPos = that.getThumbTo().getBoundingClientRect().left - (that.getRange().getBoundingClientRect().left - that.getThumbLengthInPx() / 4);
-          rightEdge = toPos;
-        }
-
-        if (newLeft > rightEdge) {
-          newLeft = rightEdge;
-        }
-
-        that.resPercentage = that.convertFromPxToPercent(newLeft);
-        that.getThumbFrom().style.left = that.resPercentage + '%';
-        that.notifyObservers(4
-        /* SET_FROM */
-        , JSON.stringify({
-          from: that.resPercentage,
-          min: that.settings.min,
-          max: that.settings.max
-        }));
-        that.setColoredRange();
-      } // eslint-disable-next-line no-inner-declarations
-
-
-      function onMouseUp() {
-        document.removeEventListener('mouseup', onMouseUp);
-        document.removeEventListener('mousemove', onMouseMove);
-      }
-    }
-  }
-
-  handleToThumb(e) {
-    e.preventDefault();
-
-    if (this.settings.isVertical) {
-      const shiftY = e.clientY - this.getThumbTo().getBoundingClientRect().top;
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp); // eslint-disable-next-line @typescript-eslint/no-this-alias
-
-      const that = this; // eslint-disable-next-line no-inner-declarations
-
-      function onMouseMove(event) {
-        let newTop = event.clientY - shiftY - that.getRange().getBoundingClientRect().top;
-        const fromPos = that.getThumbFrom().getBoundingClientRect().top - (that.getRange().getBoundingClientRect().top - that.getThumbLengthInPx() / 2);
-
-        if (newTop < fromPos) {
-          newTop = fromPos;
-        }
-
-        const bottom = that.getSliderLengthInPx() - that.getThumbFrom().offsetWidth / 4;
-
-        if (newTop > bottom) {
-          newTop = bottom;
-        }
-
-        that.resPercentage = that.convertFromPxToPercent(newTop);
-        that.getThumbTo().style.top = that.resPercentage + '%';
-        that.notifyObservers(5
-        /* SET_TO */
-        , JSON.stringify({
-          from: 0,
-          to: that.resPercentage,
-          min: that.settings.min,
-          max: that.settings.max
-        }));
-        that.setColoredRange();
-      } // eslint-disable-next-line no-inner-declarations
-
-
-      function onMouseUp() {
-        document.removeEventListener('mouseup', onMouseUp);
-        document.removeEventListener('mousemove', onMouseMove);
-      }
-    } else {
-      const shiftX = e.clientX - this.getThumbTo().getBoundingClientRect().left;
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp); // eslint-disable-next-line @typescript-eslint/no-this-alias
-
-      const that = this; // eslint-disable-next-line no-inner-declarations
-
-      function onMouseMove(e) {
-        let newLeft = e.clientX - shiftX - that.getRange().getBoundingClientRect().left;
-        const fromPos = that.getThumbFrom().getBoundingClientRect().left - (that.getRange().getBoundingClientRect().left - that.getThumbLengthInPx() / 2);
-
-        if (newLeft < fromPos) {
-          newLeft = fromPos;
-        }
-
-        const rightEdge = that.getSliderLengthInPx() - that.getThumbFrom().offsetWidth / 4;
-
-        if (newLeft > rightEdge) {
-          newLeft = rightEdge;
-        }
-
-        that.resPercentage = that.convertFromPxToPercent(newLeft);
-        that.getThumbTo().style.left = that.resPercentage + '%';
-        that.notifyObservers(5
-        /* SET_TO */
-        , JSON.stringify({
-          from: 0,
-          to: that.resPercentage,
-          min: that.settings.min,
-          max: that.settings.max
-        }));
-        that.setColoredRange();
-      } // eslint-disable-next-line no-inner-declarations
-
-
-      function onMouseUp() {
-        document.removeEventListener('mouseup', onMouseUp);
-        document.removeEventListener('mousemove', onMouseMove);
       }
     }
   }
@@ -1750,4 +1573,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.04ab4cd73451f38019d3.js.map
+//# sourceMappingURL=main.6c478e7abae85ad792c0.js.map

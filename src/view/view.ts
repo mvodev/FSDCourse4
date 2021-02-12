@@ -109,7 +109,6 @@ class View extends EventObservable {
       // eslint-disable-next-line no-inner-declarations
       function onMouseMove(e: MouseEvent) {
         let newLeft = e.clientX - shift - that.getRange().getBoundingClientRect().left;
-        console.log('new left='+newLeft);
         if(data==="thumbTo"){
           const fromPos = that.getThumbFrom().getBoundingClientRect().left - (that.getRange().getBoundingClientRect().left - that.getThumbLengthInPx() / 2);
           if (newLeft < fromPos ) {
@@ -129,7 +128,6 @@ class View extends EventObservable {
             rightEdge = toPos;
           }
         }
-        console.log('right edge=' + rightEdge);
         if (newLeft > rightEdge) {
           newLeft = rightEdge;
         }
@@ -141,7 +139,6 @@ class View extends EventObservable {
         else if (data === "thumbTo") {
           that.notifyObservers(Messages.SET_TO, JSON.stringify({ to: that.resPercentage }));
         }
-        console.log('resPercentage='+that.resPercentage+" targetElem"+targetElem);
       }
       // eslint-disable-next-line no-inner-declarations
       function onMouseUp() {
@@ -252,7 +249,9 @@ class View extends EventObservable {
   private setColoredRange():void {
     if (this.settings.isRange) {
       if (this.settings.isVertical) {
-        this.slider.getColoredRange().style.top = (this.getThumbFrom().getBoundingClientRect().top - 2 * this.getThumbLengthInPx()) + 'px';
+        const temp = (this.getThumbFrom().getBoundingClientRect().top) -this.getRange().getBoundingClientRect().top + this.getThumbLengthInPx()/2+ 'px';
+        console.log("inside set colored range temp="+temp);
+        this.slider.getColoredRange().style.top = temp;
         this.slider.getColoredRange().style.height = (this.getThumbTo().getBoundingClientRect().top - this.getThumbFrom().getBoundingClientRect().top + this.getThumbLengthInPx() / 2) + 'px';
       }
       else {
