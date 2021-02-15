@@ -6,15 +6,15 @@ import { ColoredRange } from './coloredRange';
 import { ISettings } from '../../model/ISettings';
 class Slider {
 
- private thumbFrom: Thumb;
- private thumbTo: Thumb;
- private range: Range;
- private thumbLabelFrom: ThumbLabel;
- private thumbLabelTo: ThumbLabel;
- private rangeLabel: RangeLabel;
- private rootElem: HTMLDivElement;
- private container: HTMLDivElement;
- private coloredRange: ColoredRange;
+ private thumbFrom!: Thumb;
+ private thumbTo!: Thumb;
+ private range!: Range;
+ private thumbLabelFrom!: ThumbLabel;
+ private thumbLabelTo!: ThumbLabel;
+ private rangeLabel!: RangeLabel;
+ private rootElem!: HTMLDivElement;
+ private container!: HTMLDivElement;
+ private coloredRange!: ColoredRange;
  private settings: ISettings;
  private numberOfMarking: number;
 
@@ -22,15 +22,7 @@ class Slider {
   this.settings = s;
   this.rootElem = rootElem;
   this.numberOfMarking = numberOfMarking;
-  this.thumbTo = new Thumb('fsd-slider__thumb-to');
-  this.thumbLabelTo = new ThumbLabel();
-  this.thumbFrom = new Thumb('fsd-slider__thumb-from');
-  this.thumbLabelFrom = new ThumbLabel();
-  this.range = new Range();
-  this.coloredRange = new ColoredRange();
-  this.rangeLabel = new RangeLabel(this.numberOfMarking,
-   this.settings.isVertical !== undefined ? this.settings.isVertical : false);
-  this.container = document.createElement('div');
+  this.initSliderComponents();
  }
 
  render() :void{
@@ -88,6 +80,17 @@ class Slider {
   if (this.settings.isRange) {
    this.thumbLabelTo.getThumbLabelContainer().classList.add('fsd-slider__thumb-label_is_vertical');
   }
+ }
+ private initSliderComponents() {
+  this.thumbTo = new Thumb('fsd-slider__thumb-to');
+  this.thumbLabelTo = new ThumbLabel();
+  this.thumbFrom = new Thumb('fsd-slider__thumb-from');
+  this.thumbLabelFrom = new ThumbLabel();
+  this.range = new Range();
+  this.coloredRange = new ColoredRange();
+  this.rangeLabel = new RangeLabel(this.numberOfMarking,
+  this.settings.isVertical !== undefined ? this.settings.isVertical : false);
+  this.container = document.createElement('div');
  }
 }
 export {Slider}

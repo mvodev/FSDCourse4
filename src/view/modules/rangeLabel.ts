@@ -1,23 +1,12 @@
 class RangeLabel {
- private rangeLabelContainer: HTMLDivElement;
- private minLabel: HTMLSpanElement;
- private maxLabel: HTMLSpanElement;
+ private rangeLabelContainer!: HTMLDivElement;
+ private minLabel!: HTMLSpanElement;
+ private maxLabel!: HTMLSpanElement;
 
  constructor(numberOfMarking: number, isVertical: boolean) {
-  this.rangeLabelContainer = document.createElement('div');
-  this.rangeLabelContainer.classList.add('fsd-slider__range-label');
-  this.minLabel = document.createElement('span');
-  this.rangeLabelContainer.appendChild(this.minLabel);
-  for (let i = 0; i < numberOfMarking; i++) {
-   const marking = document.createElement('span');
-   if (isVertical) {
-    marking.innerText = '-';
-   } else marking.innerText = '|';
-   this.rangeLabelContainer.appendChild(marking);
-  }
-  this.maxLabel = document.createElement('span');
-  this.rangeLabelContainer.appendChild(this.maxLabel);
+  this.initComponents(numberOfMarking,isVertical);
  }
+
  getRangeLabel():HTMLDivElement {
   return this.rangeLabelContainer;
  }
@@ -32,6 +21,21 @@ class RangeLabel {
  }
  getMaxRange():HTMLSpanElement {
   return this.maxLabel;
+ }
+ private initComponents(numberOfMarking: number, isVertical: boolean) {
+  this.rangeLabelContainer = document.createElement('div');
+  this.rangeLabelContainer.classList.add('fsd-slider__range-label');
+  this.minLabel = document.createElement('span');
+  this.rangeLabelContainer.appendChild(this.minLabel);
+  for (let i = 0; i < numberOfMarking; i++) {
+   const marking = document.createElement('span');
+   if (isVertical) {
+    marking.innerText = '-';
+   } else marking.innerText = '|';
+   this.rangeLabelContainer.appendChild(marking);
+  }
+  this.maxLabel = document.createElement('span');
+  this.rangeLabelContainer.appendChild(this.maxLabel);
  }
 }
 export {RangeLabel}
