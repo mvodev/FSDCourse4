@@ -3,21 +3,14 @@ import { IModelFacade } from './IModelFacade';
 import { ISettings } from './ISettings';
 import { EventObservable } from '../observers/EventObservable';
 import { Utils } from '../utils/Utils';
+import {defaultSettings} from './defaultSettings';
 class Model extends EventObservable implements IModelFacade {
   private settings: ISettings
-  private defaultSettings: ISettings = {
-  min: 0,
-  max: 10,
-  from: 5,
-  step:1,
-  to:8,
-  isRange: false,
-  isVertical: false,
-  hideThumbLabel: false,
-  };
+  
   constructor(settings: ISettings) {
     super();
-    this.settings = Object.assign({},this.defaultSettings);
+    this.settings = Object.assign({},defaultSettings);
+    console.log(JSON.stringify(defaultSettings));
     this.validateSettings(settings);
   }
   getSettings(): string {

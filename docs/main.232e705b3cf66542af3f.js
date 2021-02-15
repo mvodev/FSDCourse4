@@ -346,20 +346,13 @@ const EventObservable_1 = __webpack_require__(/*! ../observers/EventObservable *
 
 const Utils_1 = __webpack_require__(/*! ../utils/Utils */ "./utils/Utils.ts");
 
+const defaultSettings_1 = __webpack_require__(/*! ./defaultSettings */ "./model/defaultSettings.ts");
+
 class Model extends EventObservable_1.EventObservable {
   constructor(settings) {
     super();
-    this.defaultSettings = {
-      min: 0,
-      max: 10,
-      from: 5,
-      step: 1,
-      to: 8,
-      isRange: false,
-      isVertical: false,
-      hideThumbLabel: false
-    };
-    this.settings = Object.assign({}, this.defaultSettings);
+    this.settings = Object.assign({}, defaultSettings_1.defaultSettings);
+    console.log(JSON.stringify(defaultSettings_1.defaultSettings));
     this.validateSettings(settings);
   }
 
@@ -515,6 +508,34 @@ class Model extends EventObservable_1.EventObservable {
 }
 
 exports.Model = Model;
+
+/***/ }),
+
+/***/ "./model/defaultSettings.ts":
+/*!**********************************!*\
+  !*** ./model/defaultSettings.ts ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.defaultSettings = void 0;
+const defaultSettings = {
+  min: 0,
+  max: 10,
+  from: 5,
+  step: 1,
+  to: 8,
+  isRange: false,
+  isVertical: false,
+  hideThumbLabel: false
+};
+exports.defaultSettings = defaultSettings;
 
 /***/ }),
 
@@ -1471,4 +1492,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.21fd6478fcbf34898b7c.js.map
+//# sourceMappingURL=main.232e705b3cf66542af3f.js.map
