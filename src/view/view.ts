@@ -7,19 +7,12 @@ class View extends EventObservable {
   private slider: Slider;
   private settings: ISettings;
   private rootElem: HTMLDivElement;
-  private thumbInPercentage: number;
   private resPercentage: number;
   constructor(settings: ISettings, root: HTMLDivElement,) {
     super();
     this.settings = settings;
     this.rootElem = root;
     this.slider = new Slider(this.rootElem, this.settings, Constants.NUMBER_OF_MARKING);
-    if (this.settings.isVertical) {
-      this.thumbInPercentage = Math.abs(this.getThumbFrom().offsetHeight / this.slider.getRange().offsetHeight) * 100;
-    }
-    else {
-      this.thumbInPercentage = Math.abs(this.getThumbFrom().offsetWidth / this.slider.getRange().offsetWidth) * 100;
-    }
     this.resPercentage = 0;
   }
   private render():void {
@@ -149,52 +142,13 @@ class View extends EventObservable {
     }
     this.setColoredRange();
   }
-  private getRangeLabel(): HTMLDivElement {
-    return this.slider.getRangeLabel();
-  }
-  getSlider():Slider {
-    return this.slider;
-  }
-  private getSliderLengthInPx() {
-    if (this.settings.isVertical) {
-      return this.getRange().offsetHeight + this.getThumbFrom().offsetHeight;
-    }
-    else {
-      return this.getRange().offsetWidth + this.getThumbFrom().offsetWidth;
-    }
-  }
-  private getThumbLengthInPx() {
-    if (this.settings.isVertical) {
-      return this.getThumbFrom().offsetHeight;
-    }
-    else {
-      return this.getThumbFrom().offsetWidth;
-    }
-  }
-  private getThumbLengthInPercentage() {
-    if (this.settings.isVertical) {
-      return +((this.getThumbFrom().offsetHeight / this.getSliderLengthInPx()) * 100).toFixed(1);
-    }
-    else {
-      return +((this.getThumbFrom().offsetWidth / this.getSliderLengthInPx()) * 100).toFixed(1);
-    }
-  }
-
-  private getRange() {
-    return this.slider.getRange();
-  }
-  private getThumbFrom() {
-    return this.slider.getThumbFrom();
-  }
-
-  private getThumbTo() {
-    return this.slider.getThumbTo();
-  }
+  
   refreshView(msg: Messages, s: ISettings):void {
     if (msg === Messages.INIT) {
       this.render();
     }
     if (msg === Messages.INIT || msg === Messages.UPDATE) {
+      this.updateViewSettings(s);
       if (!s.hideThumbLabel) {
         this.slider.getThumbLabelFrom().showLabel();
         this.setThumbToValue('thumbFrom');
@@ -249,9 +203,7 @@ class View extends EventObservable {
   private setColoredRange():void {
     if (this.settings.isRange) {
       if (this.settings.isVertical) {
-        const temp = (this.getThumbFrom().getBoundingClientRect().top) -this.getRange().getBoundingClientRect().top + this.getThumbLengthInPx()/2+ 'px';
-        console.log("inside set colored range temp="+temp);
-        this.slider.getColoredRange().style.top = temp;
+        this.slider.getColoredRange().style.top = (this.getThumbFrom().getBoundingClientRect().top) - this.getRange().getBoundingClientRect().top + this.getThumbLengthInPx() / 2 + 'px';
         this.slider.getColoredRange().style.height = (this.getThumbTo().getBoundingClientRect().top - this.getThumbFrom().getBoundingClientRect().top + this.getThumbLengthInPx() / 2) + 'px';
       }
       else {
@@ -291,13 +243,13 @@ class View extends EventObservable {
           if (shiftY < pivot) {
             this.resPercentage = this.convertFromPxToPercent(shiftY);
             this.getThumbFrom().style.top = this.resPercentage + '%';
-            this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage, to: 0, min: this.settings.min, max: this.settings.max }));
+            this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage}));
             this.setColoredRange();
           }
           else if (shiftY >= pivot) {
             this.resPercentage = this.convertFromPxToPercent(shiftY);
             this.getThumbTo().style.top = this.resPercentage + '%';
-            this.notifyObservers(Messages.SET_TO, JSON.stringify({ to: this.resPercentage, from: 0, min: this.settings.min, max: this.settings.max }));
+            this.notifyObservers(Messages.SET_TO, JSON.stringify({ to: this.resPercentage}));
             this.setColoredRange();
           }
         }
@@ -306,13 +258,13 @@ class View extends EventObservable {
         if (shiftY < fromPos) {
           this.resPercentage = this.convertFromPxToPercent(shiftY);
           this.getThumbFrom().style.top = this.resPercentage + '%';
-          this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage, to: 0, min: this.settings.min, max: this.settings.max }));
+          this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage}));
           this.setColoredRange();
         }
         else {   //vertical mode single thumb 
           this.resPercentage = this.convertFromPxToPercent(shiftY);
           this.getThumbFrom().style.top = this.resPercentage + '%';
-          this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage, to: 0, min: this.settings.min, max: this.settings.max }));
+          this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage}));
           this.setColoredRange();
         }
       }
@@ -324,13 +276,13 @@ class View extends EventObservable {
         if (shiftX < fromPos) {
           this.resPercentage = this.convertFromPxToPercent(shiftX);
           this.getThumbFrom().style.left = this.resPercentage + '%';
-          this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage, to: 0, min: this.settings.min, max: this.settings.max }));
+          this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage}));
           this.setColoredRange();
         }
         else if (shiftX > toPos) {
           this.resPercentage = this.convertFromPxToPercent(shiftX);
           this.getThumbTo().style.left = this.resPercentage + '%';
-          this.notifyObservers(Messages.SET_TO, JSON.stringify({ to: this.resPercentage, from: 0, min: this.settings.min, max: this.settings.max }));
+          this.notifyObservers(Messages.SET_TO, JSON.stringify({ to: this.resPercentage}));
           this.setColoredRange();
         }
         else if (shiftX >= fromPos && shiftX <= toPos) {
@@ -338,13 +290,13 @@ class View extends EventObservable {
           if (shiftX < pivot) {
             this.resPercentage = this.convertFromPxToPercent(shiftX);
             this.getThumbFrom().style.left = this.resPercentage + '%';
-            this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage, to: 0, min: this.settings.min, max: this.settings.max }));
+            this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage}));
             this.setColoredRange();
           }
           else if (shiftX >= pivot) {
             this.resPercentage = this.convertFromPxToPercent(shiftX);
             this.getThumbTo().style.left = this.resPercentage + '%';
-            this.notifyObservers(Messages.SET_TO, JSON.stringify({ to: this.resPercentage, from: 0, min: this.settings.min, max: this.settings.max }));
+            this.notifyObservers(Messages.SET_TO, JSON.stringify({ to: this.resPercentage}));
             this.setColoredRange();
           }
         }
@@ -352,7 +304,7 @@ class View extends EventObservable {
       else { //horizontal mode single thumb
         this.resPercentage = this.convertFromPxToPercent(shiftX);
         this.getThumbFrom().style.left = this.resPercentage + '%';
-        this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage, to: 0, min: this.settings.min, max: this.settings.max }));
+        this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage}));
         this.setColoredRange();
       }
     }
@@ -387,5 +339,49 @@ class View extends EventObservable {
       this.setColoredRange();
     }
   }
+  private getRangeLabel(): HTMLDivElement {
+    return this.slider.getRangeLabel();
+  }
+  getSlider(): Slider {
+    return this.slider;
+  }
+  private getSliderLengthInPx() {
+    if (this.settings.isVertical) {
+      return this.getRange().offsetHeight + this.getThumbFrom().offsetHeight;
+    }
+    else {
+      return this.getRange().offsetWidth + this.getThumbFrom().offsetWidth;
+    }
+  }
+  private getThumbLengthInPx() {
+    if (this.settings.isVertical) {
+      return this.getThumbFrom().offsetHeight;
+    }
+    else {
+      return this.getThumbFrom().offsetWidth;
+    }
+  }
+  private getThumbLengthInPercentage() {
+    if (this.settings.isVertical) {
+      return +((this.getThumbFrom().offsetHeight / this.getSliderLengthInPx()) * 100).toFixed(1);
+    }
+    else {
+      return +((this.getThumbFrom().offsetWidth / this.getSliderLengthInPx()) * 100).toFixed(1);
+    }
+  }
+  private getRange() {
+    return this.slider.getRange();
+  }
+  private getThumbFrom() {
+    return this.slider.getThumbFrom();
+  }
+
+  private getThumbTo() {
+    return this.slider.getThumbTo();
+  }
+  private updateViewSettings(s: ISettings) {
+    this.settings = Object.assign(this.settings, s);
+  }
 }
+
 export {View}

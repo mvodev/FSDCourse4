@@ -742,13 +742,6 @@ class View extends EventObservable_1.EventObservable {
     this.settings = settings;
     this.rootElem = root;
     this.slider = new Slider_1.Slider(this.rootElem, this.settings, Constants_1.Constants.NUMBER_OF_MARKING);
-
-    if (this.settings.isVertical) {
-      this.thumbInPercentage = Math.abs(this.getThumbFrom().offsetHeight / this.slider.getRange().offsetHeight) * 100;
-    } else {
-      this.thumbInPercentage = Math.abs(this.getThumbFrom().offsetWidth / this.slider.getRange().offsetWidth) * 100;
-    }
-
     this.resPercentage = 0;
   }
 
@@ -918,50 +911,6 @@ class View extends EventObservable_1.EventObservable {
     this.setColoredRange();
   }
 
-  getRangeLabel() {
-    return this.slider.getRangeLabel();
-  }
-
-  getSlider() {
-    return this.slider;
-  }
-
-  getSliderLengthInPx() {
-    if (this.settings.isVertical) {
-      return this.getRange().offsetHeight + this.getThumbFrom().offsetHeight;
-    } else {
-      return this.getRange().offsetWidth + this.getThumbFrom().offsetWidth;
-    }
-  }
-
-  getThumbLengthInPx() {
-    if (this.settings.isVertical) {
-      return this.getThumbFrom().offsetHeight;
-    } else {
-      return this.getThumbFrom().offsetWidth;
-    }
-  }
-
-  getThumbLengthInPercentage() {
-    if (this.settings.isVertical) {
-      return +(this.getThumbFrom().offsetHeight / this.getSliderLengthInPx() * 100).toFixed(1);
-    } else {
-      return +(this.getThumbFrom().offsetWidth / this.getSliderLengthInPx() * 100).toFixed(1);
-    }
-  }
-
-  getRange() {
-    return this.slider.getRange();
-  }
-
-  getThumbFrom() {
-    return this.slider.getThumbFrom();
-  }
-
-  getThumbTo() {
-    return this.slider.getThumbTo();
-  }
-
   refreshView(msg, s) {
     if (msg === 0
     /* INIT */
@@ -974,6 +923,8 @@ class View extends EventObservable_1.EventObservable {
     || msg === 1
     /* UPDATE */
     ) {
+        this.updateViewSettings(s);
+
         if (!s.hideThumbLabel) {
           this.slider.getThumbLabelFrom().showLabel();
           this.setThumbToValue('thumbFrom');
@@ -1031,9 +982,7 @@ class View extends EventObservable_1.EventObservable {
   setColoredRange() {
     if (this.settings.isRange) {
       if (this.settings.isVertical) {
-        const temp = this.getThumbFrom().getBoundingClientRect().top - this.getRange().getBoundingClientRect().top + this.getThumbLengthInPx() / 2 + 'px';
-        console.log("inside set colored range temp=" + temp);
-        this.slider.getColoredRange().style.top = temp;
+        this.slider.getColoredRange().style.top = this.getThumbFrom().getBoundingClientRect().top - this.getRange().getBoundingClientRect().top + this.getThumbLengthInPx() / 2 + 'px';
         this.slider.getColoredRange().style.height = this.getThumbTo().getBoundingClientRect().top - this.getThumbFrom().getBoundingClientRect().top + this.getThumbLengthInPx() / 2 + 'px';
       } else {
         this.slider.getColoredRange().style.left = this.getThumbFrom().getBoundingClientRect().left - this.getRange().getBoundingClientRect().left + 'px';
@@ -1090,10 +1039,7 @@ class View extends EventObservable_1.EventObservable {
             this.notifyObservers(4
             /* SET_FROM */
             , JSON.stringify({
-              from: this.resPercentage,
-              to: 0,
-              min: this.settings.min,
-              max: this.settings.max
+              from: this.resPercentage
             }));
             this.setColoredRange();
           } else if (shiftY >= pivot) {
@@ -1102,10 +1048,7 @@ class View extends EventObservable_1.EventObservable {
             this.notifyObservers(5
             /* SET_TO */
             , JSON.stringify({
-              to: this.resPercentage,
-              from: 0,
-              min: this.settings.min,
-              max: this.settings.max
+              to: this.resPercentage
             }));
             this.setColoredRange();
           }
@@ -1117,10 +1060,7 @@ class View extends EventObservable_1.EventObservable {
           this.notifyObservers(4
           /* SET_FROM */
           , JSON.stringify({
-            from: this.resPercentage,
-            to: 0,
-            min: this.settings.min,
-            max: this.settings.max
+            from: this.resPercentage
           }));
           this.setColoredRange();
         } else {
@@ -1130,10 +1070,7 @@ class View extends EventObservable_1.EventObservable {
           this.notifyObservers(4
           /* SET_FROM */
           , JSON.stringify({
-            from: this.resPercentage,
-            to: 0,
-            min: this.settings.min,
-            max: this.settings.max
+            from: this.resPercentage
           }));
           this.setColoredRange();
         }
@@ -1152,10 +1089,7 @@ class View extends EventObservable_1.EventObservable {
           this.notifyObservers(4
           /* SET_FROM */
           , JSON.stringify({
-            from: this.resPercentage,
-            to: 0,
-            min: this.settings.min,
-            max: this.settings.max
+            from: this.resPercentage
           }));
           this.setColoredRange();
         } else if (shiftX > toPos) {
@@ -1164,10 +1098,7 @@ class View extends EventObservable_1.EventObservable {
           this.notifyObservers(5
           /* SET_TO */
           , JSON.stringify({
-            to: this.resPercentage,
-            from: 0,
-            min: this.settings.min,
-            max: this.settings.max
+            to: this.resPercentage
           }));
           this.setColoredRange();
         } else if (shiftX >= fromPos && shiftX <= toPos) {
@@ -1179,10 +1110,7 @@ class View extends EventObservable_1.EventObservable {
             this.notifyObservers(4
             /* SET_FROM */
             , JSON.stringify({
-              from: this.resPercentage,
-              to: 0,
-              min: this.settings.min,
-              max: this.settings.max
+              from: this.resPercentage
             }));
             this.setColoredRange();
           } else if (shiftX >= pivot) {
@@ -1191,10 +1119,7 @@ class View extends EventObservable_1.EventObservable {
             this.notifyObservers(5
             /* SET_TO */
             , JSON.stringify({
-              to: this.resPercentage,
-              from: 0,
-              min: this.settings.min,
-              max: this.settings.max
+              to: this.resPercentage
             }));
             this.setColoredRange();
           }
@@ -1206,10 +1131,7 @@ class View extends EventObservable_1.EventObservable {
         this.notifyObservers(4
         /* SET_FROM */
         , JSON.stringify({
-          from: this.resPercentage,
-          to: 0,
-          min: this.settings.min,
-          max: this.settings.max
+          from: this.resPercentage
         }));
         this.setColoredRange();
       }
@@ -1242,6 +1164,54 @@ class View extends EventObservable_1.EventObservable {
 
       this.setColoredRange();
     }
+  }
+
+  getRangeLabel() {
+    return this.slider.getRangeLabel();
+  }
+
+  getSlider() {
+    return this.slider;
+  }
+
+  getSliderLengthInPx() {
+    if (this.settings.isVertical) {
+      return this.getRange().offsetHeight + this.getThumbFrom().offsetHeight;
+    } else {
+      return this.getRange().offsetWidth + this.getThumbFrom().offsetWidth;
+    }
+  }
+
+  getThumbLengthInPx() {
+    if (this.settings.isVertical) {
+      return this.getThumbFrom().offsetHeight;
+    } else {
+      return this.getThumbFrom().offsetWidth;
+    }
+  }
+
+  getThumbLengthInPercentage() {
+    if (this.settings.isVertical) {
+      return +(this.getThumbFrom().offsetHeight / this.getSliderLengthInPx() * 100).toFixed(1);
+    } else {
+      return +(this.getThumbFrom().offsetWidth / this.getSliderLengthInPx() * 100).toFixed(1);
+    }
+  }
+
+  getRange() {
+    return this.slider.getRange();
+  }
+
+  getThumbFrom() {
+    return this.slider.getThumbFrom();
+  }
+
+  getThumbTo() {
+    return this.slider.getThumbTo();
+  }
+
+  updateViewSettings(s) {
+    this.settings = Object.assign(this.settings, s);
   }
 
 }
@@ -1573,4 +1543,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.6c478e7abae85ad792c0.js.map
+//# sourceMappingURL=main.585cc7d2f987f6d26408.js.map
