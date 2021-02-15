@@ -8,7 +8,7 @@ $sl1.fsdSlider({
  from: 8,
  step: 1,
  to: 18,
- isVertical: false,
+ isVertical: true,
  hideThumbLabel: false,
  isRange: true,
 }, 

@@ -30,7 +30,7 @@ class View extends EventObservable {
   }
   bindEvents():void {
     this.getThumbFrom().addEventListener('mousedown', this.handleThumb.bind(this,"thumbFrom"));
-    this.getRangeLabel().onmousedown = this.handleRange.bind(this);
+    this.getRangeLabel().addEventListener('mousedown',this.handleRange.bind(this));
     if (this.settings.isRange) {
       this.getThumbTo().addEventListener('mousedown', this.handleThumb.bind(this,"thumbTo"));
     }
@@ -220,85 +220,64 @@ class View extends EventObservable {
     }
   }
   private handleRange(e: MouseEvent) {
-    let shift:number;
+    let shift:number,fromPos:number;
     if(this.settings.isVertical){
       shift = e.clientY - this.getRange().getBoundingClientRect().top;
+      fromPos = this.getThumbFrom().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2);
     }
     else{
       shift = e.clientX - this.getRange().getBoundingClientRect().left;
+      fromPos = this.getThumbFrom().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2);
     }
     if (this.settings.isVertical) {//vertical mode
-      const fromPos = this.getThumbFrom().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2);
       if (this.settings.isRange) {
         const toPos = this.getThumbTo().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2);
         if (shift < fromPos) {
-          this.resPercentage = this.convertFromPxToPercent(shift);
-          this.getThumbFrom().style.top = this.resPercentage + '%';
-          this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage }));
+          this.dispatchEvent(shift, "thumbFrom");
         }
         else if (shift > toPos) {
-          this.resPercentage = this.convertFromPxToPercent(shift);
-          this.getThumbTo().style.top = this.resPercentage + '%';
-          this.notifyObservers(Messages.SET_TO, JSON.stringify({ to: this.resPercentage}));
+          this.dispatchEvent(shift, "thumbTo");
         }
         else if (shift >= fromPos && shift <= toPos) {
           const pivot = (toPos - fromPos);
           if (shift < pivot) {
-            this.resPercentage = this.convertFromPxToPercent(shift);
-            this.getThumbFrom().style.top = this.resPercentage + '%';
-            this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage}));
+            this.dispatchEvent(shift, "thumbFrom");
           }
           else if (shift >= pivot) {
-            this.resPercentage = this.convertFromPxToPercent(shift);
-            this.getThumbTo().style.top = this.resPercentage + '%';
-            this.notifyObservers(Messages.SET_TO, JSON.stringify({ to: this.resPercentage}));
+            this.dispatchEvent(shift, "thumbTo");
           }
         }
       }
       else {
         if (shift < fromPos) {
-          this.resPercentage = this.convertFromPxToPercent(shift);
-          this.getThumbFrom().style.top = this.resPercentage + '%';
-          this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage}));
+          this.dispatchEvent(shift, "thumbFrom");
         }
         else {   //vertical mode single thumb 
-          this.resPercentage = this.convertFromPxToPercent(shift);
-          this.getThumbFrom().style.top = this.resPercentage + '%';
-          this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage}));
+          this.dispatchEvent(shift, "thumbFrom");
         }
       }
     } else { //horizontal mode
-      const fromPos = this.getThumbFrom().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2);
+      
       if (this.settings.isRange) {
         const toPos = this.getThumbTo().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2);
         if (shift < fromPos) {
-          this.resPercentage = this.convertFromPxToPercent(shift);
-          this.getThumbFrom().style.left = this.resPercentage + '%';
-          this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage}));
+          this.dispatchEvent(shift, "thumbFrom");
         }
         else if (shift > toPos) {
-          this.resPercentage = this.convertFromPxToPercent(shift);
-          this.getThumbTo().style.left = this.resPercentage + '%';
-          this.notifyObservers(Messages.SET_TO, JSON.stringify({ to: this.resPercentage}));
+          this.dispatchEvent(shift, "thumbTo");
         }
         else if (shift >= fromPos && shift <= toPos) {
           const pivot = toPos - fromPos;
           if (shift < pivot) {
-            this.resPercentage = this.convertFromPxToPercent(shift);
-            this.getThumbFrom().style.left = this.resPercentage + '%';
-            this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage}));
+            this.dispatchEvent(shift, "thumbFrom");
           }
           else if (shift >= pivot) {
-            this.resPercentage = this.convertFromPxToPercent(shift);
-            this.getThumbTo().style.left = this.resPercentage + '%';
-            this.notifyObservers(Messages.SET_TO, JSON.stringify({ to: this.resPercentage}));
+            this.dispatchEvent(shift,"thumbTo");
           }
         }
       }
       else { //horizontal mode single thumb
-        this.resPercentage = this.convertFromPxToPercent(shift);
-        this.getThumbFrom().style.left = this.resPercentage + '%';
-        this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage}));
+        this.dispatchEvent(shift,"thumbFrom");
       }
     }
     this.setColoredRange();
@@ -310,6 +289,27 @@ class View extends EventObservable {
 
   private convertFromValueToPercent(value: number): number {
     return +((100 / Math.abs(this.settings.max - this.settings.min)) * (Math.abs(value - this.settings.min))).toFixed(2);
+  }
+  private dispatchEvent(shift:number,type:string){
+    this.resPercentage = this.convertFromPxToPercent(shift);
+    if(type==="thumbFrom"){
+      if(this.settings.isVertical){
+        this.getThumbFrom().style.top = this.resPercentage + '%';
+      }
+      else{
+        this.getThumbFrom().style.left = this.resPercentage + '%';
+      }
+      this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage }));
+    }
+    else{
+      if (this.settings.isVertical) {
+        this.getThumbTo().style.top = this.resPercentage + '%';
+      }
+      else {
+        this.getThumbTo().style.left = this.resPercentage + '%';
+      }
+      this.notifyObservers(Messages.SET_TO, JSON.stringify({ to: this.resPercentage }));
+    }
   }
   private setThumbToValue(type: string) :void{
     if (type === 'thumbFrom') {

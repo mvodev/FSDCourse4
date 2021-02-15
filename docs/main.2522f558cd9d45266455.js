@@ -221,7 +221,7 @@ $sl1.fsdSlider({
  from: 8,
  step: 1,
  to: 18,
- isVertical: false,
+ isVertical: true,
  hideThumbLabel: false,
  isRange: true,
 }, 
@@ -763,7 +763,7 @@ class View extends EventObservable_1.EventObservable {
 
   bindEvents() {
     this.getThumbFrom().addEventListener('mousedown', this.handleThumb.bind(this, "thumbFrom"));
-    this.getRangeLabel().onmousedown = this.handleRange.bind(this);
+    this.getRangeLabel().addEventListener('mousedown', this.handleRange.bind(this)); //this.getRangeLabel().onmousedown = this.handleRange.bind(this);
 
     if (this.settings.isRange) {
       this.getThumbTo().addEventListener('mousedown', this.handleThumb.bind(this, "thumbTo"));
@@ -995,131 +995,63 @@ class View extends EventObservable_1.EventObservable {
   }
 
   handleRange(e) {
-    let shift;
+    let shift, fromPos;
 
     if (this.settings.isVertical) {
       shift = e.clientY - this.getRange().getBoundingClientRect().top;
+      fromPos = this.getThumbFrom().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2);
     } else {
       shift = e.clientX - this.getRange().getBoundingClientRect().left;
+      fromPos = this.getThumbFrom().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2);
     }
 
     if (this.settings.isVertical) {
       //vertical mode
-      const fromPos = this.getThumbFrom().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2);
-
       if (this.settings.isRange) {
         const toPos = this.getThumbTo().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2);
 
         if (shift < fromPos) {
-          this.resPercentage = this.convertFromPxToPercent(shift);
-          this.getThumbFrom().style.top = this.resPercentage + '%';
-          this.notifyObservers(4
-          /* SET_FROM */
-          , JSON.stringify({
-            from: this.resPercentage
-          }));
+          this.dispatchEvent(shift, "thumbFrom");
         } else if (shift > toPos) {
-          this.resPercentage = this.convertFromPxToPercent(shift);
-          this.getThumbTo().style.top = this.resPercentage + '%';
-          this.notifyObservers(5
-          /* SET_TO */
-          , JSON.stringify({
-            to: this.resPercentage
-          }));
+          this.dispatchEvent(shift, "thumbTo");
         } else if (shift >= fromPos && shift <= toPos) {
           const pivot = toPos - fromPos;
 
           if (shift < pivot) {
-            this.resPercentage = this.convertFromPxToPercent(shift);
-            this.getThumbFrom().style.top = this.resPercentage + '%';
-            this.notifyObservers(4
-            /* SET_FROM */
-            , JSON.stringify({
-              from: this.resPercentage
-            }));
+            this.dispatchEvent(shift, "thumbFrom");
           } else if (shift >= pivot) {
-            this.resPercentage = this.convertFromPxToPercent(shift);
-            this.getThumbTo().style.top = this.resPercentage + '%';
-            this.notifyObservers(5
-            /* SET_TO */
-            , JSON.stringify({
-              to: this.resPercentage
-            }));
+            this.dispatchEvent(shift, "thumbTo");
           }
         }
       } else {
         if (shift < fromPos) {
-          this.resPercentage = this.convertFromPxToPercent(shift);
-          this.getThumbFrom().style.top = this.resPercentage + '%';
-          this.notifyObservers(4
-          /* SET_FROM */
-          , JSON.stringify({
-            from: this.resPercentage
-          }));
+          this.dispatchEvent(shift, "thumbFrom");
         } else {
           //vertical mode single thumb 
-          this.resPercentage = this.convertFromPxToPercent(shift);
-          this.getThumbFrom().style.top = this.resPercentage + '%';
-          this.notifyObservers(4
-          /* SET_FROM */
-          , JSON.stringify({
-            from: this.resPercentage
-          }));
+          this.dispatchEvent(shift, "thumbFrom");
         }
       }
     } else {
       //horizontal mode
-      const fromPos = this.getThumbFrom().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2);
-
       if (this.settings.isRange) {
         const toPos = this.getThumbTo().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2);
 
         if (shift < fromPos) {
-          this.resPercentage = this.convertFromPxToPercent(shift);
-          this.getThumbFrom().style.left = this.resPercentage + '%';
-          this.notifyObservers(4
-          /* SET_FROM */
-          , JSON.stringify({
-            from: this.resPercentage
-          }));
+          this.dispatchEvent(shift, "thumbFrom");
         } else if (shift > toPos) {
-          this.resPercentage = this.convertFromPxToPercent(shift);
-          this.getThumbTo().style.left = this.resPercentage + '%';
-          this.notifyObservers(5
-          /* SET_TO */
-          , JSON.stringify({
-            to: this.resPercentage
-          }));
+          this.dispatchEvent(shift, "thumbTo");
         } else if (shift >= fromPos && shift <= toPos) {
           const pivot = toPos - fromPos;
 
           if (shift < pivot) {
-            this.resPercentage = this.convertFromPxToPercent(shift);
-            this.getThumbFrom().style.left = this.resPercentage + '%';
-            this.notifyObservers(4
-            /* SET_FROM */
-            , JSON.stringify({
-              from: this.resPercentage
-            }));
+            this.dispatchEvent(shift, "thumbFrom");
           } else if (shift >= pivot) {
-            this.resPercentage = this.convertFromPxToPercent(shift);
-            this.getThumbTo().style.left = this.resPercentage + '%';
-            this.notifyObservers(5
-            /* SET_TO */
-            , JSON.stringify({
-              to: this.resPercentage
-            }));
+            this.dispatchEvent(shift, "thumbTo");
           }
         }
       } else {
         //horizontal mode single thumb
-        this.resPercentage = this.convertFromPxToPercent(shift);
-        this.getThumbFrom().style.left = this.resPercentage + '%';
-        this.notifyObservers(4
-        /* SET_FROM */
-        , JSON.stringify({
-          from: this.resPercentage
-        }));
+        this.dispatchEvent(shift, "thumbFrom");
       }
     }
 
@@ -1132,6 +1064,36 @@ class View extends EventObservable_1.EventObservable {
 
   convertFromValueToPercent(value) {
     return +(100 / Math.abs(this.settings.max - this.settings.min) * Math.abs(value - this.settings.min)).toFixed(2);
+  }
+
+  dispatchEvent(shift, type) {
+    this.resPercentage = this.convertFromPxToPercent(shift);
+
+    if (type === "thumbFrom") {
+      if (this.settings.isVertical) {
+        this.getThumbFrom().style.top = this.resPercentage + '%';
+      } else {
+        this.getThumbFrom().style.left = this.resPercentage + '%';
+      }
+
+      this.notifyObservers(4
+      /* SET_FROM */
+      , JSON.stringify({
+        from: this.resPercentage
+      }));
+    } else {
+      if (this.settings.isVertical) {
+        this.getThumbTo().style.top = this.resPercentage + '%';
+      } else {
+        this.getThumbTo().style.left = this.resPercentage + '%';
+      }
+
+      this.notifyObservers(5
+      /* SET_TO */
+      , JSON.stringify({
+        to: this.resPercentage
+      }));
+    }
   }
 
   setThumbToValue(type) {
@@ -1539,4 +1501,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.3c7de6097209563a5f3e.js.map
+//# sourceMappingURL=main.2522f558cd9d45266455.js.map
