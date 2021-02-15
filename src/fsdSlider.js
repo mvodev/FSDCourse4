@@ -4,7 +4,7 @@ import { Presenter } from './presenter/presenter';
 (function ($) {
  var FsdSlider = function (root, settings,callback) {
   let model = new Model(settings);
-  let view = new View(settings, root);
+  let view = new View(root);
   this.presenter = new Presenter(view, model);
   model.addObserver(this.presenter);
   view.addObserver(this.presenter);

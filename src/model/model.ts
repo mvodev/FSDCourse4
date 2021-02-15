@@ -10,7 +10,6 @@ class Model extends EventObservable implements IModelFacade {
   constructor(settings: ISettings) {
     super();
     this.settings = Object.assign({},defaultSettings);
-    console.log(JSON.stringify(defaultSettings));
     this.validateSettings(settings);
   }
   getSettings(): string {
@@ -26,9 +25,6 @@ class Model extends EventObservable implements IModelFacade {
   getMax() :number{
     return this.settings.max;
   }
-  showThumbLabel(): boolean {
-    return !this.settings.hideThumbLabel;
-  }
   setFrom(valueInPercent: number): void {
     this.settings.from = this.convertFromPercentToValue(valueInPercent);
   }
@@ -40,12 +36,6 @@ class Model extends EventObservable implements IModelFacade {
   }
   getTo() :number{
     return this.settings.to;
-  }
-  isRange(): boolean {
-    return this.settings.isRange !== undefined ? this.settings.isRange:false;
-  }
-  isVertical():boolean {
-    return this.settings.isVertical!==undefined?this.settings.isVertical:false;
   }
   getStep() :number{
     return this.settings.step ? this.settings.step : 0;

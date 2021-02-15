@@ -4,6 +4,7 @@ import { ThumbLabel } from './thumbLabel';
 import { RangeLabel } from './rangeLabel';
 import { ColoredRange } from './coloredRange';
 import { ISettings } from '../../model/ISettings';
+import { defaultSettings } from '../../model/defaultSettings';
 class Slider {
 
  private thumbFrom!: Thumb;
@@ -18,18 +19,20 @@ class Slider {
  private settings: ISettings;
  private numberOfMarking: number;
 
- constructor(rootElem: HTMLDivElement, s: ISettings, numberOfMarking: number) {
-  this.settings = s;
+ constructor(rootElem: HTMLDivElement, numberOfMarking: number) {
+  this.settings = Object.assign({},defaultSettings);
   this.rootElem = rootElem;
   this.numberOfMarking = numberOfMarking;
   this.initSliderComponents();
  }
 
- render() :void{
+ render(s:string) :void{
+  this.settings = Object.assign(this.settings,JSON.parse(s));
   this.container.classList.add('fsd-slider');
   this.container.appendChild(this.range.getRange());
   this.range.getRange().appendChild(this.coloredRange.getColoredRange());
   this.range.getRange().appendChild(this.thumbFrom.getThumb());
+  this.rangeLabel.render(s,this.numberOfMarking);
   this.thumbFrom.getThumb().appendChild(this.thumbLabelFrom.getThumbLabelContainer());
   if (this.settings.isRange) {
    this.thumbTo.getThumb().appendChild(this.thumbLabelTo.getThumbLabelContainer());
@@ -88,8 +91,7 @@ class Slider {
   this.thumbLabelFrom = new ThumbLabel();
   this.range = new Range();
   this.coloredRange = new ColoredRange();
-  this.rangeLabel = new RangeLabel(this.numberOfMarking,
-  this.settings.isVertical !== undefined ? this.settings.isVertical : false);
+  this.rangeLabel = new RangeLabel();
   this.container = document.createElement('div');
  }
 }

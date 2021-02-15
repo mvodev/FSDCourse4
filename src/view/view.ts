@@ -3,20 +3,22 @@ import { Slider } from './modules/Slider';
 import { Messages } from '../utils/Messages';
 import { Constants } from '../utils/Constants';
 import { EventObservable } from '../observers/EventObservable';
+import { defaultSettings } from '../model/defaultSettings';
 class View extends EventObservable {
   private slider: Slider;
   private settings: ISettings;
   private rootElem: HTMLDivElement;
   private resPercentage: number;
-  constructor(settings: ISettings, root: HTMLDivElement,) {
+  constructor(root: HTMLDivElement) {
     super();
-    this.settings = settings;
+    this.settings = Object.assign({},defaultSettings);
+    console.log("inside view constructor"+JSON.stringify(this.settings));
     this.rootElem = root;
-    this.slider = new Slider(this.rootElem, this.settings, Constants.NUMBER_OF_MARKING);
+    this.slider = new Slider(this.rootElem, Constants.NUMBER_OF_MARKING);
     this.resPercentage = 0;
   }
-  private render():void {
-    this.slider.render();
+  private render(s:ISettings):void {
+    this.slider.render(JSON.stringify(s));
     if (this.settings.hideThumbLabel) {
       this.slider.getThumbLabelFrom().hideLabel();
       if (this.settings.isRange) {
@@ -127,10 +129,11 @@ class View extends EventObservable {
     }
     this.setColoredRange();
   }
- 
+
   refreshView(msg: Messages, s: ISettings):void {
     if (msg === Messages.INIT) {
-      this.render();
+      this.updateViewSettings(s);
+      this.render(this.settings);
     }
     if (msg === Messages.INIT || msg === Messages.UPDATE) {
       this.updateViewSettings(s);

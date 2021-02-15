@@ -176,7 +176,7 @@ __webpack_require__.r(__webpack_exports__);
 (function ($) {
  var FsdSlider = function (root, settings,callback) {
   let model = new _model_Model__WEBPACK_IMPORTED_MODULE_1__["Model"](settings);
-  let view = new _view_View__WEBPACK_IMPORTED_MODULE_0__["View"](settings, root);
+  let view = new _view_View__WEBPACK_IMPORTED_MODULE_0__["View"](root);
   this.presenter = new _presenter_presenter__WEBPACK_IMPORTED_MODULE_2__["Presenter"](view, model);
   model.addObserver(this.presenter);
   view.addObserver(this.presenter);
@@ -352,7 +352,6 @@ class Model extends EventObservable_1.EventObservable {
   constructor(settings) {
     super();
     this.settings = Object.assign({}, defaultSettings_1.defaultSettings);
-    console.log(JSON.stringify(defaultSettings_1.defaultSettings));
     this.validateSettings(settings);
   }
 
@@ -375,10 +374,6 @@ class Model extends EventObservable_1.EventObservable {
     return this.settings.max;
   }
 
-  showThumbLabel() {
-    return !this.settings.hideThumbLabel;
-  }
-
   setFrom(valueInPercent) {
     this.settings.from = this.convertFromPercentToValue(valueInPercent);
   }
@@ -393,14 +388,6 @@ class Model extends EventObservable_1.EventObservable {
 
   getTo() {
     return this.settings.to;
-  }
-
-  isRange() {
-    return this.settings.isRange !== undefined ? this.settings.isRange : false;
-  }
-
-  isVertical() {
-    return this.settings.isVertical !== undefined ? this.settings.isVertical : false;
   }
 
   getStep() {
@@ -755,17 +742,20 @@ const Constants_1 = __webpack_require__(/*! ../utils/Constants */ "./utils/Const
 
 const EventObservable_1 = __webpack_require__(/*! ../observers/EventObservable */ "./observers/EventObservable.ts");
 
+const defaultSettings_1 = __webpack_require__(/*! ../model/defaultSettings */ "./model/defaultSettings.ts");
+
 class View extends EventObservable_1.EventObservable {
-  constructor(settings, root) {
+  constructor(root) {
     super();
-    this.settings = settings;
+    this.settings = Object.assign({}, defaultSettings_1.defaultSettings);
+    console.log("inside view constructor" + JSON.stringify(this.settings));
     this.rootElem = root;
-    this.slider = new Slider_1.Slider(this.rootElem, this.settings, Constants_1.Constants.NUMBER_OF_MARKING);
+    this.slider = new Slider_1.Slider(this.rootElem, Constants_1.Constants.NUMBER_OF_MARKING);
     this.resPercentage = 0;
   }
 
-  render() {
-    this.slider.render();
+  render(s) {
+    this.slider.render(JSON.stringify(s));
 
     if (this.settings.hideThumbLabel) {
       this.slider.getThumbLabelFrom().hideLabel();
@@ -903,7 +893,8 @@ class View extends EventObservable_1.EventObservable {
     if (msg === 0
     /* INIT */
     ) {
-        this.render();
+        this.updateViewSettings(s);
+        this.render(this.settings);
       }
 
     if (msg === 0
@@ -1186,19 +1177,23 @@ const rangeLabel_1 = __webpack_require__(/*! ./rangeLabel */ "./view/modules/ran
 
 const coloredRange_1 = __webpack_require__(/*! ./coloredRange */ "./view/modules/coloredRange.ts");
 
+const defaultSettings_1 = __webpack_require__(/*! ../../model/defaultSettings */ "./model/defaultSettings.ts");
+
 class Slider {
-  constructor(rootElem, s, numberOfMarking) {
-    this.settings = s;
+  constructor(rootElem, numberOfMarking) {
+    this.settings = Object.assign({}, defaultSettings_1.defaultSettings);
     this.rootElem = rootElem;
     this.numberOfMarking = numberOfMarking;
     this.initSliderComponents();
   }
 
-  render() {
+  render(s) {
+    this.settings = Object.assign(this.settings, JSON.parse(s));
     this.container.classList.add('fsd-slider');
     this.container.appendChild(this.range.getRange());
     this.range.getRange().appendChild(this.coloredRange.getColoredRange());
     this.range.getRange().appendChild(this.thumbFrom.getThumb());
+    this.rangeLabel.render(s, this.numberOfMarking);
     this.thumbFrom.getThumb().appendChild(this.thumbLabelFrom.getThumbLabelContainer());
 
     if (this.settings.isRange) {
@@ -1273,7 +1268,7 @@ class Slider {
     this.thumbLabelFrom = new thumbLabel_1.ThumbLabel();
     this.range = new range_1.Range();
     this.coloredRange = new coloredRange_1.ColoredRange();
-    this.rangeLabel = new rangeLabel_1.RangeLabel(this.numberOfMarking, this.settings.isVertical !== undefined ? this.settings.isVertical : false);
+    this.rangeLabel = new rangeLabel_1.RangeLabel();
     this.container = document.createElement('div');
   }
 
@@ -1362,8 +1357,28 @@ Object.defineProperty(exports, "__esModule", {
 exports.RangeLabel = void 0;
 
 class RangeLabel {
-  constructor(numberOfMarking, isVertical) {
-    this.initComponents(numberOfMarking, isVertical);
+  constructor() {
+    this.initComponents();
+  }
+
+  render(s, numberOfMarking) {
+    const {
+      isVertical
+    } = JSON.parse(s);
+    this.minLabel = document.createElement('span');
+    this.rangeLabelContainer.appendChild(this.minLabel);
+
+    for (let i = 0; i < numberOfMarking; i++) {
+      const marking = document.createElement('span');
+
+      if (isVertical) {
+        marking.innerText = '-';
+      } else marking.innerText = '|';
+
+      this.rangeLabelContainer.appendChild(marking);
+      this.maxLabel = document.createElement('span');
+      this.rangeLabelContainer.appendChild(this.maxLabel);
+    }
   }
 
   getRangeLabel() {
@@ -1386,24 +1401,9 @@ class RangeLabel {
     return this.maxLabel;
   }
 
-  initComponents(numberOfMarking, isVertical) {
+  initComponents() {
     this.rangeLabelContainer = document.createElement('div');
     this.rangeLabelContainer.classList.add('fsd-slider__range-label');
-    this.minLabel = document.createElement('span');
-    this.rangeLabelContainer.appendChild(this.minLabel);
-
-    for (let i = 0; i < numberOfMarking; i++) {
-      const marking = document.createElement('span');
-
-      if (isVertical) {
-        marking.innerText = '-';
-      } else marking.innerText = '|';
-
-      this.rangeLabelContainer.appendChild(marking);
-    }
-
-    this.maxLabel = document.createElement('span');
-    this.rangeLabelContainer.appendChild(this.maxLabel);
   }
 
 }
@@ -1492,4 +1492,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.232e705b3cf66542af3f.js.map
+//# sourceMappingURL=main.a85994c9aa91d5e2642c.js.map
