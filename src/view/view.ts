@@ -55,16 +55,16 @@ class View extends EventObservable {
       const that = this;
       // eslint-disable-next-line no-inner-declarations
       function onMouseMove(event: MouseEvent) {
-        let newTop = event.clientY - shift - that.getRange().getBoundingClientRect().top;
+        let newPos = event.clientY - shift - that.getRange().getBoundingClientRect().top;
         if (data === "thumbTo") {
           const fromPos = that.getThumbFrom().getBoundingClientRect().top - (that.getRange().getBoundingClientRect().top - that.getThumbLengthInPx() / 2);
-          if (newTop < fromPos) {
-            newTop = fromPos;
+          if (newPos < fromPos) {
+            newPos = fromPos;
           }
         }
         else {
-          if (newTop < -that.getThumbFrom().offsetWidth / 2) {
-            newTop = -that.getThumbFrom().offsetWidth / 2;
+          if (newPos < -that.getThumbFrom().offsetWidth / 2) {
+            newPos = -that.getThumbFrom().offsetWidth / 2;
           }
         }
           let bottom = that.getSliderLengthInPx() - that.getThumbLengthInPx() / 4;
@@ -74,11 +74,11 @@ class View extends EventObservable {
               bottom = toPos;
             }
           }
-          if (newTop > bottom) {
-            newTop = bottom;
+          if (newPos > bottom) {
+            newPos = bottom;
           }
-          that.resPercentage = that.convertFromPxToPercent(newTop);
-        targetElem.style.top = that.resPercentage + '%';
+          that.resPercentage = that.convertFromPxToPercent(newPos);
+          targetElem.style.top = that.resPercentage + '%';
         if (data === "thumbFrom") {
           that.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: that.resPercentage }));
         }
@@ -94,23 +94,22 @@ class View extends EventObservable {
       
     }
     else {//horizontal slider view
-      console.log('horizontal mode');
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp);
-      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      //eslint-disable-next-line @typescript-eslint/no-this-alias
       const that = this;
-      // eslint-disable-next-line no-inner-declarations
+      //eslint-disable-next-line no-inner-declarations
       function onMouseMove(e: MouseEvent) {
-        let newLeft = e.clientX - shift - that.getRange().getBoundingClientRect().left;
+        let newPos = e.clientX - shift - that.getRange().getBoundingClientRect().left;
         if(data==="thumbTo"){
           const fromPos = that.getThumbFrom().getBoundingClientRect().left - (that.getRange().getBoundingClientRect().left - that.getThumbLengthInPx() / 2);
-          if (newLeft < fromPos ) {
-            newLeft = fromPos;
+          if (newPos < fromPos ) {
+            newPos = fromPos;
           }
         }
         else{
-          if (newLeft < -that.getThumbFrom().offsetWidth / 2) {
-            newLeft = -that.getThumbFrom().offsetWidth / 2;
+          if (newPos < -that.getThumbFrom().offsetWidth / 2) {
+            newPos = -that.getThumbFrom().offsetWidth / 2;
           }
         }
         let rightEdge = that.getSliderLengthInPx() - that.getThumbFrom().offsetWidth / 4;
@@ -121,10 +120,10 @@ class View extends EventObservable {
             rightEdge = toPos;
           }
         }
-        if (newLeft > rightEdge) {
-          newLeft = rightEdge;
+        if (newPos > rightEdge) {
+          newPos = rightEdge;
         }
-        that.resPercentage = that.convertFromPxToPercent(newLeft);
+        that.resPercentage = that.convertFromPxToPercent(newPos);
         targetElem.style.left = that.resPercentage + '%';
         if (data === "thumbFrom") {
           that.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: that.resPercentage }));
@@ -142,7 +141,7 @@ class View extends EventObservable {
     }
     this.setColoredRange();
   }
-  
+ 
   refreshView(msg: Messages, s: ISettings):void {
     if (msg === Messages.INIT) {
       this.render();

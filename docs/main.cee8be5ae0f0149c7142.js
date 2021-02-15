@@ -221,7 +221,7 @@ $sl1.fsdSlider({
  from: 8,
  step: 1,
  to: 18,
- isVertical: true,
+ isVertical: false,
  hideThumbLabel: false,
  isRange: false,
 }, 
@@ -360,9 +360,7 @@ class Model extends EventObservable_1.EventObservable {
       hideThumbLabel: false
     };
     this.settings = Object.assign({}, this.defaultSettings);
-    console.log("inside model constructor before validate" + JSON.stringify(this.settings));
     this.validateSettings(settings);
-    console.log("inside model constructor after validate" + JSON.stringify(this.settings));
   }
 
   getSettings() {
@@ -795,17 +793,17 @@ class View extends EventObservable_1.EventObservable {
       const that = this; // eslint-disable-next-line no-inner-declarations
 
       function onMouseMove(event) {
-        let newTop = event.clientY - shift - that.getRange().getBoundingClientRect().top;
+        let newPos = event.clientY - shift - that.getRange().getBoundingClientRect().top;
 
         if (data === "thumbTo") {
           const fromPos = that.getThumbFrom().getBoundingClientRect().top - (that.getRange().getBoundingClientRect().top - that.getThumbLengthInPx() / 2);
 
-          if (newTop < fromPos) {
-            newTop = fromPos;
+          if (newPos < fromPos) {
+            newPos = fromPos;
           }
         } else {
-          if (newTop < -that.getThumbFrom().offsetWidth / 2) {
-            newTop = -that.getThumbFrom().offsetWidth / 2;
+          if (newPos < -that.getThumbFrom().offsetWidth / 2) {
+            newPos = -that.getThumbFrom().offsetWidth / 2;
           }
         }
 
@@ -819,11 +817,11 @@ class View extends EventObservable_1.EventObservable {
           }
         }
 
-        if (newTop > bottom) {
-          newTop = bottom;
+        if (newPos > bottom) {
+          newPos = bottom;
         }
 
-        that.resPercentage = that.convertFromPxToPercent(newTop);
+        that.resPercentage = that.convertFromPxToPercent(newPos);
         targetElem.style.top = that.resPercentage + '%';
 
         if (data === "thumbFrom") {
@@ -848,24 +846,23 @@ class View extends EventObservable_1.EventObservable {
       }
     } else {
       //horizontal slider view
-      console.log('horizontal mode');
       document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp); // eslint-disable-next-line @typescript-eslint/no-this-alias
+      document.addEventListener('mouseup', onMouseUp); //eslint-disable-next-line @typescript-eslint/no-this-alias
 
-      const that = this; // eslint-disable-next-line no-inner-declarations
+      const that = this; //eslint-disable-next-line no-inner-declarations
 
       function onMouseMove(e) {
-        let newLeft = e.clientX - shift - that.getRange().getBoundingClientRect().left;
+        let newPos = e.clientX - shift - that.getRange().getBoundingClientRect().left;
 
         if (data === "thumbTo") {
           const fromPos = that.getThumbFrom().getBoundingClientRect().left - (that.getRange().getBoundingClientRect().left - that.getThumbLengthInPx() / 2);
 
-          if (newLeft < fromPos) {
-            newLeft = fromPos;
+          if (newPos < fromPos) {
+            newPos = fromPos;
           }
         } else {
-          if (newLeft < -that.getThumbFrom().offsetWidth / 2) {
-            newLeft = -that.getThumbFrom().offsetWidth / 2;
+          if (newPos < -that.getThumbFrom().offsetWidth / 2) {
+            newPos = -that.getThumbFrom().offsetWidth / 2;
           }
         }
 
@@ -879,11 +876,11 @@ class View extends EventObservable_1.EventObservable {
           }
         }
 
-        if (newLeft > rightEdge) {
-          newLeft = rightEdge;
+        if (newPos > rightEdge) {
+          newPos = rightEdge;
         }
 
-        that.resPercentage = that.convertFromPxToPercent(newLeft);
+        that.resPercentage = that.convertFromPxToPercent(newPos);
         targetElem.style.left = that.resPercentage + '%';
 
         if (data === "thumbFrom") {
@@ -1250,14 +1247,7 @@ class Slider {
     this.settings = s;
     this.rootElem = rootElem;
     this.numberOfMarking = numberOfMarking;
-    this.thumbTo = new thumb_1.Thumb('fsd-slider__thumb-to');
-    this.thumbLabelTo = new thumbLabel_1.ThumbLabel();
-    this.thumbFrom = new thumb_1.Thumb('fsd-slider__thumb-from');
-    this.thumbLabelFrom = new thumbLabel_1.ThumbLabel();
-    this.range = new range_1.Range();
-    this.coloredRange = new coloredRange_1.ColoredRange();
-    this.rangeLabel = new rangeLabel_1.RangeLabel(this.numberOfMarking, this.settings.isVertical !== undefined ? this.settings.isVertical : false);
-    this.container = document.createElement('div');
+    this.initSliderComponents();
   }
 
   render() {
@@ -1330,6 +1320,17 @@ class Slider {
     if (this.settings.isRange) {
       this.thumbLabelTo.getThumbLabelContainer().classList.add('fsd-slider__thumb-label_is_vertical');
     }
+  }
+
+  initSliderComponents() {
+    this.thumbTo = new thumb_1.Thumb('fsd-slider__thumb-to');
+    this.thumbLabelTo = new thumbLabel_1.ThumbLabel();
+    this.thumbFrom = new thumb_1.Thumb('fsd-slider__thumb-from');
+    this.thumbLabelFrom = new thumbLabel_1.ThumbLabel();
+    this.range = new range_1.Range();
+    this.coloredRange = new coloredRange_1.ColoredRange();
+    this.rangeLabel = new rangeLabel_1.RangeLabel(this.numberOfMarking, this.settings.isVertical !== undefined ? this.settings.isVertical : false);
+    this.container = document.createElement('div');
   }
 
 }
@@ -1418,23 +1419,7 @@ exports.RangeLabel = void 0;
 
 class RangeLabel {
   constructor(numberOfMarking, isVertical) {
-    this.rangeLabelContainer = document.createElement('div');
-    this.rangeLabelContainer.classList.add('fsd-slider__range-label');
-    this.minLabel = document.createElement('span');
-    this.rangeLabelContainer.appendChild(this.minLabel);
-
-    for (let i = 0; i < numberOfMarking; i++) {
-      const marking = document.createElement('span');
-
-      if (isVertical) {
-        marking.innerText = '-';
-      } else marking.innerText = '|';
-
-      this.rangeLabelContainer.appendChild(marking);
-    }
-
-    this.maxLabel = document.createElement('span');
-    this.rangeLabelContainer.appendChild(this.maxLabel);
+    this.initComponents(numberOfMarking, isVertical);
   }
 
   getRangeLabel() {
@@ -1455,6 +1440,26 @@ class RangeLabel {
 
   getMaxRange() {
     return this.maxLabel;
+  }
+
+  initComponents(numberOfMarking, isVertical) {
+    this.rangeLabelContainer = document.createElement('div');
+    this.rangeLabelContainer.classList.add('fsd-slider__range-label');
+    this.minLabel = document.createElement('span');
+    this.rangeLabelContainer.appendChild(this.minLabel);
+
+    for (let i = 0; i < numberOfMarking; i++) {
+      const marking = document.createElement('span');
+
+      if (isVertical) {
+        marking.innerText = '-';
+      } else marking.innerText = '|';
+
+      this.rangeLabelContainer.appendChild(marking);
+    }
+
+    this.maxLabel = document.createElement('span');
+    this.rangeLabelContainer.appendChild(this.maxLabel);
   }
 
 }
@@ -1543,4 +1548,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.585cc7d2f987f6d26408.js.map
+//# sourceMappingURL=main.cee8be5ae0f0149c7142.js.map

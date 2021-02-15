@@ -18,9 +18,7 @@ class Model extends EventObservable implements IModelFacade {
   constructor(settings: ISettings) {
     super();
     this.settings = Object.assign({},this.defaultSettings);
-    console.log("inside model constructor before validate"+JSON.stringify(this.settings));
     this.validateSettings(settings);
-    console.log("inside model constructor after validate" + JSON.stringify(this.settings));
   }
   getSettings(): string {
     return JSON.stringify(this.settings);
