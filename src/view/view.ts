@@ -77,14 +77,7 @@ class View extends EventObservable {
           if (newPos > bottom) {
             newPos = bottom;
           }
-          that.resPercentage = that.convertFromPxToPercent(newPos);
-          targetElem.style.top = that.resPercentage + '%';
-        if (data === "thumbFrom") {
-          that.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: that.resPercentage }));
-        }
-        else if (data === "thumbTo") {
-          that.notifyObservers(Messages.SET_TO, JSON.stringify({ to: that.resPercentage }));
-        }
+          that.dispatchEvent(newPos,data);
       }
       // eslint-disable-next-line no-inner-declarations
       function onMouseUp() {
@@ -123,14 +116,7 @@ class View extends EventObservable {
         if (newPos > rightEdge) {
           newPos = rightEdge;
         }
-        that.resPercentage = that.convertFromPxToPercent(newPos);
-        targetElem.style.left = that.resPercentage + '%';
-        if (data === "thumbFrom") {
-          that.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: that.resPercentage }));
-        }
-        else if (data === "thumbTo") {
-          that.notifyObservers(Messages.SET_TO, JSON.stringify({ to: that.resPercentage }));
-        }
+        that.dispatchEvent(newPos,data);
       }
       // eslint-disable-next-line no-inner-declarations
       function onMouseUp() {

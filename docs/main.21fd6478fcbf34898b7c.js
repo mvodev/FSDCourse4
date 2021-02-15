@@ -763,7 +763,7 @@ class View extends EventObservable_1.EventObservable {
 
   bindEvents() {
     this.getThumbFrom().addEventListener('mousedown', this.handleThumb.bind(this, "thumbFrom"));
-    this.getRangeLabel().addEventListener('mousedown', this.handleRange.bind(this)); //this.getRangeLabel().onmousedown = this.handleRange.bind(this);
+    this.getRangeLabel().addEventListener('mousedown', this.handleRange.bind(this));
 
     if (this.settings.isRange) {
       this.getThumbTo().addEventListener('mousedown', this.handleThumb.bind(this, "thumbTo"));
@@ -821,22 +821,7 @@ class View extends EventObservable_1.EventObservable {
           newPos = bottom;
         }
 
-        that.resPercentage = that.convertFromPxToPercent(newPos);
-        targetElem.style.top = that.resPercentage + '%';
-
-        if (data === "thumbFrom") {
-          that.notifyObservers(4
-          /* SET_FROM */
-          , JSON.stringify({
-            from: that.resPercentage
-          }));
-        } else if (data === "thumbTo") {
-          that.notifyObservers(5
-          /* SET_TO */
-          , JSON.stringify({
-            to: that.resPercentage
-          }));
-        }
+        that.dispatchEvent(newPos, data);
       } // eslint-disable-next-line no-inner-declarations
 
 
@@ -880,22 +865,7 @@ class View extends EventObservable_1.EventObservable {
           newPos = rightEdge;
         }
 
-        that.resPercentage = that.convertFromPxToPercent(newPos);
-        targetElem.style.left = that.resPercentage + '%';
-
-        if (data === "thumbFrom") {
-          that.notifyObservers(4
-          /* SET_FROM */
-          , JSON.stringify({
-            from: that.resPercentage
-          }));
-        } else if (data === "thumbTo") {
-          that.notifyObservers(5
-          /* SET_TO */
-          , JSON.stringify({
-            to: that.resPercentage
-          }));
-        }
+        that.dispatchEvent(newPos, data);
       } // eslint-disable-next-line no-inner-declarations
 
 
@@ -1501,4 +1471,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.2522f558cd9d45266455.js.map
+//# sourceMappingURL=main.21fd6478fcbf34898b7c.js.map
