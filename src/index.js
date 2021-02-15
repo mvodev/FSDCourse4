@@ -10,7 +10,7 @@ $sl1.fsdSlider({
  to: 18,
  isVertical: false,
  hideThumbLabel: false,
- isRange: false,
+ isRange: true,
 }, 
 {
  handleEvent: (message, result) => {

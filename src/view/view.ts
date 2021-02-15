@@ -220,93 +220,88 @@ class View extends EventObservable {
     }
   }
   private handleRange(e: MouseEvent) {
+    let shift:number;
+    if(this.settings.isVertical){
+      shift = e.clientY - this.getRange().getBoundingClientRect().top;
+    }
+    else{
+      shift = e.clientX - this.getRange().getBoundingClientRect().left;
+    }
     if (this.settings.isVertical) {//vertical mode
-      const shiftY = e.clientY - this.getRange().getBoundingClientRect().top;
       const fromPos = this.getThumbFrom().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2);
       if (this.settings.isRange) {
         const toPos = this.getThumbTo().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2);
-        if (shiftY < fromPos) {
-          this.resPercentage = this.convertFromPxToPercent(shiftY);
+        if (shift < fromPos) {
+          this.resPercentage = this.convertFromPxToPercent(shift);
           this.getThumbFrom().style.top = this.resPercentage + '%';
-          this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage, to: 0, min: this.settings.min, max: this.settings.max }));
-          this.setColoredRange();
+          this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage }));
         }
-        else if (shiftY > toPos) {
-          this.resPercentage = this.convertFromPxToPercent(shiftY);
+        else if (shift > toPos) {
+          this.resPercentage = this.convertFromPxToPercent(shift);
           this.getThumbTo().style.top = this.resPercentage + '%';
-          this.notifyObservers(Messages.SET_TO, JSON.stringify({ to: this.resPercentage, from: 0, min: this.settings.min, max: this.settings.max }));
-          this.setColoredRange();
+          this.notifyObservers(Messages.SET_TO, JSON.stringify({ to: this.resPercentage}));
         }
-        else if (shiftY >= fromPos && shiftY <= toPos) {
+        else if (shift >= fromPos && shift <= toPos) {
           const pivot = (toPos - fromPos);
-          if (shiftY < pivot) {
-            this.resPercentage = this.convertFromPxToPercent(shiftY);
+          if (shift < pivot) {
+            this.resPercentage = this.convertFromPxToPercent(shift);
             this.getThumbFrom().style.top = this.resPercentage + '%';
             this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage}));
-            this.setColoredRange();
           }
-          else if (shiftY >= pivot) {
-            this.resPercentage = this.convertFromPxToPercent(shiftY);
+          else if (shift >= pivot) {
+            this.resPercentage = this.convertFromPxToPercent(shift);
             this.getThumbTo().style.top = this.resPercentage + '%';
             this.notifyObservers(Messages.SET_TO, JSON.stringify({ to: this.resPercentage}));
-            this.setColoredRange();
           }
         }
       }
       else {
-        if (shiftY < fromPos) {
-          this.resPercentage = this.convertFromPxToPercent(shiftY);
+        if (shift < fromPos) {
+          this.resPercentage = this.convertFromPxToPercent(shift);
           this.getThumbFrom().style.top = this.resPercentage + '%';
           this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage}));
-          this.setColoredRange();
         }
         else {   //vertical mode single thumb 
-          this.resPercentage = this.convertFromPxToPercent(shiftY);
+          this.resPercentage = this.convertFromPxToPercent(shift);
           this.getThumbFrom().style.top = this.resPercentage + '%';
           this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage}));
-          this.setColoredRange();
         }
       }
     } else { //horizontal mode
-      const shiftX = e.clientX - this.getRange().getBoundingClientRect().left;
       const fromPos = this.getThumbFrom().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2);
       if (this.settings.isRange) {
         const toPos = this.getThumbTo().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2);
-        if (shiftX < fromPos) {
-          this.resPercentage = this.convertFromPxToPercent(shiftX);
+        if (shift < fromPos) {
+          this.resPercentage = this.convertFromPxToPercent(shift);
           this.getThumbFrom().style.left = this.resPercentage + '%';
           this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage}));
-          this.setColoredRange();
         }
-        else if (shiftX > toPos) {
-          this.resPercentage = this.convertFromPxToPercent(shiftX);
+        else if (shift > toPos) {
+          this.resPercentage = this.convertFromPxToPercent(shift);
           this.getThumbTo().style.left = this.resPercentage + '%';
           this.notifyObservers(Messages.SET_TO, JSON.stringify({ to: this.resPercentage}));
-          this.setColoredRange();
         }
-        else if (shiftX >= fromPos && shiftX <= toPos) {
+        else if (shift >= fromPos && shift <= toPos) {
           const pivot = toPos - fromPos;
-          if (shiftX < pivot) {
-            this.resPercentage = this.convertFromPxToPercent(shiftX);
+          if (shift < pivot) {
+            this.resPercentage = this.convertFromPxToPercent(shift);
             this.getThumbFrom().style.left = this.resPercentage + '%';
             this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage}));
-            this.setColoredRange();
           }
-          else if (shiftX >= pivot) {
-            this.resPercentage = this.convertFromPxToPercent(shiftX);
+          else if (shift >= pivot) {
+            this.resPercentage = this.convertFromPxToPercent(shift);
             this.getThumbTo().style.left = this.resPercentage + '%';
             this.notifyObservers(Messages.SET_TO, JSON.stringify({ to: this.resPercentage}));
-            this.setColoredRange();
           }
         }
       }
       else { //horizontal mode single thumb
-        this.resPercentage = this.convertFromPxToPercent(shiftX);
+        this.resPercentage = this.convertFromPxToPercent(shift);
         this.getThumbFrom().style.left = this.resPercentage + '%';
         this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage}));
-        this.setColoredRange();
       }
     }
+    this.setColoredRange();
   }
 
   private convertFromPxToPercent(valueInPX: number) {
