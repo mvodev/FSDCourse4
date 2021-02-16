@@ -48,6 +48,7 @@ class Model extends EventObservable implements IModelFacade {
     const validatedStep = Utils.isNumber(settings.step);
     const validatedIsVertical = Utils.isBoolean(settings.isVertical);
     const validatedHideThumbLabel = Utils.isBoolean(settings.hideThumbLabel);
+    
     this.settings.isRange = settings.isRange ? Utils.isBoolean(settings.isRange):this.settings.isRange;
     if(validatedMin!==undefined){
       if (validatedMin >= this.settings.max) {
@@ -115,8 +116,12 @@ class Model extends EventObservable implements IModelFacade {
         this.settings.step = validatedStep;
       }
     }
-    this.settings.isVertical = validatedIsVertical;
-    this.settings.hideThumbLabel = validatedHideThumbLabel;
+    if(settings.isVertical!==undefined){
+      this.settings.isVertical = validatedIsVertical;
+    }
+    if(settings.hideThumbLabel!==undefined){
+      this.settings.hideThumbLabel = validatedHideThumbLabel;
+    }
   }
   
   private convertFromPercentToValue(valueInPercent: number) {

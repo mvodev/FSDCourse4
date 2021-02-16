@@ -467,8 +467,13 @@ class Model extends EventObservable_1.EventObservable {
       }
     }
 
-    this.settings.isVertical = validatedIsVertical;
-    this.settings.hideThumbLabel = validatedHideThumbLabel;
+    if (settings.isVertical !== undefined) {
+      this.settings.isVertical = validatedIsVertical;
+    }
+
+    if (settings.hideThumbLabel !== undefined) {
+      this.settings.hideThumbLabel = validatedHideThumbLabel;
+    }
   }
 
   convertFromPercentToValue(valueInPercent) {
@@ -747,8 +752,8 @@ const defaultSettings_1 = __webpack_require__(/*! ../model/defaultSettings */ ".
 class View extends EventObservable_1.EventObservable {
   constructor(root) {
     super();
-    this.settings = Object.assign({}, defaultSettings_1.defaultSettings);
-    console.log("inside view constructor" + JSON.stringify(this.settings));
+    this.viewSettings = Object.assign({}, defaultSettings_1.defaultSettings);
+    console.log("inside view constructor" + JSON.stringify(this.viewSettings));
     this.rootElem = root;
     this.slider = new Slider_1.Slider(this.rootElem, Constants_1.Constants.NUMBER_OF_MARKING);
     this.resPercentage = 0;
@@ -757,15 +762,15 @@ class View extends EventObservable_1.EventObservable {
   render(s) {
     this.slider.render(JSON.stringify(s));
 
-    if (this.settings.hideThumbLabel) {
+    if (this.viewSettings.hideThumbLabel) {
       this.slider.getThumbLabelFrom().hideLabel();
 
-      if (this.settings.isRange) {
+      if (this.viewSettings.isRange) {
         this.slider.getThumbLabelTo().hideLabel();
       }
     }
 
-    if (this.settings.isVertical) {
+    if (this.viewSettings.isVertical) {
       this.slider.setVertical();
     }
 
@@ -776,7 +781,7 @@ class View extends EventObservable_1.EventObservable {
     this.getThumbFrom().addEventListener('mousedown', this.handleThumb.bind(this, "thumbFrom"));
     this.getRangeLabel().addEventListener('mousedown', this.handleRange.bind(this));
 
-    if (this.settings.isRange) {
+    if (this.viewSettings.isRange) {
       this.getThumbTo().addEventListener('mousedown', this.handleThumb.bind(this, "thumbTo"));
     }
   }
@@ -791,13 +796,13 @@ class View extends EventObservable_1.EventObservable {
 
     let shift;
 
-    if (this.settings.isVertical) {
+    if (this.viewSettings.isVertical) {
       shift = e.clientY - targetElem.getBoundingClientRect().top;
     } else {
       shift = e.clientX - targetElem.getBoundingClientRect().left;
     }
 
-    if (this.settings.isVertical) {
+    if (this.viewSettings.isVertical) {
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp); // eslint-disable-next-line @typescript-eslint/no-this-alias
 
@@ -820,7 +825,7 @@ class View extends EventObservable_1.EventObservable {
 
         let bottom = that.getSliderLengthInPx() - that.getThumbLengthInPx() / 4;
 
-        if (that.settings.isRange) {
+        if (that.viewSettings.isRange) {
           const toPos = that.getThumbTo().getBoundingClientRect().top - (that.getRange().getBoundingClientRect().top - that.getThumbLengthInPx() / 4);
 
           if (data === "thumbFrom") {
@@ -864,7 +869,7 @@ class View extends EventObservable_1.EventObservable {
 
         let rightEdge = that.getSliderLengthInPx() - that.getThumbFrom().offsetWidth / 4;
 
-        if (that.settings.isRange) {
+        if (that.viewSettings.isRange) {
           const toPos = that.getThumbTo().getBoundingClientRect().left - (that.getRange().getBoundingClientRect().left - that.getThumbLengthInPx() / 4);
 
           if (data === "thumbFrom") {
@@ -894,7 +899,7 @@ class View extends EventObservable_1.EventObservable {
     /* INIT */
     ) {
         this.updateViewSettings(s);
-        this.render(this.settings);
+        this.render(this.viewSettings);
       }
 
     if (msg === 0
@@ -906,10 +911,10 @@ class View extends EventObservable_1.EventObservable {
 
         if (!s.hideThumbLabel) {
           this.slider.getThumbLabelFrom().showLabel();
-          this.setThumbToValue('thumbFrom');
+          this.setThumbToValue(s, 'thumbFrom');
 
           if (s.isRange) {
-            this.setThumbToValue('thumbTo');
+            this.setThumbToValue(s, 'thumbTo');
             this.slider.getThumbLabelTo().showLabel();
           }
         } else {
@@ -959,8 +964,8 @@ class View extends EventObservable_1.EventObservable {
   }
 
   setColoredRange() {
-    if (this.settings.isRange) {
-      if (this.settings.isVertical) {
+    if (this.viewSettings.isRange) {
+      if (this.viewSettings.isVertical) {
         this.slider.getColoredRange().style.top = this.getThumbFrom().getBoundingClientRect().top - this.getRange().getBoundingClientRect().top + this.getThumbLengthInPx() / 2 + 'px';
         this.slider.getColoredRange().style.height = this.getThumbTo().getBoundingClientRect().top - this.getThumbFrom().getBoundingClientRect().top + this.getThumbLengthInPx() / 2 + 'px';
       } else {
@@ -968,7 +973,7 @@ class View extends EventObservable_1.EventObservable {
         this.slider.getColoredRange().style.width = this.getThumbTo().getBoundingClientRect().left - (this.getThumbFrom().getBoundingClientRect().left - this.getThumbLengthInPx() / 2) + 'px';
       }
     } else {
-      if (this.settings.isVertical) {
+      if (this.viewSettings.isVertical) {
         this.slider.getColoredRange().style.height = this.getThumbFrom().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2) + 'px';
       } else {
         this.slider.getColoredRange().style.width = this.getThumbFrom().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2) + 'px';
@@ -979,7 +984,7 @@ class View extends EventObservable_1.EventObservable {
   handleRange(e) {
     let shift, fromPos;
 
-    if (this.settings.isVertical) {
+    if (this.viewSettings.isVertical) {
       shift = e.clientY - this.getRange().getBoundingClientRect().top;
       fromPos = this.getThumbFrom().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2);
     } else {
@@ -987,9 +992,9 @@ class View extends EventObservable_1.EventObservable {
       fromPos = this.getThumbFrom().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2);
     }
 
-    if (this.settings.isVertical) {
+    if (this.viewSettings.isVertical) {
       //vertical mode
-      if (this.settings.isRange) {
+      if (this.viewSettings.isRange) {
         const toPos = this.getThumbTo().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2);
 
         if (shift < fromPos) {
@@ -1015,7 +1020,7 @@ class View extends EventObservable_1.EventObservable {
       }
     } else {
       //horizontal mode
-      if (this.settings.isRange) {
+      if (this.viewSettings.isRange) {
         const toPos = this.getThumbTo().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2);
 
         if (shift < fromPos) {
@@ -1044,15 +1049,15 @@ class View extends EventObservable_1.EventObservable {
     return +(valueInPX / this.getSliderLengthInPx() * 100).toFixed(2);
   }
 
-  convertFromValueToPercent(value) {
-    return +(100 / Math.abs(this.settings.max - this.settings.min) * Math.abs(value - this.settings.min)).toFixed(2);
+  convertFromValueToPercent(s, value) {
+    return +(100 / Math.abs(s.max - s.min) * Math.abs(value - s.min)).toFixed(2);
   }
 
   dispatchEvent(shift, type) {
     this.resPercentage = this.convertFromPxToPercent(shift);
 
     if (type === "thumbFrom") {
-      if (this.settings.isVertical) {
+      if (this.viewSettings.isVertical) {
         this.getThumbFrom().style.top = this.resPercentage + '%';
       } else {
         this.getThumbFrom().style.left = this.resPercentage + '%';
@@ -1064,7 +1069,7 @@ class View extends EventObservable_1.EventObservable {
         from: this.resPercentage
       }));
     } else {
-      if (this.settings.isVertical) {
+      if (this.viewSettings.isVertical) {
         this.getThumbTo().style.top = this.resPercentage + '%';
       } else {
         this.getThumbTo().style.left = this.resPercentage + '%';
@@ -1078,20 +1083,20 @@ class View extends EventObservable_1.EventObservable {
     }
   }
 
-  setThumbToValue(type) {
+  setThumbToValue(s, type) {
     if (type === 'thumbFrom') {
-      if (this.settings.isVertical) {
-        this.getThumbFrom().style.top = this.convertFromValueToPercent(this.settings.from) + '%';
+      if (this.viewSettings.isVertical) {
+        this.getThumbFrom().style.top = this.convertFromValueToPercent(s, s.from) + '%';
       } else {
-        this.getThumbFrom().style.left = this.convertFromValueToPercent(this.settings.from) + '%';
+        this.getThumbFrom().style.left = this.convertFromValueToPercent(s, s.from) + '%';
       }
 
       this.setColoredRange();
     } else {
-      if (this.settings.isVertical) {
-        this.getThumbTo().style.top = this.convertFromValueToPercent(this.settings.to !== undefined ? this.settings.to : this.settings.from) + '%';
+      if (this.viewSettings.isVertical) {
+        this.getThumbTo().style.top = this.convertFromValueToPercent(s, s.to !== undefined ? s.to : s.from) + '%';
       } else {
-        this.getThumbTo().style.left = this.convertFromValueToPercent(this.settings.to !== undefined ? this.settings.to : this.settings.from) + '%';
+        this.getThumbTo().style.left = this.convertFromValueToPercent(s, s.to !== undefined ? s.to : s.from) + '%';
       }
 
       this.setColoredRange();
@@ -1107,7 +1112,7 @@ class View extends EventObservable_1.EventObservable {
   }
 
   getSliderLengthInPx() {
-    if (this.settings.isVertical) {
+    if (this.viewSettings.isVertical) {
       return this.getRange().offsetHeight + this.getThumbFrom().offsetHeight;
     } else {
       return this.getRange().offsetWidth + this.getThumbFrom().offsetWidth;
@@ -1115,7 +1120,7 @@ class View extends EventObservable_1.EventObservable {
   }
 
   getThumbLengthInPx() {
-    if (this.settings.isVertical) {
+    if (this.viewSettings.isVertical) {
       return this.getThumbFrom().offsetHeight;
     } else {
       return this.getThumbFrom().offsetWidth;
@@ -1123,7 +1128,7 @@ class View extends EventObservable_1.EventObservable {
   }
 
   getThumbLengthInPercentage() {
-    if (this.settings.isVertical) {
+    if (this.viewSettings.isVertical) {
       return +(this.getThumbFrom().offsetHeight / this.getSliderLengthInPx() * 100).toFixed(1);
     } else {
       return +(this.getThumbFrom().offsetWidth / this.getSliderLengthInPx() * 100).toFixed(1);
@@ -1143,7 +1148,7 @@ class View extends EventObservable_1.EventObservable {
   }
 
   updateViewSettings(s) {
-    this.settings = Object.assign(this.settings, s);
+    this.viewSettings = Object.assign(this.viewSettings, s);
   }
 
 }
@@ -1492,4 +1497,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.a85994c9aa91d5e2642c.js.map
+//# sourceMappingURL=main.0356bb74cbe6cabf1d74.js.map
