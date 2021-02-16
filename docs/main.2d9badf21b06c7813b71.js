@@ -752,8 +752,14 @@ const defaultSettings_1 = __webpack_require__(/*! ../model/defaultSettings */ ".
 class View extends EventObservable_1.EventObservable {
   constructor(root) {
     super();
+
+    this.test = function (params) {
+      return function (event) {
+        console.log(params + event.clientX);
+      };
+    };
+
     this.viewSettings = Object.assign({}, defaultSettings_1.defaultSettings);
-    console.log("inside view constructor" + JSON.stringify(this.viewSettings));
     this.rootElem = root;
     this.slider = new Slider_1.Slider(this.rootElem, Constants_1.Constants.NUMBER_OF_MARKING);
     this.resPercentage = 0;
@@ -779,6 +785,7 @@ class View extends EventObservable_1.EventObservable {
 
   bindEvents() {
     this.getThumbFrom().addEventListener('mousedown', this.handleThumb.bind(this, "thumbFrom"));
+    this.getThumbFrom().addEventListener('mousedown', this.test("test"));
     this.getRangeLabel().addEventListener('mousedown', this.handleRange.bind(this));
 
     if (this.viewSettings.isRange) {
@@ -1497,4 +1504,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.0356bb74cbe6cabf1d74.js.map
+//# sourceMappingURL=main.2d9badf21b06c7813b71.js.map

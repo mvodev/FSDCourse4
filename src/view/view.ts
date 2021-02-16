@@ -13,7 +13,6 @@ class View extends EventObservable {
   constructor(root: HTMLDivElement) {
     super();
     this.viewSettings = Object.assign({},defaultSettings);
-    console.log("inside view constructor"+JSON.stringify(this.viewSettings));
     this.rootElem = root;
     this.slider = new Slider(this.rootElem, Constants.NUMBER_OF_MARKING);
     this.resPercentage = 0;
@@ -33,11 +32,17 @@ class View extends EventObservable {
   }
   bindEvents():void {
     this.getThumbFrom().addEventListener('mousedown', this.handleThumb.bind(this,"thumbFrom"));
+    this.getThumbFrom().addEventListener('mousedown', this.test("test"));
     this.getRangeLabel().addEventListener('mousedown',this.handleRange.bind(this));
     if (this.viewSettings.isRange) {
       this.getThumbTo().addEventListener('mousedown', this.handleThumb.bind(this,"thumbTo"));
     }
   }
+  test = function (params:string) {
+    return function(event:MouseEvent):void {
+      console.log(params+event.clientX);
+    };
+  };
   private handleThumb(data:string,e:MouseEvent):void{
     e.preventDefault();
     let targetElem:HTMLDivElement = this.getThumbFrom();
