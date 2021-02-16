@@ -16,31 +16,32 @@ class Slider {
  private rootElem!: HTMLDivElement;
  private container!: HTMLDivElement;
  private coloredRange!: ColoredRange;
- private settings: ISettings;
+ private viewSettings: ISettings;
  private numberOfMarking: number;
 
  constructor(rootElem: HTMLDivElement, numberOfMarking: number) {
-  this.settings = Object.assign({},defaultSettings);
+  this.viewSettings = Object.assign({},defaultSettings);
   this.rootElem = rootElem;
   this.numberOfMarking = numberOfMarking;
   this.initSliderComponents();
  }
 
  render(s:string) :void{
-  this.settings = Object.assign(this.settings,JSON.parse(s));
+  this.viewSettings = Object.assign(this.viewSettings,JSON.parse(s));
   this.container.classList.add('fsd-slider');
   this.container.appendChild(this.range.getRange());
   this.range.getRange().appendChild(this.coloredRange.getColoredRange());
   this.range.getRange().appendChild(this.thumbFrom.getThumb());
   this.rangeLabel.render(s,this.numberOfMarking);
   this.thumbFrom.getThumb().appendChild(this.thumbLabelFrom.getThumbLabelContainer());
-  if (this.settings.isRange) {
+  if (this.viewSettings.isRange) {
    this.thumbTo.getThumb().appendChild(this.thumbLabelTo.getThumbLabelContainer());
    this.range.getRange().appendChild(this.thumbTo.getThumb());
   }
   this.container.appendChild(this.rangeLabel.getRangeLabel());
   this.rootElem.appendChild(this.container);
  }
+ 
  getRange():HTMLDivElement {
   return this.range.getRange();
  }
@@ -80,7 +81,7 @@ class Slider {
   this.coloredRange.getColoredRange().classList.add('fsd-slider__colored-range_is_vertical');
   this.rangeLabel.getRangeLabel().classList.add('fsd-slider__range-label_is_vertical');
   this.thumbLabelFrom.getThumbLabelContainer().classList.add('fsd-slider__thumb-label_is_vertical');
-  if (this.settings.isRange) {
+  if (this.viewSettings.isRange) {
    this.thumbLabelTo.getThumbLabelContainer().classList.add('fsd-slider__thumb-label_is_vertical');
   }
  }
@@ -93,6 +94,34 @@ class Slider {
   this.coloredRange = new ColoredRange();
   this.rangeLabel = new RangeLabel();
   this.container = document.createElement('div');
+ }
+ setColoredRange(): void {
+  if (this.viewSettings.isRange) {
+   if (this.viewSettings.isVertical) {
+    this.getColoredRange().style.top = (this.getThumbFrom().getBoundingClientRect().top) - this.getRange().getBoundingClientRect().top + this.getThumbLengthInPx() / 2 + 'px';
+    this.getColoredRange().style.height = (this.getThumbTo().getBoundingClientRect().top - this.getThumbFrom().getBoundingClientRect().top + this.getThumbLengthInPx() / 2) + 'px';
+   }
+   else {
+    this.getColoredRange().style.left = (this.getThumbFrom().getBoundingClientRect().left - this.getRange().getBoundingClientRect().left) + 'px';
+    this.getColoredRange().style.width = (this.getThumbTo().getBoundingClientRect().left - (this.getThumbFrom().getBoundingClientRect().left - this.getThumbLengthInPx() / 2)) + 'px';
+   }
+  }
+  else {
+   if (this.viewSettings.isVertical) {
+    this.getColoredRange().style.height = (this.getThumbFrom().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2)) + 'px';
+   }
+   else {
+    this.getColoredRange().style.width = (this.getThumbFrom().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2)) + 'px';
+   }
+  }
+ }
+ getThumbLengthInPx() :number{
+  if (this.viewSettings.isVertical) {
+   return this.getThumbFrom().offsetHeight;
+  }
+  else {
+   return this.getThumbFrom().offsetWidth;
+  }
  }
 }
 export {Slider}
