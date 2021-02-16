@@ -5,7 +5,8 @@ import { RangeLabel } from './rangeLabel';
 import { ColoredRange } from './coloredRange';
 import { ISettings } from '../../model/ISettings';
 import { defaultSettings } from '../../model/defaultSettings';
-class Slider {
+import { EventObservable } from '../../observers/EventObservable';
+class Slider extends EventObservable{
 
  private thumbFrom!: Thumb;
  private thumbTo!: Thumb;
@@ -20,6 +21,7 @@ class Slider {
  private numberOfMarking: number;
 
  constructor(rootElem: HTMLDivElement, numberOfMarking: number) {
+  super();
   this.viewSettings = Object.assign({},defaultSettings);
   this.rootElem = rootElem;
   this.numberOfMarking = numberOfMarking;
