@@ -56,6 +56,10 @@ class Slider extends EventObservable{
  }
  bindEvents(): void {
   this.getRangeLabel().addEventListener('mousedown', this.handleRange.bind(this));
+  this.getThumbFrom().addEventListener('mousedown', this.handleThumb.bind(this, "thumbFrom"));
+  if (this.viewSettings.isRange) {
+   this.getThumbTo().addEventListener('mousedown', this.handleThumb.bind(this, "thumbTo"));
+  }
  }
  setVertical():void {
   this.container.classList.add('fsd-slider_is_vertical');
@@ -76,8 +80,100 @@ class Slider extends EventObservable{
        this.getRange(),
        this.getThumbLengthInPx());
  }
- getThumbLengthInPx() :number{
+  getThumbLengthInPx() :number{
    return this.getThumbFrom().offsetHeight;
+ }
+ private handleThumb(data: string, e: MouseEvent): void {
+  e.preventDefault();
+  let targetElem: HTMLDivElement = this.getThumbFrom();
+  if (data === "thumbTo") {
+   targetElem = this.getThumbTo();
+  }
+  let shift: number;
+  if (this.viewSettings.isVertical) {
+   shift = e.clientY - targetElem.getBoundingClientRect().top;
+  }
+  else {
+   shift = e.clientX - targetElem.getBoundingClientRect().left;
+  }
+  if (this.viewSettings.isVertical) {
+   document.addEventListener('mousemove', onMouseMove);
+   document.addEventListener('mouseup', onMouseUp);
+   // eslint-disable-next-line @typescript-eslint/no-this-alias
+   const that = this;
+   // eslint-disable-next-line no-inner-declarations
+   function onMouseMove(event: MouseEvent) {
+    let newPos = event.clientY - shift - that.getRange().getBoundingClientRect().top;
+    if (data === "thumbTo") {
+     const fromPos = that.getThumbFrom().getBoundingClientRect().top - (that.getRange().getBoundingClientRect().top - that.getThumbLengthInPx() / 2);
+     if (newPos < fromPos) {
+      newPos = fromPos;
+     }
+    }
+    else {
+     if (newPos < -that.getThumbFrom().offsetWidth / 2) {
+      newPos = -that.getThumbFrom().offsetWidth / 2;
+     }
+    }
+    let bottom = that.getSliderLengthInPx() - that.getThumbLengthInPx() / 4;
+    if (that.viewSettings.isRange) {
+     const toPos = that.getThumbTo().getBoundingClientRect().top - (that.getRange().getBoundingClientRect().top - that.getThumbLengthInPx() / 4);
+     if (data === "thumbFrom") {
+      bottom = toPos;
+     }
+    }
+    if (newPos > bottom) {
+     newPos = bottom;
+    }
+    that.dispatchEvent(newPos, data);
+   }
+   // eslint-disable-next-line no-inner-declarations
+   function onMouseUp() {
+    document.removeEventListener('mouseup', onMouseUp);
+    document.removeEventListener('mousemove', onMouseMove);
+   }
+
+  }
+  else {//horizontal slider view
+   document.addEventListener('mousemove', onMouseMove);
+   document.addEventListener('mouseup', onMouseUp);
+   //eslint-disable-next-line @typescript-eslint/no-this-alias
+   const that = this;
+   //eslint-disable-next-line no-inner-declarations
+   function onMouseMove(e: MouseEvent) {
+    let newPos = e.clientX - shift - that.getRange().getBoundingClientRect().left;
+    if (data === "thumbTo") {
+     const fromPos = that.getThumbFrom().getBoundingClientRect().left - (that.getRange().getBoundingClientRect().left - that.getThumbLengthInPx() / 2);
+     if (newPos < fromPos) {
+      newPos = fromPos;
+     }
+    }
+    else {
+     if (newPos < -that.getThumbFrom().offsetWidth / 2) {
+      newPos = -that.getThumbFrom().offsetWidth / 2;
+     }
+    }
+    let rightEdge = that.getSliderLengthInPx() - that.getThumbFrom().offsetWidth / 4;
+
+    if (that.viewSettings.isRange) {
+     const toPos = that.getThumbTo().getBoundingClientRect().left - (that.getRange().getBoundingClientRect().left - that.getThumbLengthInPx() / 4);
+     if (data === "thumbFrom") {
+      rightEdge = toPos;
+     }
+    }
+    if (newPos > rightEdge) {
+     newPos = rightEdge;
+    }
+    that.dispatchEvent(newPos, data);
+   }
+   // eslint-disable-next-line no-inner-declarations
+   function onMouseUp() {
+    document.removeEventListener('mouseup', onMouseUp);
+    document.removeEventListener('mousemove', onMouseMove);
+   }
+
+  }
+  this.setColoredRange();
  }
  private handleRange(e: MouseEvent) {
   let shift: number, fromPos: number;
@@ -169,6 +265,7 @@ class Slider extends EventObservable{
    }
    this.notifyObservers(Messages.SET_TO, JSON.stringify({ to: this.resPercentage }));
   }
+  this.setColoredRange();
  }
  getRange(): HTMLDivElement {
   return this.range.getRange();
