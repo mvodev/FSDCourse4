@@ -7,7 +7,6 @@ import { ISettings } from '../../model/ISettings';
 import { defaultSettings } from '../../model/defaultSettings';
 import { EventObservable } from '../../observers/EventObservable';
 class Slider extends EventObservable{
-
  private thumbFrom!: Thumb;
  private thumbTo!: Thumb;
  private range!: Range;
@@ -19,7 +18,6 @@ class Slider extends EventObservable{
  private coloredRange!: ColoredRange;
  private viewSettings: ISettings;
  private numberOfMarking: number;
-
  constructor(rootElem: HTMLDivElement, numberOfMarking: number) {
   super();
   this.viewSettings = Object.assign({},defaultSettings);
@@ -43,7 +41,6 @@ class Slider extends EventObservable{
   this.container.appendChild(this.rangeLabel.getRangeLabel());
   this.rootElem.appendChild(this.container);
  }
- 
  getRange():HTMLDivElement {
   return this.range.getRange();
  }
@@ -98,15 +95,15 @@ class Slider extends EventObservable{
   this.container = document.createElement('div');
  }
  setColoredRange(): void {
-  this.coloredRange.setColoredRange(this.viewSettings, this.getThumbFrom(), this.getThumbTo(),this.getRange(),this.getThumbLengthInPx());
+  this.coloredRange.setColoredRange(
+       this.viewSettings,
+       this.getThumbFrom(),
+       this.getThumbTo(),
+       this.getRange(),
+       this.getThumbLengthInPx());
  }
  getThumbLengthInPx() :number{
-  if (this.viewSettings.isVertical) {
    return this.getThumbFrom().offsetHeight;
-  }
-  else {
-   return this.getThumbFrom().offsetWidth;
-  }
  }
 }
 export {Slider}
