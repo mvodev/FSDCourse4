@@ -192,18 +192,11 @@ class View extends EventObservable {
     }
   }
 
-
   private handleRange(e: MouseEvent) {
     let shift:number,fromPos:number;
     if(this.viewSettings.isVertical){
       shift = e.clientY - this.getRange().getBoundingClientRect().top;
       fromPos = this.getThumbFrom().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2);
-    }
-    else{
-      shift = e.clientX - this.getRange().getBoundingClientRect().left;
-      fromPos = this.getThumbFrom().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2);
-    }
-    if (this.viewSettings.isVertical) {//vertical mode
       if (this.viewSettings.isRange) {
         const toPos = this.getThumbTo().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2);
         if (shift < fromPos) {
@@ -230,8 +223,10 @@ class View extends EventObservable {
           this.dispatchEvent(shift, "thumbFrom");
         }
       }
-    } else { //horizontal mode
-      
+    }
+    else{
+      shift = e.clientX - this.getRange().getBoundingClientRect().left;
+      fromPos = this.getThumbFrom().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2);
       if (this.viewSettings.isRange) {
         const toPos = this.getThumbTo().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2);
         if (shift < fromPos) {
@@ -246,16 +241,15 @@ class View extends EventObservable {
             this.dispatchEvent(shift, "thumbFrom");
           }
           else if (shift >= pivot) {
-            this.dispatchEvent(shift,"thumbTo");
+            this.dispatchEvent(shift, "thumbTo");
           }
         }
       }
       else { //horizontal mode single thumb
-        this.dispatchEvent(shift,"thumbFrom");
+        this.dispatchEvent(shift, "thumbFrom");
       }
     }
     this.setColoredRange();
-    
   }
   private setColoredRange():void{
     this.getSlider().setColoredRange();

@@ -972,13 +972,7 @@ class View extends EventObservable_1.EventObservable {
     if (this.viewSettings.isVertical) {
       shift = e.clientY - this.getRange().getBoundingClientRect().top;
       fromPos = this.getThumbFrom().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2);
-    } else {
-      shift = e.clientX - this.getRange().getBoundingClientRect().left;
-      fromPos = this.getThumbFrom().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2);
-    }
 
-    if (this.viewSettings.isVertical) {
-      //vertical mode
       if (this.viewSettings.isRange) {
         const toPos = this.getThumbTo().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2);
 
@@ -1004,7 +998,9 @@ class View extends EventObservable_1.EventObservable {
         }
       }
     } else {
-      //horizontal mode
+      shift = e.clientX - this.getRange().getBoundingClientRect().left;
+      fromPos = this.getThumbFrom().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2);
+
       if (this.viewSettings.isRange) {
         const toPos = this.getThumbTo().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2);
 
@@ -1165,8 +1161,11 @@ const coloredRange_1 = __webpack_require__(/*! ./coloredRange */ "./view/modules
 
 const defaultSettings_1 = __webpack_require__(/*! ../../model/defaultSettings */ "./model/defaultSettings.ts");
 
-class Slider {
+const EventObservable_1 = __webpack_require__(/*! ../../observers/EventObservable */ "./observers/EventObservable.ts");
+
+class Slider extends EventObservable_1.EventObservable {
   constructor(rootElem, numberOfMarking) {
+    super();
     this.viewSettings = Object.assign({}, defaultSettings_1.defaultSettings);
     this.rootElem = rootElem;
     this.numberOfMarking = numberOfMarking;
@@ -1259,21 +1258,7 @@ class Slider {
   }
 
   setColoredRange() {
-    if (this.viewSettings.isRange) {
-      if (this.viewSettings.isVertical) {
-        this.getColoredRange().style.top = this.getThumbFrom().getBoundingClientRect().top - this.getRange().getBoundingClientRect().top + this.getThumbLengthInPx() / 2 + 'px';
-        this.getColoredRange().style.height = this.getThumbTo().getBoundingClientRect().top - this.getThumbFrom().getBoundingClientRect().top + this.getThumbLengthInPx() / 2 + 'px';
-      } else {
-        this.getColoredRange().style.left = this.getThumbFrom().getBoundingClientRect().left - this.getRange().getBoundingClientRect().left + 'px';
-        this.getColoredRange().style.width = this.getThumbTo().getBoundingClientRect().left - (this.getThumbFrom().getBoundingClientRect().left - this.getThumbLengthInPx() / 2) + 'px';
-      }
-    } else {
-      if (this.viewSettings.isVertical) {
-        this.getColoredRange().style.height = this.getThumbFrom().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2) + 'px';
-      } else {
-        this.getColoredRange().style.width = this.getThumbFrom().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2) + 'px';
-      }
-    }
+    this.coloredRange.setColoredRange(this.viewSettings, this.getThumbFrom(), this.getThumbTo(), this.getRange(), this.getThumbLengthInPx());
   }
 
   getThumbLengthInPx() {
@@ -1313,6 +1298,24 @@ class ColoredRange {
 
   getColoredRange() {
     return this.coloredRange;
+  }
+
+  setColoredRange(viewSettings, thumbFrom, thumbTo, range, thumbLength) {
+    if (viewSettings.isRange) {
+      if (viewSettings.isVertical) {
+        this.getColoredRange().style.top = thumbFrom.getBoundingClientRect().top - range.getBoundingClientRect().top + thumbLength / 2 + 'px';
+        this.getColoredRange().style.height = thumbTo.getBoundingClientRect().top - thumbFrom.getBoundingClientRect().top + thumbLength / 2 + 'px';
+      } else {
+        this.getColoredRange().style.left = thumbFrom.getBoundingClientRect().left - range.getBoundingClientRect().left + 'px';
+        this.getColoredRange().style.width = thumbTo.getBoundingClientRect().left - (thumbFrom.getBoundingClientRect().left - thumbLength / 2) + 'px';
+      }
+    } else {
+      if (viewSettings.isVertical) {
+        this.getColoredRange().style.height = thumbFrom.getBoundingClientRect().top - (range.getBoundingClientRect().top - thumbLength / 2) + 'px';
+      } else {
+        this.getColoredRange().style.width = thumbFrom.getBoundingClientRect().left - (range.getBoundingClientRect().left - thumbLength / 2) + 'px';
+      }
+    }
   }
 
 }
@@ -1439,8 +1442,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Thumb = void 0;
 
-class Thumb {
+const EventObservable_1 = __webpack_require__(/*! ../../observers/EventObservable */ "./observers/EventObservable.ts");
+
+class Thumb extends EventObservable_1.EventObservable {
   constructor(className) {
+    super();
     this.thumb = document.createElement('div');
     this.thumb.classList.add(className);
   }
@@ -1504,4 +1510,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.6791c61001e87d403f8d.js.map
+//# sourceMappingURL=main.c8ceccd181448630fd15.js.map
