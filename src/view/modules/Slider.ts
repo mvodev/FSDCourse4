@@ -92,11 +92,6 @@ class Slider extends EventObservable{
   let shift: number;
   if (this.viewSettings.isVertical) {
    shift = e.clientY - targetElem.getBoundingClientRect().top;
-  }
-  else {
-   shift = e.clientX - targetElem.getBoundingClientRect().left;
-  }
-  if (this.viewSettings.isVertical) {
    document.addEventListener('mousemove', onMouseMove);
    document.addEventListener('mouseup', onMouseUp);
    // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -132,9 +127,9 @@ class Slider extends EventObservable{
     document.removeEventListener('mouseup', onMouseUp);
     document.removeEventListener('mousemove', onMouseMove);
    }
-
   }
-  else {//horizontal slider view
+  else {
+   shift = e.clientX - targetElem.getBoundingClientRect().left;
    document.addEventListener('mousemove', onMouseMove);
    document.addEventListener('mouseup', onMouseUp);
    //eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -171,7 +166,6 @@ class Slider extends EventObservable{
     document.removeEventListener('mouseup', onMouseUp);
     document.removeEventListener('mousemove', onMouseMove);
    }
-
   }
   this.setColoredRange();
  }
