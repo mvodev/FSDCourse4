@@ -1,4 +1,4 @@
-class RangeLabel {
+class RangeLabel{
  private rangeLabelContainer!: HTMLDivElement;
  private minLabel!: HTMLSpanElement;
  private maxLabel!: HTMLSpanElement;
@@ -18,7 +18,6 @@ class RangeLabel {
    this.rangeLabelContainer.appendChild(marking);
   this.maxLabel = document.createElement('span');
   this.rangeLabelContainer.appendChild(this.maxLabel);
-  
   }
  }
  getRangeLabel():HTMLDivElement {

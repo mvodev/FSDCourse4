@@ -5,7 +5,8 @@ import { Constants } from '../utils/Constants';
 import { EventObservable } from '../observers/EventObservable';
 import { defaultSettings } from '../model/defaultSettings';
 import { IViewSettings } from '../model/IViewSettings';
-class View extends EventObservable {
+import { IObserver } from '../observers/IObserver';
+class View extends EventObservable implements IObserver{
   private slider: Slider;
   private viewSettings: IViewSettings;
   private rootElem: HTMLDivElement;
@@ -18,7 +19,11 @@ class View extends EventObservable {
     this.slider = new Slider(this.rootElem, Constants.NUMBER_OF_MARKING);
     this.resPercentage = 0;
   }
+  handleEvent(msg: Messages, s: string): void {
+    this.refreshView(msg,JSON.parse(s));
+  }
   private render(s:IViewSettings):void {
+    this.slider.addObserver(this);
     this.slider.render(JSON.stringify(s));
     if (this.viewSettings.hideThumbLabel) {
       this.slider.getThumbLabelFrom().hideLabel();
@@ -33,7 +38,6 @@ class View extends EventObservable {
   }
   bindEvents():void {
     this.getThumbFrom().addEventListener('mousedown', this.handleThumb.bind(this, "thumbFrom"));
-    this.getRangeLabel().addEventListener('mousedown',this.handleRange.bind(this));
     if (this.viewSettings.isRange) {
       this.getThumbTo().addEventListener('mousedown', this.handleThumb.bind(this,"thumbTo"));
     }
@@ -192,65 +196,7 @@ class View extends EventObservable {
     }
   }
 
-  private handleRange(e: MouseEvent) {
-    let shift:number,fromPos:number;
-    if(this.viewSettings.isVertical){
-      shift = e.clientY - this.getRange().getBoundingClientRect().top;
-      fromPos = this.getThumbFrom().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2);
-      if (this.viewSettings.isRange) {
-        const toPos = this.getThumbTo().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2);
-        if (shift < fromPos) {
-          this.dispatchEvent(shift, "thumbFrom");
-        }
-        else if (shift > toPos) {
-          this.dispatchEvent(shift, "thumbTo");
-        }
-        else if (shift >= fromPos && shift <= toPos) {
-          const pivot = (toPos - fromPos);
-          if (shift < pivot) {
-            this.dispatchEvent(shift, "thumbFrom");
-          }
-          else if (shift >= pivot) {
-            this.dispatchEvent(shift, "thumbTo");
-          }
-        }
-      }
-      else {
-        if (shift < fromPos) {
-          this.dispatchEvent(shift, "thumbFrom");
-        }
-        else {   //vertical mode single thumb 
-          this.dispatchEvent(shift, "thumbFrom");
-        }
-      }
-    }
-    else{
-      shift = e.clientX - this.getRange().getBoundingClientRect().left;
-      fromPos = this.getThumbFrom().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2);
-      if (this.viewSettings.isRange) {
-        const toPos = this.getThumbTo().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2);
-        if (shift < fromPos) {
-          this.dispatchEvent(shift, "thumbFrom");
-        }
-        else if (shift > toPos) {
-          this.dispatchEvent(shift, "thumbTo");
-        }
-        else if (shift >= fromPos && shift <= toPos) {
-          const pivot = toPos - fromPos;
-          if (shift < pivot) {
-            this.dispatchEvent(shift, "thumbFrom");
-          }
-          else if (shift >= pivot) {
-            this.dispatchEvent(shift, "thumbTo");
-          }
-        }
-      }
-      else { //horizontal mode single thumb
-        this.dispatchEvent(shift, "thumbFrom");
-      }
-    }
-    this.setColoredRange();
-  }
+  
   private setColoredRange():void{
     this.getSlider().setColoredRange();
   }
