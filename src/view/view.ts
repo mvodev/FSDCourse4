@@ -10,7 +10,7 @@ class View extends EventObservable implements IObserver{
   private slider: Slider;
   private viewSettings: IViewSettings;
   private rootElem: HTMLDivElement;
-  
+
   constructor(root: HTMLDivElement) {
     super();
     this.viewSettings = Object.assign({},defaultSettings);
@@ -18,7 +18,7 @@ class View extends EventObservable implements IObserver{
     this.slider = new Slider(this.rootElem, Constants.NUMBER_OF_MARKING);
   }
   handleEvent(msg: Messages, s: string): void {
-    this.refreshView(msg,JSON.parse(s));
+    this.notifyObservers(msg,s);
   }
   private render(s:IViewSettings):void {
     this.slider.addObserver(this);
@@ -37,8 +37,10 @@ class View extends EventObservable implements IObserver{
     if (msg === Messages.INIT) {
       this.updateViewSettings(s);
       this.render(this.viewSettings);
+      this.setColoredRange();
     }
     if (msg === Messages.INIT || msg === Messages.UPDATE) {
+      
       this.updateViewSettings(s);
       if (!s.hideThumbLabel) {
         this.slider.getThumbLabelFrom().showLabel();
@@ -69,7 +71,6 @@ class View extends EventObservable implements IObserver{
           this.getThumbTo().style.left = ((Math.abs((s.to !== undefined ? s.to : s.from) - s.min) / Math.abs(s.max - s.min)) * 100 - this.getThumbLengthInPercentage()) + '%';
           this.getThumbFrom().style.left = (Math.abs(s.from - s.min) / Math.abs(s.max - s.min)) * 100 + '%';
         }
-        this.setColoredRange();
       }
       else {
         if (s.isVertical) {
@@ -78,23 +79,19 @@ class View extends EventObservable implements IObserver{
         else {
           this.getThumbFrom().style.left = (Math.abs(s.from - s.min) / Math.abs(s.max - s.min)) * 100 + '%';
         }
-        this.setColoredRange();
       }
+      this.setColoredRange();
     }
     else if (msg === Messages.FROM_IS_SET) {
       this.slider.setValueToLabelThumbFrom(s.from);
-      this.setColoredRange();
     }
     else if (msg === Messages.TO_IS_SET) {
       this.slider.setValueToLabelThumbTo(s.to!==undefined?s.to:s.from);
-      this.setColoredRange();
     }
   }
-  
-  private setColoredRange():void{
-    this.getSlider().setColoredRange();
+  private setColoredRange(){
+    this.slider.setColoredRange();
   }
-
   private convertFromValueToPercent(s:ISettings,value: number): number {
     return +((100 / Math.abs(s.max - s.min)) * (Math.abs(value - s.min))).toFixed(2);
   }
@@ -106,7 +103,6 @@ class View extends EventObservable implements IObserver{
       else {
         this.getThumbFrom().style.left = this.convertFromValueToPercent(s,s.from) + '%';
       }
-      this.setColoredRange();
     }
     else {
       if (this.viewSettings.isVertical) {
@@ -117,7 +113,6 @@ class View extends EventObservable implements IObserver{
         this.getThumbTo().style.left 
         = this.convertFromValueToPercent(s,s.to!==undefined?s.to:s.from) + '%';
       }
-      this.setColoredRange();
     }
   }
   getSlider(): Slider {

@@ -221,7 +221,7 @@ $sl1.fsdSlider({
  from: 8,
  step: 1,
  to: 18,
- isVertical: true,
+ isVertical: false,
  hideThumbLabel: false,
  isRange: true,
 }, 
@@ -613,13 +613,7 @@ class Presenter extends EventObservable_1.EventObservable {
         this.model.setFrom(JSON.parse(s).from);
         this.view.refreshView(2
         /* FROM_IS_SET */
-        , {
-          from: this.model.getFrom(),
-          to: 0,
-          min: 0,
-          max: 0,
-          step: 0
-        });
+        , JSON.parse(this.model.getSettings()));
         this.notifyObservers(1
         /* UPDATE */
         , this.model.getSettings());
@@ -629,13 +623,7 @@ class Presenter extends EventObservable_1.EventObservable {
         this.model.setTo(JSON.parse(s).to);
         this.view.refreshView(3
         /* TO_IS_SET */
-        , {
-          to: this.model.getTo(),
-          from: 0,
-          min: 0,
-          max: 0,
-          step: 0
-        });
+        , JSON.parse(this.model.getSettings()));
         this.notifyObservers(1
         /* UPDATE */
         , this.model.getSettings());
@@ -755,11 +743,10 @@ class View extends EventObservable_1.EventObservable {
     this.viewSettings = Object.assign({}, defaultSettings_1.defaultSettings);
     this.rootElem = root;
     this.slider = new Slider_1.Slider(this.rootElem, Constants_1.Constants.NUMBER_OF_MARKING);
-    this.resPercentage = 0;
   }
 
   handleEvent(msg, s) {
-    this.refreshView(msg, JSON.parse(s));
+    this.notifyObservers(msg, s);
   }
 
   render(s) {
@@ -776,11 +763,8 @@ class View extends EventObservable_1.EventObservable {
 
     if (this.viewSettings.isVertical) {
       this.slider.setVertical();
-    } // this.bindEvents();
-
-  } // bindEvents():void {
-  // }
-
+    }
+  }
 
   refreshView(msg, s) {
     if (msg === 0
@@ -788,6 +772,7 @@ class View extends EventObservable_1.EventObservable {
     ) {
         this.updateViewSettings(s);
         this.render(this.viewSettings);
+        this.setColoredRange();
       }
 
     if (msg === 0
@@ -827,70 +812,32 @@ class View extends EventObservable_1.EventObservable {
             this.getThumbTo().style.left = Math.abs((s.to !== undefined ? s.to : s.from) - s.min) / Math.abs(s.max - s.min) * 100 - this.getThumbLengthInPercentage() + '%';
             this.getThumbFrom().style.left = Math.abs(s.from - s.min) / Math.abs(s.max - s.min) * 100 + '%';
           }
-
-          this.setColoredRange();
         } else {
           if (s.isVertical) {
             this.getThumbFrom().style.top = Math.abs(s.from - s.min) / Math.abs(s.max - s.min) * 100 + '%';
           } else {
             this.getThumbFrom().style.left = Math.abs(s.from - s.min) / Math.abs(s.max - s.min) * 100 + '%';
           }
-
-          this.setColoredRange();
         }
+
+        this.setColoredRange();
       } else if (msg === 2
     /* FROM_IS_SET */
     ) {
         this.slider.setValueToLabelThumbFrom(s.from);
-        this.setColoredRange();
       } else if (msg === 3
     /* TO_IS_SET */
     ) {
         this.slider.setValueToLabelThumbTo(s.to !== undefined ? s.to : s.from);
-        this.setColoredRange();
       }
   }
 
   setColoredRange() {
-    this.getSlider().setColoredRange();
-  }
-
-  convertFromPxToPercent(valueInPX) {
-    return +(valueInPX / this.getSliderLengthInPx() * 100).toFixed(2);
+    this.slider.setColoredRange();
   }
 
   convertFromValueToPercent(s, value) {
     return +(100 / Math.abs(s.max - s.min) * Math.abs(value - s.min)).toFixed(2);
-  }
-
-  dispatchEvent(shift, type) {
-    this.resPercentage = this.convertFromPxToPercent(shift);
-
-    if (type === "thumbFrom") {
-      if (this.viewSettings.isVertical) {
-        this.getThumbFrom().style.top = this.resPercentage + '%';
-      } else {
-        this.getThumbFrom().style.left = this.resPercentage + '%';
-      }
-
-      this.notifyObservers(4
-      /* SET_FROM */
-      , JSON.stringify({
-        from: this.resPercentage
-      }));
-    } else {
-      if (this.viewSettings.isVertical) {
-        this.getThumbTo().style.top = this.resPercentage + '%';
-      } else {
-        this.getThumbTo().style.left = this.resPercentage + '%';
-      }
-
-      this.notifyObservers(5
-      /* SET_TO */
-      , JSON.stringify({
-        to: this.resPercentage
-      }));
-    }
   }
 
   setThumbToValue(s, type) {
@@ -900,21 +847,13 @@ class View extends EventObservable_1.EventObservable {
       } else {
         this.getThumbFrom().style.left = this.convertFromValueToPercent(s, s.from) + '%';
       }
-
-      this.setColoredRange();
     } else {
       if (this.viewSettings.isVertical) {
         this.getThumbTo().style.top = this.convertFromValueToPercent(s, s.to !== undefined ? s.to : s.from) + '%';
       } else {
         this.getThumbTo().style.left = this.convertFromValueToPercent(s, s.to !== undefined ? s.to : s.from) + '%';
       }
-
-      this.setColoredRange();
     }
-  }
-
-  getRangeLabel() {
-    return this.slider.getRangeLabel();
   }
 
   getSlider() {
@@ -1069,11 +1008,6 @@ class Slider extends EventObservable_1.EventObservable {
 
     if (this.viewSettings.isVertical) {
       shift = e.clientY - targetElem.getBoundingClientRect().top;
-    } else {
-      shift = e.clientX - targetElem.getBoundingClientRect().left;
-    }
-
-    if (this.viewSettings.isVertical) {
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp); // eslint-disable-next-line @typescript-eslint/no-this-alias
 
@@ -1117,7 +1051,7 @@ class Slider extends EventObservable_1.EventObservable {
         document.removeEventListener('mousemove', onMouseMove);
       }
     } else {
-      //horizontal slider view
+      shift = e.clientX - targetElem.getBoundingClientRect().left;
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp); //eslint-disable-next-line @typescript-eslint/no-this-alias
 
@@ -1552,4 +1486,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.eaccff79ba945aa7eefe.js.map
+//# sourceMappingURL=main.8fa57dac8b010f2b4ad6.js.map
