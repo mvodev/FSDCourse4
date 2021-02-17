@@ -98,24 +98,7 @@ class Slider extends EventObservable{
   this.container = document.createElement('div');
  }
  setColoredRange(): void {
-  if (this.viewSettings.isRange) {
-   if (this.viewSettings.isVertical) {
-    this.getColoredRange().style.top = (this.getThumbFrom().getBoundingClientRect().top) - this.getRange().getBoundingClientRect().top + this.getThumbLengthInPx() / 2 + 'px';
-    this.getColoredRange().style.height = (this.getThumbTo().getBoundingClientRect().top - this.getThumbFrom().getBoundingClientRect().top + this.getThumbLengthInPx() / 2) + 'px';
-   }
-   else {
-    this.getColoredRange().style.left = (this.getThumbFrom().getBoundingClientRect().left - this.getRange().getBoundingClientRect().left) + 'px';
-    this.getColoredRange().style.width = (this.getThumbTo().getBoundingClientRect().left - (this.getThumbFrom().getBoundingClientRect().left - this.getThumbLengthInPx() / 2)) + 'px';
-   }
-  }
-  else {
-   if (this.viewSettings.isVertical) {
-    this.getColoredRange().style.height = (this.getThumbFrom().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2)) + 'px';
-   }
-   else {
-    this.getColoredRange().style.width = (this.getThumbFrom().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2)) + 'px';
-   }
-  }
+  this.coloredRange.setColoredRange(this.viewSettings, this.getThumbFrom(), this.getThumbTo(),this.getRange(),this.getThumbLengthInPx());
  }
  getThumbLengthInPx() :number{
   if (this.viewSettings.isVertical) {
