@@ -10,14 +10,12 @@ class View extends EventObservable implements IObserver{
   private slider: Slider;
   private viewSettings: IViewSettings;
   private rootElem: HTMLDivElement;
-  private resPercentage: number;
-
+  
   constructor(root: HTMLDivElement) {
     super();
     this.viewSettings = Object.assign({},defaultSettings);
     this.rootElem = root;
     this.slider = new Slider(this.rootElem, Constants.NUMBER_OF_MARKING);
-    this.resPercentage = 0;
   }
   handleEvent(msg: Messages, s: string): void {
     this.refreshView(msg,JSON.parse(s));
@@ -95,9 +93,6 @@ class View extends EventObservable implements IObserver{
   
   private setColoredRange():void{
     this.getSlider().setColoredRange();
-  }
-  private convertFromPxToPercent(valueInPX: number) {
-    return +((valueInPX / this.getSliderLengthInPx()) * 100).toFixed(2);
   }
 
   private convertFromValueToPercent(s:ISettings,value: number): number {
