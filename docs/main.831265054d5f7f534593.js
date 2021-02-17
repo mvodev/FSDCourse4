@@ -1136,48 +1136,15 @@ class Slider extends EventObservable_1.EventObservable {
     this.bindEvents();
   }
 
-  getRange() {
-    return this.range.getRange();
-  }
-
-  getThumbFrom() {
-    return this.thumbFrom.getThumb();
-  }
-
-  getThumbTo() {
-    return this.thumbTo.getThumb();
-  }
-
-  getThumbLabelFrom() {
-    return this.thumbLabelFrom;
-  }
-
-  getThumbLabelTo() {
-    return this.thumbLabelTo;
-  }
-
-  getColoredRange() {
-    return this.coloredRange.getColoredRange();
-  }
-
-  setMaxRange(value) {
-    this.rangeLabel.setMaxRange(value);
-  }
-
-  setMinRange(value) {
-    this.rangeLabel.setMinRange(value);
-  }
-
-  setValueToLabelThumbFrom(value) {
-    this.thumbLabelFrom.setValueToLabel(value);
-  }
-
-  setValueToLabelThumbTo(value) {
-    this.thumbLabelTo.setValueToLabel(value);
-  }
-
-  getRangeLabel() {
-    return this.rangeLabel.getRangeLabel();
+  initSliderComponents() {
+    this.thumbTo = new thumb_1.Thumb('fsd-slider__thumb-to');
+    this.thumbLabelTo = new thumbLabel_1.ThumbLabel();
+    this.thumbFrom = new thumb_1.Thumb('fsd-slider__thumb-from');
+    this.thumbLabelFrom = new thumbLabel_1.ThumbLabel();
+    this.range = new range_1.Range();
+    this.coloredRange = new coloredRange_1.ColoredRange();
+    this.rangeLabel = new rangeLabel_1.RangeLabel();
+    this.container = document.createElement('div');
   }
 
   bindEvents() {
@@ -1194,17 +1161,6 @@ class Slider extends EventObservable_1.EventObservable {
     if (this.viewSettings.isRange) {
       this.thumbLabelTo.getThumbLabelContainer().classList.add('fsd-slider__thumb-label_is_vertical');
     }
-  }
-
-  initSliderComponents() {
-    this.thumbTo = new thumb_1.Thumb('fsd-slider__thumb-to');
-    this.thumbLabelTo = new thumbLabel_1.ThumbLabel();
-    this.thumbFrom = new thumb_1.Thumb('fsd-slider__thumb-from');
-    this.thumbLabelFrom = new thumbLabel_1.ThumbLabel();
-    this.range = new range_1.Range();
-    this.coloredRange = new coloredRange_1.ColoredRange();
-    this.rangeLabel = new rangeLabel_1.RangeLabel();
-    this.container = document.createElement('div');
   }
 
   setColoredRange() {
@@ -1317,6 +1273,50 @@ class Slider extends EventObservable_1.EventObservable {
     }
   }
 
+  getRange() {
+    return this.range.getRange();
+  }
+
+  getThumbFrom() {
+    return this.thumbFrom.getThumb();
+  }
+
+  getThumbTo() {
+    return this.thumbTo.getThumb();
+  }
+
+  getThumbLabelFrom() {
+    return this.thumbLabelFrom;
+  }
+
+  getThumbLabelTo() {
+    return this.thumbLabelTo;
+  }
+
+  getColoredRange() {
+    return this.coloredRange.getColoredRange();
+  }
+
+  setMaxRange(value) {
+    this.rangeLabel.setMaxRange(value);
+  }
+
+  setMinRange(value) {
+    this.rangeLabel.setMinRange(value);
+  }
+
+  setValueToLabelThumbFrom(value) {
+    this.thumbLabelFrom.setValueToLabel(value);
+  }
+
+  setValueToLabelThumbTo(value) {
+    this.thumbLabelTo.setValueToLabel(value);
+  }
+
+  getRangeLabel() {
+    return this.rangeLabel.getRangeLabel();
+  }
+
 }
 
 exports.Slider = Slider;
@@ -1425,16 +1425,14 @@ class RangeLabel {
   }
 
   render(s, numberOfMarking) {
-    const {
-      isVertical
-    } = JSON.parse(s);
+    this.viewSettings = JSON.parse(s);
     this.minLabel = document.createElement('span');
     this.rangeLabelContainer.appendChild(this.minLabel);
 
     for (let i = 0; i < numberOfMarking; i++) {
       const marking = document.createElement('span');
 
-      if (isVertical) {
+      if (this.viewSettings.isVertical) {
         marking.innerText = '-';
       } else marking.innerText = '|';
 
@@ -1558,4 +1556,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.03e3b7f4be62acdff519.js.map
+//# sourceMappingURL=main.831265054d5f7f534593.js.map

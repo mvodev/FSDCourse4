@@ -44,38 +44,15 @@ class Slider extends EventObservable{
   this.rootElem.appendChild(this.container);
   this.bindEvents();
  }
- getRange():HTMLDivElement {
-  return this.range.getRange();
- }
- getThumbFrom():HTMLDivElement {
-  return this.thumbFrom.getThumb();
- }
- getThumbTo() :HTMLDivElement{
-  return this.thumbTo.getThumb();
- }
- getThumbLabelFrom() :ThumbLabel{
-  return this.thumbLabelFrom;
- }
- getThumbLabelTo():ThumbLabel {
-  return this.thumbLabelTo;
- }
- getColoredRange():HTMLDivElement {
-  return this.coloredRange.getColoredRange();
- }
- setMaxRange(value: number) :void{
-  this.rangeLabel.setMaxRange(value);
- }
- setMinRange(value: number) :void{
-  this.rangeLabel.setMinRange(value);
- }
- setValueToLabelThumbFrom(value: number):void {
-  this.thumbLabelFrom.setValueToLabel(value);
- }
- setValueToLabelThumbTo(value: number) :void{
-  this.thumbLabelTo.setValueToLabel(value);
- }
- getRangeLabel(): HTMLDivElement {
-  return this.rangeLabel.getRangeLabel();
+ private initSliderComponents() {
+  this.thumbTo = new Thumb('fsd-slider__thumb-to');
+  this.thumbLabelTo = new ThumbLabel();
+  this.thumbFrom = new Thumb('fsd-slider__thumb-from');
+  this.thumbLabelFrom = new ThumbLabel();
+  this.range = new Range();
+  this.coloredRange = new ColoredRange();
+  this.rangeLabel = new RangeLabel();
+  this.container = document.createElement('div');
  }
  bindEvents(): void {
   this.getRangeLabel().addEventListener('mousedown', this.handleRange.bind(this));
@@ -90,16 +67,7 @@ class Slider extends EventObservable{
    this.thumbLabelTo.getThumbLabelContainer().classList.add('fsd-slider__thumb-label_is_vertical');
   }
  }
- private initSliderComponents() {
-  this.thumbTo = new Thumb('fsd-slider__thumb-to');
-  this.thumbLabelTo = new ThumbLabel();
-  this.thumbFrom = new Thumb('fsd-slider__thumb-from');
-  this.thumbLabelFrom = new ThumbLabel();
-  this.range = new Range();
-  this.coloredRange = new ColoredRange();
-  this.rangeLabel = new RangeLabel();
-  this.container = document.createElement('div');
- }
+ 
  setColoredRange(): void {
   this.coloredRange.setColoredRange(
        this.viewSettings,
@@ -201,6 +169,39 @@ class Slider extends EventObservable{
    }
    this.notifyObservers(Messages.SET_TO, JSON.stringify({ to: this.resPercentage }));
   }
+ }
+ getRange(): HTMLDivElement {
+  return this.range.getRange();
+ }
+ getThumbFrom(): HTMLDivElement {
+  return this.thumbFrom.getThumb();
+ }
+ getThumbTo(): HTMLDivElement {
+  return this.thumbTo.getThumb();
+ }
+ getThumbLabelFrom(): ThumbLabel {
+  return this.thumbLabelFrom;
+ }
+ getThumbLabelTo(): ThumbLabel {
+  return this.thumbLabelTo;
+ }
+ getColoredRange(): HTMLDivElement {
+  return this.coloredRange.getColoredRange();
+ }
+ setMaxRange(value: number): void {
+  this.rangeLabel.setMaxRange(value);
+ }
+ setMinRange(value: number): void {
+  this.rangeLabel.setMinRange(value);
+ }
+ setValueToLabelThumbFrom(value: number): void {
+  this.thumbLabelFrom.setValueToLabel(value);
+ }
+ setValueToLabelThumbTo(value: number): void {
+  this.thumbLabelTo.setValueToLabel(value);
+ }
+ getRangeLabel(): HTMLDivElement {
+  return this.rangeLabel.getRangeLabel();
  }
 }
 export {Slider}

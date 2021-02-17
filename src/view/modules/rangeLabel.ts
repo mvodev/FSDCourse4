@@ -1,18 +1,21 @@
+import { IViewSettings } from "../../model/IViewSettings";
+
 class RangeLabel{
  private rangeLabelContainer!: HTMLDivElement;
  private minLabel!: HTMLSpanElement;
  private maxLabel!: HTMLSpanElement;
+ private viewSettings!:IViewSettings;
 
  constructor() {
   this.initComponents();
  }
  render(s: string, numberOfMarking:number):void{
-  const {isVertical} = JSON.parse(s);
+  this.viewSettings = JSON.parse(s);
   this.minLabel = document.createElement('span');
   this.rangeLabelContainer.appendChild(this.minLabel);
   for (let i = 0; i < numberOfMarking; i++) {
    const marking = document.createElement('span');
-   if (isVertical) {
+   if (this.viewSettings.isVertical) {
     marking.innerText = '-';
    } else marking.innerText = '|';
    this.rangeLabelContainer.appendChild(marking);
