@@ -1,4 +1,4 @@
-class Range {
+class Range{
  private range: HTMLDivElement;
  constructor() {
   const div = document.createElement('div');

@@ -1,6 +1,6 @@
 import { IViewSettings } from "../../model/IViewSettings";
 
-class ColoredRange {
+class ColoredRange{
  private coloredRange: HTMLDivElement;
  constructor() {
   this.coloredRange = document.createElement('div');
