@@ -4,7 +4,7 @@ import { Thumb } from './thumb';
 import { ThumbLabel } from './thumbLabel';
 import { RangeLabel } from './rangeLabel';
 import { ColoredRange } from './coloredRange';
-import { ISettings } from '../../model/ISettings';
+import { IViewSettings } from '../../model/IViewSettings';
 import { defaultSettings } from '../../model/defaultSettings';
 import { EventObservable } from '../../observers/EventObservable';
 class Slider extends EventObservable{
@@ -17,7 +17,7 @@ private rangeLabel!: RangeLabel;
 private rootElem!: HTMLDivElement;
 private container!: HTMLDivElement;
 private coloredRange!: ColoredRange;
-private viewSettings: ISettings;
+private viewSettings: IViewSettings;
 private numberOfMarking: number;
 private resPercentage: number;
 constructor(rootElem: HTMLDivElement, numberOfMarking: number) {
