@@ -13,25 +13,18 @@ describe("Model", function () {
   isRange: true,
  });
  it("Model return correct min after validation settings", function () {
-  assert.equal(model.getMin(), -20);
+  assert.equal(model.getMin(), 0);
  });
  it("Model return correct step after validation settings", function () {
-  assert.equal(model.getStep(), 0.2);
+  assert.equal(model.getStep(), 1);
  });
- it("Model return correct range value after validation settings", function () {
-  assert.equal(model.isRange(), true);
- });
- it("Model return correct hideThumbLabel value after validation settings",
-  function () {
-   assert.equal(JSON.parse(model.getSettings()).hideThumbLabel, false);
-  });
  it("Model return correct from after setFrom method", function () {
   model.setFrom(50);
-  assert.equal(model.getFrom(), -15);
+  assert.equal(model.getFrom(), 5);
  });
  it("Model return correct from after setFrom method", function () {
   model.setFrom(-10);
-  assert.equal(model.getFrom(), -20);
+  assert.equal(model.getFrom(), 0);
  });
 });
 

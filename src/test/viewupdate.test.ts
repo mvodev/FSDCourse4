@@ -8,6 +8,7 @@ describe("View", function () {
   min: 15,
   max: 25,
   from: 17,
+  to:20,
   step: 2,
   isVertical: true,
   hideThumbLabel: true,
@@ -17,13 +18,14 @@ describe("View", function () {
   min: 10,
   max: 25,
   from: 17,
+  to:20,
   step: 2,
   isVertical: true,
   hideThumbLabel: false,
   isRange: false,
  };
  const root: HTMLDivElement = document.querySelector('#slider-test2');
- const view = new View(s, root);
+ const view = new View(root);
  view.refreshView(Messages.INIT, s);
  view.refreshView(Messages.UPDATE, sUpdated);
  it("View set correct style for ThumbLabel after update", function () {

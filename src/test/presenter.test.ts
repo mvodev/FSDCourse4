@@ -10,6 +10,7 @@ describe("Presenter", function () {
   min: 0,
   max: 25,
   from: 17,
+  to:20,
   step: 5,
   isVertical: false,
   hideThumbLabel: true,
@@ -19,13 +20,14 @@ describe("Presenter", function () {
   min: -10,
   max: 25,
   from: 17,
+  to:20,
   step: -3,
   isVertical: false,
   hideThumbLabel: false,
   isRange: true,
  };
  const model = new Model(settings);
- const view = new View(settings, root3);
+ const view = new View(root3);
  const presenter = new Presenter(view, model);
  model.addObserver(presenter);
  view.addObserver(presenter);

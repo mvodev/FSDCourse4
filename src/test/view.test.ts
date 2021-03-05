@@ -8,13 +8,14 @@ describe("View", function () {
   min: 15,
   max: 25,
   from: 17,
+  to:20,
   step: 2,
   isVertical: true,
   hideThumbLabel: true,
   isRange: false,
  };
  const root: HTMLDivElement = document.querySelector('#slider-test');
- const view = new View(s, root);
+ const view = new View(root);
  view.refreshView(Messages.INIT, s);
  it("View set correct classes for range label in vertical mode", function () {
   assert.equal(view.getSlider().getRangeLabel().classList.contains('fsd-slider__range-label_is_vertical'), true);
