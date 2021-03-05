@@ -236,68 +236,68 @@ $sl1.fsdSlider({
   }
  }
 });
-// var $sl2 = $('.slider2');
-// var $sl2_input = $('.input-result2');
-// $sl2.fsdSlider({
-//  min: 5,
-//  max: 10,
-//  from: 7,
-//  step: 0.2,
-//  to: -11,
-//  isVertical: true,
-//  hideThumbLabel: true,
-//  isRange: false,
-// },
-// {
-//  handleEvent: (message, result) => {
-//   var s = JSON.parse(result);
-//   if (s.isRange) {
-//    $sl2_input.val(s.from + '    -    ' + s.to);
-//   }
-//   else {
-//    $sl2_input.val(s.from);
-//   }
-//  }
-// });
-// var $sl3 = $('.slider3');
-// var $sl3_input = $('.input-result3');
-// $sl3.fsdSlider({
-//  min: -15,
-//  max: 100,
-//  from: -14,
-//  step: 4,
-//  to: 11,
-//  isVertical: false,
-//  hideThumbLabel: false,
-//  isRange: true,
-// }, {
-//  handleEvent: (message, result) => {
-//   var s = JSON.parse(result);
-//   if (s.isRange) {
-//    $sl3_input.val(s.from + '    -    ' + s.to);
-//   }
-//   else {
-//    $sl3_input.val(s.from);
-//   }
-//  }
-// });
+var $sl2 = $('.slider2');
+var $sl2_input = $('.input-result2');
+$sl2.fsdSlider({
+ min: 5,
+ max: 10,
+ from: 7,
+ step: 0.2,
+ to: -11,
+ isVertical: true,
+ hideThumbLabel: true,
+ isRange: false,
+},
+{
+ handleEvent: (message, result) => {
+  var s = JSON.parse(result);
+  if (s.isRange) {
+   $sl2_input.val(s.from + '    -    ' + s.to);
+  }
+  else {
+   $sl2_input.val(s.from);
+  }
+ }
+});
+var $sl3 = $('.slider3');
+var $sl3_input = $('.input-result3');
+$sl3.fsdSlider({
+ min: -15,
+ max: 100,
+ from: -14,
+ step: 4,
+ to: 11,
+ isVertical: false,
+ hideThumbLabel: false,
+ isRange: true,
+}, {
+ handleEvent: (message, result) => {
+  var s = JSON.parse(result);
+  if (s.isRange) {
+   $sl3_input.val(s.from + '    -    ' + s.to);
+  }
+  else {
+   $sl3_input.val(s.from);
+  }
+ }
+});
 var sl1_instance = $sl1.data("fsdSlider");
-// var sl2_instance = $sl2.data("fsdSlider");
-// var sl3_instance = $sl3.data("fsdSlider");
+var sl2_instance = $sl2.data("fsdSlider");
+var sl3_instance = $sl3.data("fsdSlider");
 
 $("input").on("change",function inputHandler(){
  if ($(this).parent().parent().hasClass("form_slider1"))//slider1
  {
   sl1_instance.update(collectData('slider1'));
  }
- // else if ($(this).parent().parent().hasClass("form_slider2"))//slider1
- // {
- //  sl2_instance.update(collectData('slider2'));
- // }
- // else if ($(this).parent().parent().hasClass("form_slider3"))//slider1
- // {
- //  sl3_instance.update(collectData('slider3'));
- // }  
+ else if ($(this).parent().parent().hasClass("form_slider2"))//slider1
+ {
+  sl2_instance.update(collectData('slider2'));
+ }
+ else if ($(this).parent().parent().hasClass("form_slider3"))//slider1
+ {
+  sl3_instance.update(collectData('slider3'));
+ }  
 });
 function collectData(sliderNumber) {
  return {
@@ -407,6 +407,10 @@ class Model extends EventObservable_1.EventObservable {
     if (validatedMin !== undefined) {
       if (validatedMin >= this.settings.max) {
         console.error('unacceptable value,min value in settings more than max value');
+      } else if (validatedMin > this.settings.from) {
+        console.error('unacceptable value,min value in settings more than from value');
+        this.settings.min = validatedMin;
+        this.settings.from = validatedMin;
       } else {
         this.settings.min = validatedMin;
       }
@@ -415,6 +419,12 @@ class Model extends EventObservable_1.EventObservable {
     if (validatedMax !== undefined) {
       if (validatedMax <= this.settings.min) {
         console.error('unacceptable value,max value in settings lower than min value');
+      } else if (validatedMax <= this.settings.to && this.settings.isRange) {
+        console.error('unacceptable value,max value in settings lower than to value');
+        this.settings.max = validatedMax;
+        this.settings.to = validatedMax;
+      } else if (validatedMax <= this.settings.from) {
+        console.error('unacceptable value,max value in settings lower than from value');
       } else {
         this.settings.max = validatedMax;
       }
@@ -766,11 +776,11 @@ class View extends EventObservable_1.EventObservable {
     }
   }
 
-  refreshView(msg, s) {
+  refreshView(msg, settings) {
     if (msg === 0
     /* INIT */
     ) {
-        this.updateViewSettings(s);
+        this.updateViewSettings(settings);
         this.render(this.viewSettings);
         this.setColoredRange();
       }
@@ -780,43 +790,43 @@ class View extends EventObservable_1.EventObservable {
     || msg === 1
     /* UPDATE */
     ) {
-        this.updateViewSettings(s);
+        this.updateViewSettings(settings);
 
-        if (!s.hideThumbLabel) {
+        if (!settings.hideThumbLabel) {
           this.slider.getThumbLabelFrom().showLabel();
-          this.setThumbToValue(s, 'thumbFrom');
+          this.setThumbToValue(settings, 'thumbFrom');
 
-          if (s.isRange) {
-            this.setThumbToValue(s, 'thumbTo');
+          if (settings.isRange) {
+            this.setThumbToValue(settings, 'thumbTo');
             this.slider.getThumbLabelTo().showLabel();
           }
         } else {
           this.slider.getThumbLabelFrom().hideLabel();
 
-          if (s.isRange) {
+          if (settings.isRange) {
             this.slider.getThumbLabelTo().hideLabel();
           }
         }
 
-        this.slider.setMinRange(s.min);
-        this.slider.setMaxRange(s.max);
-        this.slider.setValueToLabelThumbFrom(s.from);
+        this.slider.setMinRange(settings.min);
+        this.slider.setMaxRange(settings.max);
+        this.slider.setValueToLabelThumbFrom(settings.from);
 
-        if (s.isRange) {
-          this.slider.setValueToLabelThumbTo(s.to !== undefined ? s.to : s.from);
+        if (settings.isRange) {
+          this.slider.setValueToLabelThumbTo(settings.to !== undefined ? settings.to : settings.from);
 
-          if (s.isVertical) {
-            this.getThumbTo().style.top = Math.abs((s.to !== undefined ? s.to : s.from) - s.min) / Math.abs(s.max - s.min) * 100 - this.getThumbLengthInPercentage() + '%';
-            this.getThumbFrom().style.top = Math.abs(s.from - s.min) / Math.abs(s.max - s.min) * 100 + '%';
+          if (settings.isVertical) {
+            this.getThumbTo().style.top = Math.abs((settings.to !== undefined ? settings.to : settings.from) - settings.min) / Math.abs(settings.max - settings.min) * 100 - this.getThumbLengthInPercentage() + '%';
+            this.getThumbFrom().style.top = Math.abs(settings.from - settings.min) / Math.abs(settings.max - settings.min) * 100 + '%';
           } else {
-            this.getThumbTo().style.left = Math.abs((s.to !== undefined ? s.to : s.from) - s.min) / Math.abs(s.max - s.min) * 100 - this.getThumbLengthInPercentage() + '%';
-            this.getThumbFrom().style.left = Math.abs(s.from - s.min) / Math.abs(s.max - s.min) * 100 + '%';
+            this.getThumbTo().style.left = Math.abs((settings.to !== undefined ? settings.to : settings.from) - settings.min) / Math.abs(settings.max - settings.min) * 100 - this.getThumbLengthInPercentage() + '%';
+            this.getThumbFrom().style.left = Math.abs(settings.from - settings.min) / Math.abs(settings.max - settings.min) * 100 + '%';
           }
         } else {
-          if (s.isVertical) {
-            this.getThumbFrom().style.top = Math.abs(s.from - s.min) / Math.abs(s.max - s.min) * 100 + '%';
+          if (settings.isVertical) {
+            this.getThumbFrom().style.top = Math.abs(settings.from - settings.min) / Math.abs(settings.max - settings.min) * 100 + '%';
           } else {
-            this.getThumbFrom().style.left = Math.abs(s.from - s.min) / Math.abs(s.max - s.min) * 100 + '%';
+            this.getThumbFrom().style.left = Math.abs(settings.from - settings.min) / Math.abs(settings.max - settings.min) * 100 + '%';
           }
         }
 
@@ -824,11 +834,11 @@ class View extends EventObservable_1.EventObservable {
       } else if (msg === 2
     /* FROM_IS_SET */
     ) {
-        this.slider.setValueToLabelThumbFrom(s.from);
+        this.slider.setValueToLabelThumbFrom(settings.from);
       } else if (msg === 3
     /* TO_IS_SET */
     ) {
-        this.slider.setValueToLabelThumbTo(s.to !== undefined ? s.to : s.from);
+        this.slider.setValueToLabelThumbTo(settings.to !== undefined ? settings.to : settings.from);
       }
   }
 
@@ -937,13 +947,13 @@ class Slider extends EventObservable_1.EventObservable {
     this.initSliderComponents();
   }
 
-  render(s) {
-    this.viewSettings = Object.assign(this.viewSettings, JSON.parse(s));
+  render(settings) {
+    this.viewSettings = Object.assign(this.viewSettings, JSON.parse(settings));
     this.container.classList.add('fsd-slider');
     this.container.appendChild(this.range.getRange());
     this.range.getRange().appendChild(this.coloredRange.getColoredRange());
     this.range.getRange().appendChild(this.thumbFrom.getThumb());
-    this.rangeLabel.render(s, this.numberOfMarking);
+    this.rangeLabel.render(settings, this.numberOfMarking);
     this.thumbFrom.getThumb().appendChild(this.thumbLabelFrom.getThumbLabelContainer());
 
     if (this.viewSettings.isRange) {
@@ -1354,8 +1364,8 @@ class RangeLabel {
     this.initComponents();
   }
 
-  render(s, numberOfMarking) {
-    this.viewSettings = JSON.parse(s);
+  render(settings, numberOfMarking) {
+    this.viewSettings = JSON.parse(settings);
     this.minLabel = document.createElement('span');
     this.rangeLabelContainer.appendChild(this.minLabel);
 
@@ -1486,4 +1496,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.8fa57dac8b010f2b4ad6.js.map
+//# sourceMappingURL=main.12ef61ccc2b91f4064ce.js.map
