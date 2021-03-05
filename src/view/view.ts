@@ -15,7 +15,7 @@ class View extends EventObservable implements IObserver{
     super();
     this.viewSettings = Object.assign({},defaultSettings);
     this.rootElem = root;
-    this.slider = new Slider(this.rootElem, Constants.NUMBER_OF_MARKING);
+    this.slider = new Slider(this.rootElem, Constants.NUMBER_OF_MARKINGS);
   }
   handleEvent(msg: Messages, s: string): void {
     this.notifyObservers(msg,s);
