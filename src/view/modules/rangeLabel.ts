@@ -9,8 +9,8 @@ class RangeLabel{
  constructor() {
   this.initComponents();
  }
- render(s: string, numberOfMarking:number):void{
-  this.viewSettings = JSON.parse(s);
+ render(settings: string, numberOfMarking:number):void{
+  this.viewSettings = JSON.parse(settings);
   this.minLabel = document.createElement('span');
   this.rangeLabelContainer.appendChild(this.minLabel);
   for (let i = 0; i < numberOfMarking; i++) {

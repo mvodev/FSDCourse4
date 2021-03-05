@@ -33,60 +33,60 @@ class View extends EventObservable implements IObserver{
       this.slider.setVertical();
     }
   }
-  refreshView(msg: Messages, s: ISettings):void {
+  refreshView(msg: Messages, settings: ISettings):void {
     if (msg === Messages.INIT) {
-      this.updateViewSettings(s);
+      this.updateViewSettings(settings);
       this.render(this.viewSettings);
       this.setColoredRange();
     }
     if (msg === Messages.INIT || msg === Messages.UPDATE) {
       
-      this.updateViewSettings(s);
-      if (!s.hideThumbLabel) {
+      this.updateViewSettings(settings);
+      if (!settings.hideThumbLabel) {
         this.slider.getThumbLabelFrom().showLabel();
-        this.setThumbToValue(s,'thumbFrom');
-        if (s.isRange) {
-          this.setThumbToValue(s,'thumbTo');
+        this.setThumbToValue(settings,'thumbFrom');
+        if (settings.isRange) {
+          this.setThumbToValue(settings,'thumbTo');
           this.slider.getThumbLabelTo().showLabel();
         }
       }
       else {
         this.slider.getThumbLabelFrom().hideLabel();
-        if (s.isRange) {
+        if (settings.isRange) {
           this.slider.getThumbLabelTo().hideLabel();
         }
       }
-      this.slider.setMinRange(s.min);
-      this.slider.setMaxRange(s.max);
-      this.slider.setValueToLabelThumbFrom(s.from);
-      if (s.isRange) {
-        this.slider.setValueToLabelThumbTo(s.to!==undefined?s.to:s.from);
+      this.slider.setMinRange(settings.min);
+      this.slider.setMaxRange(settings.max);
+      this.slider.setValueToLabelThumbFrom(settings.from);
+      if (settings.isRange) {
+        this.slider.setValueToLabelThumbTo(settings.to !== undefined ? settings.to : settings.from);
 
-        if (s.isVertical) {
+        if (settings.isVertical) {
           this.getThumbTo().style.top = (
-            (Math.abs((s.to !== undefined ? s.to : s.from) - s.min) / Math.abs(s.max - s.min)) * 100 - this.getThumbLengthInPercentage()) + '%';
-          this.getThumbFrom().style.top = (Math.abs(s.from - s.min) / Math.abs(s.max - s.min)) * 100 + '%';
+            (Math.abs((settings.to !== undefined ? settings.to : settings.from) - settings.min) / Math.abs(settings.max - settings.min)) * 100 - this.getThumbLengthInPercentage()) + '%';
+          this.getThumbFrom().style.top = (Math.abs(settings.from - settings.min) / Math.abs(settings.max - settings.min)) * 100 + '%';
         }
         else {
-          this.getThumbTo().style.left = ((Math.abs((s.to !== undefined ? s.to : s.from) - s.min) / Math.abs(s.max - s.min)) * 100 - this.getThumbLengthInPercentage()) + '%';
-          this.getThumbFrom().style.left = (Math.abs(s.from - s.min) / Math.abs(s.max - s.min)) * 100 + '%';
+          this.getThumbTo().style.left = ((Math.abs((settings.to !== undefined ? settings.to : settings.from) - settings.min) / Math.abs(settings.max - settings.min)) * 100 - this.getThumbLengthInPercentage()) + '%';
+          this.getThumbFrom().style.left = (Math.abs(settings.from - settings.min) / Math.abs(settings.max - settings.min)) * 100 + '%';
         }
       }
       else {
-        if (s.isVertical) {
-          this.getThumbFrom().style.top = (Math.abs(s.from - s.min) / Math.abs(s.max - s.min)) * 100 + '%';
+        if (settings.isVertical) {
+          this.getThumbFrom().style.top = (Math.abs(settings.from - settings.min) / Math.abs(settings.max - settings.min)) * 100 + '%';
         }
         else {
-          this.getThumbFrom().style.left = (Math.abs(s.from - s.min) / Math.abs(s.max - s.min)) * 100 + '%';
+          this.getThumbFrom().style.left = (Math.abs(settings.from - settings.min) / Math.abs(settings.max - settings.min)) * 100 + '%';
         }
       }
       this.setColoredRange();
     }
     else if (msg === Messages.FROM_IS_SET) {
-      this.slider.setValueToLabelThumbFrom(s.from);
+      this.slider.setValueToLabelThumbFrom(settings.from);
     }
     else if (msg === Messages.TO_IS_SET) {
-      this.slider.setValueToLabelThumbTo(s.to!==undefined?s.to:s.from);
+      this.slider.setValueToLabelThumbTo(settings.to !== undefined ? settings.to : settings.from);
     }
   }
   private setColoredRange(){
