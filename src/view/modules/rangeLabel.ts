@@ -32,12 +32,6 @@ class RangeLabel{
  setMaxRange(value: number):void {
   this.maxLabel.innerText = '' + value;
  }
- getMinRange():HTMLSpanElement {
-  return this.minLabel;
- }
- getMaxRange():HTMLSpanElement {
-  return this.maxLabel;
- }
  private initComponents() {
   this.rangeLabelContainer = document.createElement('div');
   this.rangeLabelContainer.classList.add('fsd-slider__range-label');
