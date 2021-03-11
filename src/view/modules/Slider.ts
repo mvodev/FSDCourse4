@@ -53,15 +53,15 @@ private initSliderComponents() {
   this.coloredRange = new ColoredRange();
   this.rangeLabel = new RangeLabel();
   this.container = document.createElement('div');
- }
- bindEvents(): void {
+}
+private bindEvents(): void {
   this.getRangeLabel().addEventListener('mousedown', this.handleRange.bind(this));
   this.getThumbFrom().addEventListener('mousedown', this.handleThumb.bind(this, "thumbFrom"));
   if (this.viewSettings.isRange) {
     this.getThumbTo().addEventListener('mousedown', this.handleThumb.bind(this, "thumbTo"));
   }
- }
- setVertical():void {
+}
+private setVertical():void {
   this.container.classList.add('fsd-slider_is_vertical');
   this.range.getRange().classList.add('fsd-slider__range_is_vertical');
   this.coloredRange.getColoredRange().classList.add('fsd-slider__colored-range_is_vertical');
@@ -70,9 +70,9 @@ private initSliderComponents() {
   if (this.viewSettings.isRange) {
    this.thumbLabelTo.getThumbLabelContainer().classList.add('fsd-slider__thumb-label_is_vertical');
   }
- }
- 
- setColoredRange(): void {
+}
+
+private setColoredRange(): void {
   this.coloredRange.setColoredRange(
       this.viewSettings,
       this.getThumbFrom(),
@@ -80,10 +80,10 @@ private initSliderComponents() {
       this.getRange(),
       this.getThumbLengthInPx());
   }
-  getThumbLengthInPx() :number{
-    return this.getThumbFrom().offsetHeight;
-  }
-  private handleThumb(data: string, e: MouseEvent): void {
+private  getThumbLengthInPx() :number{
+  return this.getThumbFrom().offsetHeight;
+}
+private handleThumb(data: string, e: MouseEvent): void {
     e.preventDefault();
     let targetElem: HTMLDivElement = this.getThumbFrom();
     if (data === "thumbTo") {
@@ -260,37 +260,37 @@ private dispatchEvent(shift: number, type: string) {
   }
   this.setColoredRange();
 }
-getRange(): HTMLDivElement {
+private getRange(): HTMLDivElement {
   return this.range.getRange();
 }
-getThumbFrom(): HTMLDivElement {
+private getThumbFrom(): HTMLDivElement {
   return this.thumbFrom.getThumb();
 }
-getThumbTo(): HTMLDivElement {
+private getThumbTo(): HTMLDivElement {
   return this.thumbTo.getThumb();
 }
-getThumbLabelFrom(): ThumbLabel {
+private getThumbLabelFrom(): ThumbLabel {
   return this.thumbLabelFrom;
 }
-getThumbLabelTo(): ThumbLabel {
+private getThumbLabelTo(): ThumbLabel {
   return this.thumbLabelTo;
 }
-getColoredRange(): HTMLDivElement {
+private getColoredRange(): HTMLDivElement {
   return this.coloredRange.getColoredRange();
 }
-setMaxRange(value: number): void {
+private setMaxRange(value: number): void {
   this.rangeLabel.setMaxRange(value);
 }
-setMinRange(value: number): void {
+private setMinRange(value: number): void {
   this.rangeLabel.setMinRange(value);
 }
-setValueToLabelThumbFrom(value: number): void {
+private setValueToLabelThumbFrom(value: number): void {
   this.thumbLabelFrom.setValueToLabel(value);
 }
-setValueToLabelThumbTo(value: number): void {
+private setValueToLabelThumbTo(value: number): void {
   this.thumbLabelTo.setValueToLabel(value);
 }
-getRangeLabel(): HTMLDivElement {
+private getRangeLabel(): HTMLDivElement {
   return this.rangeLabel.getRangeLabel();
 }
 }
