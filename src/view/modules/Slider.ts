@@ -83,10 +83,10 @@ setColoredRange(): void {
 private  getThumbLengthInPx() :number{
   return this.getThumbFrom().offsetHeight;
 }
-private handleThumb(data: string, e: MouseEvent): void {
+private handleThumb(thumbType: string, e: MouseEvent): void {
     e.preventDefault();
     let targetElem: HTMLDivElement = this.getThumbFrom();
-    if (data === "thumbTo") {
+  if (thumbType === "thumbTo") {
       targetElem = this.getThumbTo();
     }
     let shift: number;
@@ -99,28 +99,28 @@ private handleThumb(data: string, e: MouseEvent): void {
    // eslint-disable-next-line no-inner-declarations
     function onMouseMove(event: MouseEvent) {
       let newPos = event.clientY - shift - that.getRange().getBoundingClientRect().top;
-      if (data === "thumbTo") {
-      const fromPos = that.getThumbFrom().getBoundingClientRect().top - (that.getRange().getBoundingClientRect().top - that.getThumbLengthInPx() / 2);
+      if (thumbType === "thumbTo") {
+      const fromPos = that.getThumbFrom().getBoundingClientRect().top - (that.getRange().getBoundingClientRect().top);
       if (newPos < fromPos) {
         newPos = fromPos;
       }
       }
       else {
-        if (newPos < -that.getThumbFrom().offsetWidth / 2) {
-          newPos = -that.getThumbFrom().offsetWidth / 2;
+        if (newPos < 0) {
+          newPos = 0;
         }
       }
-      let bottom = that.getSliderLengthInPx() - that.getThumbLengthInPx() / 4;
+      let bottom = that.getSliderLengthInPx() ;
       if (that.viewSettings.isRange) {
-        const toPos = that.getThumbTo().getBoundingClientRect().top - (that.getRange().getBoundingClientRect().top - that.getThumbLengthInPx() / 4);
-      if (data === "thumbFrom") {
+        const toPos = that.getThumbTo().getBoundingClientRect().top - (that.getRange().getBoundingClientRect().top );
+        if (thumbType === "thumbFrom") {
         bottom = toPos;
       }
       }
       if (newPos > bottom) {
         newPos = bottom;
       }
-      that.dispatchEvent(newPos, data);
+      that.dispatchEvent(newPos, thumbType);
     }
    // eslint-disable-next-line no-inner-declarations
     function onMouseUp() {
@@ -137,28 +137,28 @@ private handleThumb(data: string, e: MouseEvent): void {
    //eslint-disable-next-line no-inner-declarations
     function onMouseMove(e: MouseEvent) {
       let newPos = e.clientX - shift - that.getRange().getBoundingClientRect().left;
-      if (data === "thumbTo") {
-        const fromPos = that.getThumbFrom().getBoundingClientRect().left - (that.getRange().getBoundingClientRect().left - that.getThumbLengthInPx() / 2);
+      if (thumbType === "thumbTo") {
+        const fromPos = that.getThumbFrom().getBoundingClientRect().left - (that.getRange().getBoundingClientRect().left );
       if (newPos < fromPos) {
         newPos = fromPos;
       }
       }
       else {
-        if (newPos < -that.getThumbFrom().offsetWidth / 2) {
-        newPos = -that.getThumbFrom().offsetWidth / 2;
+        if (newPos < 0) {
+        newPos = 0;
         }
       }
-      let rightEdge = that.getSliderLengthInPx() - that.getThumbFrom().offsetWidth / 4;
+      let rightEdge = that.getSliderLengthInPx();
       if (that.viewSettings.isRange) {
-        const toPos = that.getThumbTo().getBoundingClientRect().left - (that.getRange().getBoundingClientRect().left - that.getThumbLengthInPx() / 4);
-      if (data === "thumbFrom") {
+        const toPos = that.getThumbTo().getBoundingClientRect().left - (that.getRange().getBoundingClientRect().left );
+        if (thumbType === "thumbFrom") {
         rightEdge = toPos;
       }
       }
       if (newPos > rightEdge) {
         newPos = rightEdge;
       }
-      that.dispatchEvent(newPos, data);
+      that.dispatchEvent(newPos, thumbType);
       }
    // eslint-disable-next-line no-inner-declarations
     function onMouseUp() {
@@ -172,9 +172,9 @@ private handleRange(e: MouseEvent) {
   let shift: number, fromPos: number;
   if (this.viewSettings.isVertical) {
     shift = e.clientY - this.getRange().getBoundingClientRect().top;
-    fromPos = this.getThumbFrom().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2);
+    fromPos = this.getThumbFrom().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top);
     if (this.viewSettings.isRange) {
-    const toPos = this.getThumbTo().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbLengthInPx() / 2);
+    const toPos = this.getThumbTo().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top );
     if (shift < fromPos) {
       this.dispatchEvent(shift, "thumbFrom");
     }
@@ -182,11 +182,11 @@ private handleRange(e: MouseEvent) {
       this.dispatchEvent(shift, "thumbTo");
     }
     else if (shift >= fromPos && shift <= toPos) {
-      const pivot = (toPos - fromPos);
-      if (shift < pivot) {
+      const pivot = (toPos - fromPos)/2;
+      if (shift < pivot+fromPos) {
       this.dispatchEvent(shift, "thumbFrom");
       }
-      else if (shift >= pivot) {
+      else if (shift >= pivot+fromPos) {
         this.dispatchEvent(shift, "thumbTo");
       }
     }
@@ -204,7 +204,7 @@ private handleRange(e: MouseEvent) {
     shift = e.clientX - this.getRange().getBoundingClientRect().left;
     fromPos = this.getThumbFrom().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2);
     if (this.viewSettings.isRange) {
-      const toPos = this.getThumbTo().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2);
+      const toPos = this.getThumbTo().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left);
     if (shift < fromPos) {
       this.dispatchEvent(shift, "thumbFrom");
     }
@@ -212,11 +212,11 @@ private handleRange(e: MouseEvent) {
       this.dispatchEvent(shift, "thumbTo");
     }
     else if (shift >= fromPos && shift <= toPos) {
-      const pivot = toPos - fromPos;
-      if (shift < pivot) {
+      const pivot = (toPos - fromPos)/2;
+      if (shift < pivot+fromPos) {
         this.dispatchEvent(shift, "thumbFrom");
       }
-      else if (shift >= pivot) {
+      else if (shift >= pivot+fromPos) {
         this.dispatchEvent(shift, "thumbTo");
       }
     }
