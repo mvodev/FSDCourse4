@@ -677,7 +677,7 @@ exports.Constants = void 0; // eslint-disable-next-line @typescript-eslint/no-na
 var Constants;
 
 (function (Constants) {
-  Constants.NUMBER_OF_MARKING = 10;
+  Constants.NUMBER_OF_MARKINGS = 10;
 })(Constants = exports.Constants || (exports.Constants = {}));
 
 /***/ }),
@@ -752,7 +752,7 @@ class View extends EventObservable_1.EventObservable {
     super();
     this.viewSettings = Object.assign({}, defaultSettings_1.defaultSettings);
     this.rootElem = root;
-    this.slider = new Slider_1.Slider(this.rootElem, Constants_1.Constants.NUMBER_OF_MARKING);
+    this.slider = new Slider_1.Slider(this.rootElem, Constants_1.Constants.NUMBER_OF_MARKINGS);
   }
 
   handleEvent(msg, s) {
@@ -1394,14 +1394,6 @@ class RangeLabel {
     this.maxLabel.innerText = '' + value;
   }
 
-  getMinRange() {
-    return this.minLabel;
-  }
-
-  getMaxRange() {
-    return this.maxLabel;
-  }
-
   initComponents() {
     this.rangeLabelContainer = document.createElement('div');
     this.rangeLabelContainer.classList.add('fsd-slider__range-label');
@@ -1496,4 +1488,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.12ef61ccc2b91f4064ce.js.map
+//# sourceMappingURL=main.74820ab8cd2ac3b4b6dc.js.map

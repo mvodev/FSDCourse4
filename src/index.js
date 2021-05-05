@@ -32,7 +32,7 @@ $sl2.fsdSlider({
  step: 0.2,
  to: -11,
  isVertical: true,
- hideThumbLabel: true,
+ hideThumbLabel: false,
  isRange: false,
 },
 {

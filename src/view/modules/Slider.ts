@@ -61,7 +61,7 @@ private bindEvents(): void {
     this.getThumbTo().addEventListener('mousedown', this.handleThumb.bind(this, "thumbTo"));
   }
 }
-private setVertical():void {
+setVertical():void {
   this.container.classList.add('fsd-slider_is_vertical');
   this.range.getRange().classList.add('fsd-slider__range_is_vertical');
   this.coloredRange.getColoredRange().classList.add('fsd-slider__colored-range_is_vertical');
@@ -72,7 +72,7 @@ private setVertical():void {
   }
 }
 
-private setColoredRange(): void {
+setColoredRange(): void {
   this.coloredRange.setColoredRange(
       this.viewSettings,
       this.getThumbFrom(),
@@ -260,37 +260,37 @@ private dispatchEvent(shift: number, type: string) {
   }
   this.setColoredRange();
 }
-private getRange(): HTMLDivElement {
+getRange(): HTMLDivElement {
   return this.range.getRange();
 }
-private getThumbFrom(): HTMLDivElement {
+getThumbFrom(): HTMLDivElement {
   return this.thumbFrom.getThumb();
 }
-private getThumbTo(): HTMLDivElement {
+getThumbTo(): HTMLDivElement {
   return this.thumbTo.getThumb();
 }
-private getThumbLabelFrom(): ThumbLabel {
+getThumbLabelFrom(): ThumbLabel {
   return this.thumbLabelFrom;
 }
-private getThumbLabelTo(): ThumbLabel {
+getThumbLabelTo(): ThumbLabel {
   return this.thumbLabelTo;
 }
 private getColoredRange(): HTMLDivElement {
   return this.coloredRange.getColoredRange();
 }
-private setMaxRange(value: number): void {
+setMaxRange(value: number): void {
   this.rangeLabel.setMaxRange(value);
 }
-private setMinRange(value: number): void {
+setMinRange(value: number): void {
   this.rangeLabel.setMinRange(value);
 }
-private setValueToLabelThumbFrom(value: number): void {
+setValueToLabelThumbFrom(value: number): void {
   this.thumbLabelFrom.setValueToLabel(value);
 }
-private setValueToLabelThumbTo(value: number): void {
+setValueToLabelThumbTo(value: number): void {
   this.thumbLabelTo.setValueToLabel(value);
 }
-private getRangeLabel(): HTMLDivElement {
+getRangeLabel(): HTMLDivElement {
   return this.rangeLabel.getRangeLabel();
 }
 }
