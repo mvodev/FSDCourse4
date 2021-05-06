@@ -660,6 +660,38 @@ exports.Presenter = Presenter;
 
 /***/ }),
 
+/***/ "./utils/ClassNaming.ts":
+/*!******************************!*\
+  !*** ./utils/ClassNaming.ts ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ClassNaming = void 0;
+const ClassNaming = {
+  ROOT: 'fsd-slider',
+  RANGE: 'fsd-slider__range',
+  COLORED_RANGE: 'fsd-slider__colored-range',
+  THUMB_TO: 'fsd-slider__thumb-to',
+  THUMB_FROM: 'fsd-slider__thumb-from',
+  THUMB_LABEL: 'fsd-slider__thumb-label',
+  THUMB_VALUE: 'fsd-slider__thumb-value',
+  SLIDER_IS_VERTICAL: 'fsd-slider_is_vertical',
+  RANGE_IS_VERTICAL: 'fsd-slider__range_is_vertical',
+  COLORED_RANGE_IS_VERTICAL: 'fsd-slider__colored-range_is_vertical',
+  RANGE_LABEL_IS_VERTICAL: 'fsd-slider__range-label_is_vertical',
+  THUMB_LABEL_IS_VERTICAL: 'fsd-slider__thumb-label_is_vertical'
+};
+exports.ClassNaming = ClassNaming;
+
+/***/ }),
+
 /***/ "./utils/Constants.ts":
 /*!****************************!*\
   !*** ./utils/Constants.ts ***!
@@ -938,6 +970,8 @@ const defaultSettings_1 = __webpack_require__(/*! ../../model/defaultSettings */
 
 const EventObservable_1 = __webpack_require__(/*! ../../observers/EventObservable */ "./observers/EventObservable.ts");
 
+const ClassNaming_1 = __webpack_require__(/*! ../../utils/ClassNaming */ "./utils/ClassNaming.ts");
+
 class Slider extends EventObservable_1.EventObservable {
   constructor(rootElem, numberOfMarking) {
     super();
@@ -950,7 +984,7 @@ class Slider extends EventObservable_1.EventObservable {
 
   render(settings) {
     this.viewSettings = Object.assign(this.viewSettings, JSON.parse(settings));
-    this.container.classList.add('fsd-slider');
+    this.container.classList.add(ClassNaming_1.ClassNaming.ROOT);
     this.container.appendChild(this.range.getRange());
     this.range.getRange().appendChild(this.coloredRange.getColoredRange());
     this.range.getRange().appendChild(this.thumbFrom.getThumb());
@@ -968,9 +1002,9 @@ class Slider extends EventObservable_1.EventObservable {
   }
 
   initSliderComponents() {
-    this.thumbTo = new thumb_1.Thumb('fsd-slider__thumb-to');
+    this.thumbTo = new thumb_1.Thumb(ClassNaming_1.ClassNaming.THUMB_TO);
     this.thumbLabelTo = new thumbLabel_1.ThumbLabel();
-    this.thumbFrom = new thumb_1.Thumb('fsd-slider__thumb-from');
+    this.thumbFrom = new thumb_1.Thumb(ClassNaming_1.ClassNaming.THUMB_FROM);
     this.thumbLabelFrom = new thumbLabel_1.ThumbLabel();
     this.range = new range_1.Range();
     this.coloredRange = new coloredRange_1.ColoredRange();
@@ -988,14 +1022,14 @@ class Slider extends EventObservable_1.EventObservable {
   }
 
   setVertical() {
-    this.container.classList.add('fsd-slider_is_vertical');
-    this.range.getRange().classList.add('fsd-slider__range_is_vertical');
-    this.coloredRange.getColoredRange().classList.add('fsd-slider__colored-range_is_vertical');
-    this.rangeLabel.getRangeLabel().classList.add('fsd-slider__range-label_is_vertical');
-    this.thumbLabelFrom.getThumbLabelContainer().classList.add('fsd-slider__thumb-label_is_vertical');
+    this.container.classList.add(ClassNaming_1.ClassNaming.SLIDER_IS_VERTICAL);
+    this.range.getRange().classList.add(ClassNaming_1.ClassNaming.RANGE_IS_VERTICAL);
+    this.coloredRange.getColoredRange().classList.add(ClassNaming_1.ClassNaming.COLORED_RANGE_IS_VERTICAL);
+    this.rangeLabel.getRangeLabel().classList.add(ClassNaming_1.ClassNaming.RANGE_LABEL_IS_VERTICAL);
+    this.thumbLabelFrom.getThumbLabelContainer().classList.add(ClassNaming_1.ClassNaming.THUMB_LABEL_IS_VERTICAL);
 
     if (this.viewSettings.isRange) {
-      this.thumbLabelTo.getThumbLabelContainer().classList.add('fsd-slider__thumb-label_is_vertical');
+      this.thumbLabelTo.getThumbLabelContainer().classList.add(ClassNaming_1.ClassNaming.THUMB_LABEL_IS_VERTICAL);
     }
   }
 
@@ -1279,10 +1313,12 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ColoredRange = void 0;
 
+const ClassNaming_1 = __webpack_require__(/*! ../../utils/ClassNaming */ "./utils/ClassNaming.ts");
+
 class ColoredRange {
   constructor() {
     this.coloredRange = document.createElement('div');
-    this.coloredRange.classList.add('fsd-slider__colored-range');
+    this.coloredRange.classList.add(ClassNaming_1.ClassNaming.COLORED_RANGE);
   }
 
   getColoredRange() {
@@ -1328,10 +1364,12 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Range = void 0;
 
+const ClassNaming_1 = __webpack_require__(/*! ../../utils/ClassNaming */ "./utils/ClassNaming.ts");
+
 class Range {
   constructor() {
     const div = document.createElement('div');
-    div.classList.add('fsd-slider__range');
+    div.classList.add(ClassNaming_1.ClassNaming.RANGE);
     this.range = div;
   }
 
@@ -1455,14 +1493,16 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ThumbLabel = void 0;
 
+const ClassNaming_1 = __webpack_require__(/*! ../../utils/ClassNaming */ "./utils/ClassNaming.ts");
+
 class ThumbLabel {
   constructor() {
     const div = document.createElement('div');
     const divValue = document.createElement('div');
     this.thumbLabelContainer = div;
-    this.thumbLabelContainer.classList.add('fsd-slider__thumb-label');
+    this.thumbLabelContainer.classList.add(ClassNaming_1.ClassNaming.THUMB_LABEL);
     this.thumbLabelValue = divValue;
-    this.thumbLabelValue.classList.add('fsd-slider__thumb-label-value');
+    this.thumbLabelValue.classList.add(ClassNaming_1.ClassNaming.THUMB_VALUE);
     this.thumbLabelContainer.appendChild(this.thumbLabelValue);
   }
 
@@ -1489,4 +1529,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.e9d6c102f107b428e38e.js.map
+//# sourceMappingURL=main.fc9313550e7ecb3e27da.js.map

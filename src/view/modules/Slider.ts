@@ -7,6 +7,8 @@ import { ColoredRange } from './coloredRange';
 import { IViewSettings } from '../../model/IViewSettings';
 import { defaultSettings } from '../../model/defaultSettings';
 import { EventObservable } from '../../observers/EventObservable';
+import { ClassNaming } from '../../utils/ClassNaming';
+
 class Slider extends EventObservable{
 private thumbFrom!: Thumb;
 private thumbTo!: Thumb;
@@ -30,7 +32,7 @@ constructor(rootElem: HTMLDivElement, numberOfMarking: number) {
 }
 render(settings:string) :void{
   this.viewSettings = Object.assign(this.viewSettings,JSON.parse(settings));
-  this.container.classList.add('fsd-slider');
+  this.container.classList.add(ClassNaming.ROOT);
   this.container.appendChild(this.range.getRange());
   this.range.getRange().appendChild(this.coloredRange.getColoredRange());
   this.range.getRange().appendChild(this.thumbFrom.getThumb());
@@ -45,9 +47,9 @@ render(settings:string) :void{
   this.bindEvents();
   }
 private initSliderComponents() {
-  this.thumbTo = new Thumb('fsd-slider__thumb-to');
+  this.thumbTo = new Thumb(ClassNaming.THUMB_TO);
   this.thumbLabelTo = new ThumbLabel();
-  this.thumbFrom = new Thumb('fsd-slider__thumb-from');
+  this.thumbFrom = new Thumb(ClassNaming.THUMB_FROM);
   this.thumbLabelFrom = new ThumbLabel();
   this.range = new Range();
   this.coloredRange = new ColoredRange();
@@ -62,13 +64,13 @@ private bindEvents(): void {
   }
 }
 setVertical():void {
-  this.container.classList.add('fsd-slider_is_vertical');
-  this.range.getRange().classList.add('fsd-slider__range_is_vertical');
-  this.coloredRange.getColoredRange().classList.add('fsd-slider__colored-range_is_vertical');
-  this.rangeLabel.getRangeLabel().classList.add('fsd-slider__range-label_is_vertical');
-  this.thumbLabelFrom.getThumbLabelContainer().classList.add('fsd-slider__thumb-label_is_vertical');
+  this.container.classList.add(ClassNaming.SLIDER_IS_VERTICAL);
+  this.range.getRange().classList.add(ClassNaming.RANGE_IS_VERTICAL);
+  this.coloredRange.getColoredRange().classList.add(ClassNaming.COLORED_RANGE_IS_VERTICAL);
+  this.rangeLabel.getRangeLabel().classList.add(ClassNaming.RANGE_LABEL_IS_VERTICAL);
+  this.thumbLabelFrom.getThumbLabelContainer().classList.add(ClassNaming.THUMB_LABEL_IS_VERTICAL);
   if (this.viewSettings.isRange) {
-   this.thumbLabelTo.getThumbLabelContainer().classList.add('fsd-slider__thumb-label_is_vertical');
+   this.thumbLabelTo.getThumbLabelContainer().classList.add(ClassNaming.THUMB_LABEL_IS_VERTICAL);
   }
 }
 

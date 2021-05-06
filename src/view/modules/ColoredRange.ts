@@ -1,10 +1,11 @@
 import { IViewSettings } from "../../model/IViewSettings";
+import { ClassNaming } from '../../utils/ClassNaming';
 
 class ColoredRange{
  private coloredRange: HTMLDivElement;
  constructor() {
   this.coloredRange = document.createElement('div');
-  this.coloredRange.classList.add('fsd-slider__colored-range');
+  this.coloredRange.classList.add(ClassNaming.COLORED_RANGE);
  }
  getColoredRange(): HTMLDivElement {
   return this.coloredRange;

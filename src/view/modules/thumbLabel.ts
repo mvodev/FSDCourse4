@@ -1,3 +1,5 @@
+import { ClassNaming } from "../../utils/ClassNaming";
+
 class ThumbLabel {
  private thumbLabelContainer: HTMLDivElement;
  private thumbLabelValue: HTMLSpanElement;
@@ -5,9 +7,9 @@ class ThumbLabel {
   const div = document.createElement('div');
   const divValue = document.createElement('div');
   this.thumbLabelContainer = div;
-  this.thumbLabelContainer.classList.add('fsd-slider__thumb-label');
+  this.thumbLabelContainer.classList.add(ClassNaming.THUMB_LABEL);
   this.thumbLabelValue = divValue;
-  this.thumbLabelValue.classList.add('fsd-slider__thumb-label-value');
+  this.thumbLabelValue.classList.add(ClassNaming.THUMB_VALUE);
   this.thumbLabelContainer.appendChild(this.thumbLabelValue);
  }
  getThumbLabelContainer():HTMLDivElement {
