@@ -112,9 +112,9 @@ private handleThumb(thumbType: string, e: MouseEvent): void {
           newPos = 0;
         }
       }
-      let bottom = that.getSliderLengthInPx() ;
+      let bottom = that.getSliderLengthInPx() -that.getThumbLengthInPx();
       if (that.viewSettings.isRange) {
-        const toPos = that.getThumbTo().getBoundingClientRect().top - (that.getRange().getBoundingClientRect().top );
+        const toPos = that.getThumbTo().getBoundingClientRect().top - (that.getRange().getBoundingClientRect().top);
         if (thumbType === "thumbFrom") {
         bottom = toPos;
       }
@@ -150,7 +150,7 @@ private handleThumb(thumbType: string, e: MouseEvent): void {
         newPos = 0;
         }
       }
-      let rightEdge = that.getSliderLengthInPx();
+      let rightEdge = that.getSliderLengthInPx() - that.getThumbLengthInPx();
       if (that.viewSettings.isRange) {
         const toPos = that.getThumbTo().getBoundingClientRect().left - (that.getRange().getBoundingClientRect().left );
         if (thumbType === "thumbFrom") {
@@ -249,7 +249,7 @@ private dispatchEvent(shift: number, type: string) {
     else {
       this.getThumbFrom().style.left = this.resPercentage + '%';
     }
-  this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage }));
+  this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage }),0);
   }
   else {
     if (this.viewSettings.isVertical) {
@@ -258,7 +258,7 @@ private dispatchEvent(shift: number, type: string) {
     else {
       this.getThumbTo().style.left = this.resPercentage + '%';
     }
-    this.notifyObservers(Messages.SET_TO, JSON.stringify({ to: this.resPercentage }));
+    this.notifyObservers(Messages.SET_TO, JSON.stringify({ to: this.resPercentage }),0);
   }
   this.setColoredRange();
 }

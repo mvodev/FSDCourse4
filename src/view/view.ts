@@ -17,8 +17,8 @@ class View extends EventObservable implements IObserver{
     this.rootElem = root;
     this.slider = new Slider(this.rootElem, Constants.NUMBER_OF_MARKINGS);
   }
-  handleEvent(msg: Messages, s: string): void {
-    this.notifyObservers(msg,s);
+  handleEvent(msg: Messages, settings: string): void {
+    this.notifyObservers(msg,settings,this.getThumbWidthInPercentage());
   }
   private render(s:IViewSettings):void {
     this.slider.addObserver(this);
@@ -64,11 +64,11 @@ class View extends EventObservable implements IObserver{
 
         if (settings.isVertical) {
           this.getThumbTo().style.top = (
-            (Math.abs((settings.to !== undefined ? settings.to : settings.from) - settings.min) / Math.abs(settings.max - settings.min)) * 100 - this.getThumbLengthInPercentage()) + '%';
+            (Math.abs((settings.to !== undefined ? settings.to : settings.from) - settings.min) / Math.abs(settings.max - settings.min)) * 100 - this.getThumbWidthInPercentage()) + '%';
           this.getThumbFrom().style.top = (Math.abs(settings.from - settings.min) / Math.abs(settings.max - settings.min)) * 100 + '%';
         }
         else {
-          this.getThumbTo().style.left = ((Math.abs((settings.to !== undefined ? settings.to : settings.from) - settings.min) / Math.abs(settings.max - settings.min)) * 100 - this.getThumbLengthInPercentage()) + '%';
+          this.getThumbTo().style.left = ((Math.abs((settings.to !== undefined ? settings.to : settings.from) - settings.min) / Math.abs(settings.max - settings.min)) * 100 - this.getThumbWidthInPercentage()) + '%';
           this.getThumbFrom().style.left = (Math.abs(settings.from - settings.min) / Math.abs(settings.max - settings.min)) * 100 + '%';
         }
       }
@@ -93,7 +93,7 @@ class View extends EventObservable implements IObserver{
     this.slider.setColoredRange();
   }
   private convertFromValueToPercent(s:ISettings,value: number): number {
-    return +((100 / Math.abs(s.max - s.min)) * (Math.abs(value - s.min))).toFixed(2);
+    return +(((100-this.getThumbWidthInPercentage()) / Math.abs(s.max - s.min)) * (Math.abs(value - s.min))).toFixed(2);
   }
   private setThumbToValue(s:ISettings,type: string) :void{
     if (type === 'thumbFrom') {
@@ -127,7 +127,7 @@ class View extends EventObservable implements IObserver{
     }
   }
   
-  private getThumbLengthInPercentage() {
+  private getThumbWidthInPercentage() {
     if (this.viewSettings.isVertical) {
       return +((this.getThumbFrom().offsetHeight / this.getSliderLengthInPx()) * 100).toFixed(1);
     }

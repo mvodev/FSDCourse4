@@ -17,7 +17,7 @@ class Model extends EventObservable implements IModelFacade {
   }
   updateSettings(settings: ISettings):void {
     this.validateSettings(settings);
-    this.notifyObservers(Messages.UPDATE, this.getSettings());
+    this.notifyObservers(Messages.UPDATE, this.getSettings(),0);
   }
   getMin(): number {
       return this.settings.min;
@@ -25,14 +25,14 @@ class Model extends EventObservable implements IModelFacade {
   getMax() :number{
     return this.settings.max;
   }
-  setFrom(valueInPercent: number): void {
-    this.settings.from = this.convertFromPercentToValue(valueInPercent);
+  setFrom(valueInPercent: number, thumbWidthInPercent:number): void {
+    this.settings.from = this.convertFromPercentToValue(valueInPercent,thumbWidthInPercent);
   }
   getFrom(): number {
   return this.settings.from;
   }
-  setTo(valueInPercent: number): void {
-    this.settings.to = this.convertFromPercentToValue(valueInPercent);
+  setTo(valueInPercent: number, thumbWidthInPercent:number): void {
+    this.settings.to = this.convertFromPercentToValue(valueInPercent, thumbWidthInPercent);
   }
   getTo() :number{
     return this.settings.to;
@@ -137,7 +137,7 @@ class Model extends EventObservable implements IModelFacade {
     }
   }
   
-  private convertFromPercentToValue(valueInPercent: number) {
+  private convertFromPercentToValue(valueInPercent: number,thumbWidthInPercent:number) {
     if (valueInPercent <= 0) {
       return this.getMin();
     }
@@ -149,9 +149,9 @@ class Model extends EventObservable implements IModelFacade {
       del = 1.0 / this.getStep();
     }
     const diapason = Math.abs(this.getMax() - this.getMin());
-    const res = Math.round(+((diapason * valueInPercent / 100) + this.getMin()).toFixed(Utils.numDigitsAfterDecimal(this.getStep())) * del) / del;
-    // if (res < this.getMin()) return this.getMin();
-    // if (res > this.getMax()) return this.getMax();
+    const res = Math.round(+((diapason * valueInPercent / (100 - thumbWidthInPercent)) + this.getMin()).toFixed(Utils.numDigitsAfterDecimal(this.getStep())) * del) / del;
+    if (res < this.getMin()) return this.getMin();
+    if (res > this.getMax()) return this.getMax();
     return res;
   }
 }

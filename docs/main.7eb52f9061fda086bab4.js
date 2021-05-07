@@ -221,7 +221,7 @@ $sl1.fsdSlider({
  from: 8,
  step: 1,
  to: 18,
- isVertical: true,
+ isVertical: false,
  hideThumbLabel: false,
  isRange: true,
 }, 
@@ -363,7 +363,7 @@ class Model extends EventObservable_1.EventObservable {
     this.validateSettings(settings);
     this.notifyObservers(1
     /* UPDATE */
-    , this.getSettings());
+    , this.getSettings(), 0);
   }
 
   getMin() {
@@ -374,16 +374,16 @@ class Model extends EventObservable_1.EventObservable {
     return this.settings.max;
   }
 
-  setFrom(valueInPercent) {
-    this.settings.from = this.convertFromPercentToValue(valueInPercent);
+  setFrom(valueInPercent, thumbWidthInPercent) {
+    this.settings.from = this.convertFromPercentToValue(valueInPercent, thumbWidthInPercent);
   }
 
   getFrom() {
     return this.settings.from;
   }
 
-  setTo(valueInPercent) {
-    this.settings.to = this.convertFromPercentToValue(valueInPercent);
+  setTo(valueInPercent, thumbWidthInPercent) {
+    this.settings.to = this.convertFromPercentToValue(valueInPercent, thumbWidthInPercent);
   }
 
   getTo() {
@@ -486,7 +486,7 @@ class Model extends EventObservable_1.EventObservable {
     }
   }
 
-  convertFromPercentToValue(valueInPercent) {
+  convertFromPercentToValue(valueInPercent, thumbWidthInPercent) {
     if (valueInPercent <= 0) {
       return this.getMin();
     }
@@ -502,9 +502,9 @@ class Model extends EventObservable_1.EventObservable {
     }
 
     const diapason = Math.abs(this.getMax() - this.getMin());
-    const res = Math.round(+(diapason * valueInPercent / 100 + this.getMin()).toFixed(Utils_1.Utils.numDigitsAfterDecimal(this.getStep())) * del) / del; // if (res < this.getMin()) return this.getMin();
-    // if (res > this.getMax()) return this.getMax();
-
+    const res = Math.round(+(diapason * valueInPercent / (100 - thumbWidthInPercent) + this.getMin()).toFixed(Utils_1.Utils.numDigitsAfterDecimal(this.getStep())) * del) / del;
+    if (res < this.getMin()) return this.getMin();
+    if (res > this.getMax()) return this.getMax();
     return res;
   }
 
@@ -570,10 +570,10 @@ class EventObservable {
     this.observers.filter(subscriber => subscriber !== o);
   }
 
-  notifyObservers(msg, settings) {
+  notifyObservers(msg, settings, width) {
     this.observers.forEach(elem => {
       if (elem && "handleEvent" in elem) {
-        elem.handleEvent(msg, settings);
+        elem.handleEvent(msg, settings, width);
       }
     });
   }
@@ -608,7 +608,7 @@ class Presenter extends EventObservable_1.EventObservable {
     this.model = model;
   }
 
-  handleEvent(msg, s) {
+  handleEvent(msg, s, thumbWidthInPercentage) {
     if (msg === 1
     /* UPDATE */
     ) {
@@ -617,27 +617,27 @@ class Presenter extends EventObservable_1.EventObservable {
         , JSON.parse(s));
         this.notifyObservers(1
         /* UPDATE */
-        , this.model.getSettings());
+        , this.model.getSettings(), thumbWidthInPercentage);
       } else if (msg === 4
     /* SET_FROM */
     ) {
-        this.model.setFrom(JSON.parse(s).from);
+        this.model.setFrom(JSON.parse(s).from, thumbWidthInPercentage);
         this.view.refreshView(2
         /* FROM_IS_SET */
         , JSON.parse(this.model.getSettings()));
         this.notifyObservers(1
         /* UPDATE */
-        , this.model.getSettings());
+        , this.model.getSettings(), thumbWidthInPercentage);
       } else if (msg === 5
     /* SET_TO */
     ) {
-        this.model.setTo(JSON.parse(s).to);
+        this.model.setTo(JSON.parse(s).to, thumbWidthInPercentage);
         this.view.refreshView(3
         /* TO_IS_SET */
         , JSON.parse(this.model.getSettings()));
         this.notifyObservers(1
         /* UPDATE */
-        , this.model.getSettings());
+        , this.model.getSettings(), thumbWidthInPercentage);
       }
   }
 
@@ -647,7 +647,7 @@ class Presenter extends EventObservable_1.EventObservable {
     , JSON.parse(this.model.getSettings()));
     this.notifyObservers(1
     /* UPDATE */
-    , this.model.getSettings());
+    , this.model.getSettings(), 0);
   }
 
   update(newSettings) {
@@ -788,8 +788,8 @@ class View extends EventObservable_1.EventObservable {
     this.slider = new Slider_1.Slider(this.rootElem, Constants_1.Constants.NUMBER_OF_MARKINGS);
   }
 
-  handleEvent(msg, s) {
-    this.notifyObservers(msg, s);
+  handleEvent(msg, settings) {
+    this.notifyObservers(msg, settings, this.getThumbWidthInPercentage());
   }
 
   render(s) {
@@ -849,10 +849,10 @@ class View extends EventObservable_1.EventObservable {
           this.slider.setValueToLabelThumbTo(settings.to !== undefined ? settings.to : settings.from);
 
           if (settings.isVertical) {
-            this.getThumbTo().style.top = Math.abs((settings.to !== undefined ? settings.to : settings.from) - settings.min) / Math.abs(settings.max - settings.min) * 100 - this.getThumbLengthInPercentage() + '%';
+            this.getThumbTo().style.top = Math.abs((settings.to !== undefined ? settings.to : settings.from) - settings.min) / Math.abs(settings.max - settings.min) * 100 - this.getThumbWidthInPercentage() + '%';
             this.getThumbFrom().style.top = Math.abs(settings.from - settings.min) / Math.abs(settings.max - settings.min) * 100 + '%';
           } else {
-            this.getThumbTo().style.left = Math.abs((settings.to !== undefined ? settings.to : settings.from) - settings.min) / Math.abs(settings.max - settings.min) * 100 - this.getThumbLengthInPercentage() + '%';
+            this.getThumbTo().style.left = Math.abs((settings.to !== undefined ? settings.to : settings.from) - settings.min) / Math.abs(settings.max - settings.min) * 100 - this.getThumbWidthInPercentage() + '%';
             this.getThumbFrom().style.left = Math.abs(settings.from - settings.min) / Math.abs(settings.max - settings.min) * 100 + '%';
           }
         } else {
@@ -880,7 +880,7 @@ class View extends EventObservable_1.EventObservable {
   }
 
   convertFromValueToPercent(s, value) {
-    return +(100 / Math.abs(s.max - s.min) * Math.abs(value - s.min)).toFixed(2);
+    return +((100 - this.getThumbWidthInPercentage()) / Math.abs(s.max - s.min) * Math.abs(value - s.min)).toFixed(2);
   }
 
   setThumbToValue(s, type) {
@@ -911,7 +911,7 @@ class View extends EventObservable_1.EventObservable {
     }
   }
 
-  getThumbLengthInPercentage() {
+  getThumbWidthInPercentage() {
     if (this.viewSettings.isVertical) {
       return +(this.getThumbFrom().offsetHeight / this.getSliderLengthInPx() * 100).toFixed(1);
     } else {
@@ -1073,7 +1073,7 @@ class Slider extends EventObservable_1.EventObservable {
           }
         }
 
-        let bottom = that.getSliderLengthInPx();
+        let bottom = that.getSliderLengthInPx() - that.getThumbLengthInPx();
 
         if (that.viewSettings.isRange) {
           const toPos = that.getThumbTo().getBoundingClientRect().top - that.getRange().getBoundingClientRect().top;
@@ -1117,7 +1117,7 @@ class Slider extends EventObservable_1.EventObservable {
           }
         }
 
-        let rightEdge = that.getSliderLengthInPx();
+        let rightEdge = that.getSliderLengthInPx() - that.getThumbLengthInPx();
 
         if (that.viewSettings.isRange) {
           const toPos = that.getThumbTo().getBoundingClientRect().left - that.getRange().getBoundingClientRect().left;
@@ -1230,7 +1230,7 @@ class Slider extends EventObservable_1.EventObservable {
       /* SET_FROM */
       , JSON.stringify({
         from: this.resPercentage
-      }));
+      }), 0);
     } else {
       if (this.viewSettings.isVertical) {
         this.getThumbTo().style.top = this.resPercentage + '%';
@@ -1242,7 +1242,7 @@ class Slider extends EventObservable_1.EventObservable {
       /* SET_TO */
       , JSON.stringify({
         to: this.resPercentage
-      }));
+      }), 0);
     }
 
     this.setColoredRange();
@@ -1529,4 +1529,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.fc9313550e7ecb3e27da.js.map
+//# sourceMappingURL=main.7eb52f9061fda086bab4.js.map

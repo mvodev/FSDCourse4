@@ -1,9 +1,9 @@
 interface IModelFacade {
  getMin(): number;
  getMax(): number;
- setFrom(pos: number): void;
+ setFrom(pos: number,value:number): void;
  getFrom(): number;
- setTo(value: number): void;
+ setTo(pos: number,value:number): void;
  getTo(): number;
  getStep(): number;
 }

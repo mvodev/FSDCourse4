@@ -14,25 +14,25 @@ class Presenter extends EventObservable implements IObserver {
     this.view = view;
     this.model = model;
   }
-  handleEvent(msg: Messages, s: string) :void{
+  handleEvent(msg: Messages, s: string,thumbWidthInPercentage:number) :void{
     if (msg === Messages.UPDATE) {
       this.view.refreshView(Messages.UPDATE, JSON.parse(s));
-      this.notifyObservers(Messages.UPDATE, this.model.getSettings());
+      this.notifyObservers(Messages.UPDATE, this.model.getSettings(),thumbWidthInPercentage);
     }
     else if (msg === Messages.SET_FROM) {
-      this.model.setFrom(JSON.parse(s).from);
+      this.model.setFrom(JSON.parse(s).from, thumbWidthInPercentage);
       this.view.refreshView(Messages.FROM_IS_SET, JSON.parse(this.model.getSettings()));
-      this.notifyObservers(Messages.UPDATE, this.model.getSettings());
+      this.notifyObservers(Messages.UPDATE, this.model.getSettings(),thumbWidthInPercentage);
     }
     else if (msg === Messages.SET_TO) {
-      this.model.setTo(JSON.parse(s).to);
+      this.model.setTo(JSON.parse(s).to, thumbWidthInPercentage);
       this.view.refreshView(Messages.TO_IS_SET, JSON.parse(this.model.getSettings()));
-      this.notifyObservers(Messages.UPDATE, this.model.getSettings());
+      this.notifyObservers(Messages.UPDATE, this.model.getSettings(),thumbWidthInPercentage);
     }
   }
   initialize():void{
     this.view.refreshView(Messages.INIT, JSON.parse(this.model.getSettings()));
-    this.notifyObservers(Messages.UPDATE, this.model.getSettings());
+    this.notifyObservers(Messages.UPDATE, this.model.getSettings(),0);
   }
   update(newSettings: ISettings):void {
     this.model.updateSettings(newSettings);
