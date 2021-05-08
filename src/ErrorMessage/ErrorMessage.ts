@@ -8,4 +8,4 @@ class ErrorMessage{
   console.error(this.message);
  }
 }
-export default ErrorMessage;
+export {ErrorMessage};

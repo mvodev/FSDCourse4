@@ -155,6 +155,37 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./ErrorMessage/ErrorMessage.ts":
+/*!**************************************!*\
+  !*** ./ErrorMessage/ErrorMessage.ts ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ErrorMessage = void 0;
+
+class ErrorMessage {
+  constructor(message) {
+    this.message = message;
+    this.showMessage();
+  }
+
+  showMessage() {
+    console.error(this.message);
+  }
+
+}
+
+exports.ErrorMessage = ErrorMessage;
+
+/***/ }),
+
 /***/ "./fsdSlider.js":
 /*!**********************!*\
   !*** ./fsdSlider.js ***!
@@ -348,6 +379,8 @@ const Utils_1 = __webpack_require__(/*! ../utils/Utils */ "./utils/Utils.ts");
 
 const defaultSettings_1 = __webpack_require__(/*! ./defaultSettings */ "./model/defaultSettings.ts");
 
+const ErrorMessage_1 = __webpack_require__(/*! ../ErrorMessage/ErrorMessage */ "./ErrorMessage/ErrorMessage.ts");
+
 class Model extends EventObservable_1.EventObservable {
   constructor(settings) {
     super();
@@ -406,9 +439,9 @@ class Model extends EventObservable_1.EventObservable {
 
     if (validatedMin !== undefined) {
       if (validatedMin >= this.settings.max) {
-        console.error('unacceptable value,min value in settings more than max value');
+        new ErrorMessage_1.ErrorMessage('unacceptable value,min value in settings more than max value');
       } else if (validatedMin > this.settings.from) {
-        console.error('unacceptable value,min value in settings more than from value');
+        new ErrorMessage_1.ErrorMessage('unacceptable value,min value in settings more than from value');
         this.settings.min = validatedMin;
         this.settings.from = validatedMin;
       } else {
@@ -418,13 +451,13 @@ class Model extends EventObservable_1.EventObservable {
 
     if (validatedMax !== undefined) {
       if (validatedMax <= this.settings.min) {
-        console.error('unacceptable value,max value in settings lower than min value');
+        new ErrorMessage_1.ErrorMessage('unacceptable value,max value in settings lower than min value');
       } else if (validatedMax <= this.settings.to && this.settings.isRange) {
-        console.error('unacceptable value,max value in settings lower than to value');
+        new ErrorMessage_1.ErrorMessage('unacceptable value,max value in settings lower than to value');
         this.settings.max = validatedMax;
         this.settings.to = validatedMax;
       } else if (validatedMax <= this.settings.from) {
-        console.error('unacceptable value,max value in settings lower than from value');
+        new ErrorMessage_1.ErrorMessage('unacceptable value,max value in settings lower than from value');
       } else {
         this.settings.max = validatedMax;
       }
@@ -434,7 +467,7 @@ class Model extends EventObservable_1.EventObservable {
       const max = this.settings.isRange ? this.settings.to : this.settings.max;
 
       if (validatedFrom <= this.settings.min + this.settings.step || validatedFrom >= max + this.settings.step) {
-        console.error('from is invalid');
+        new ErrorMessage_1.ErrorMessage('from is invalid');
         this.settings.from = this.settings.min;
       } else {
         this.settings.from = validatedFrom;
@@ -443,14 +476,14 @@ class Model extends EventObservable_1.EventObservable {
 
     if (validatedTo !== undefined) {
       if (validatedTo > this.settings.max) {
-        console.error('to must be lower than max');
+        new ErrorMessage_1.ErrorMessage('to must be lower than max');
         this.settings.to = this.settings.max;
       } else if (validatedTo <= this.settings.min) {
-        console.error('to must be lower than max');
+        new ErrorMessage_1.ErrorMessage('to must be lower than max');
         this.settings.to = this.settings.max;
       } else if (this.settings.isRange) {
         if (validatedTo <= this.settings.from) {
-          console.error('to must be lower than max');
+          new ErrorMessage_1.ErrorMessage('to must be lower than max');
           this.settings.to = this.settings.max;
         } else {
           this.settings.to = validatedTo;
@@ -461,7 +494,7 @@ class Model extends EventObservable_1.EventObservable {
         if (this.settings.to !== undefined) {
           if (this.settings.to <= settings.from) {
             this.settings.to = this.settings.max;
-            console.error('to must be more than from');
+            new ErrorMessage_1.ErrorMessage('to must be more than from');
           }
         }
       }
@@ -469,9 +502,9 @@ class Model extends EventObservable_1.EventObservable {
 
     if (validatedStep !== undefined) {
       if (validatedStep < 0) {
-        console.error('step must be positive');
+        new ErrorMessage_1.ErrorMessage('step must be positive');
       } else if (validatedStep > Math.abs(this.settings.max - this.settings.min)) {
-        console.error('step must be lower than difference between max and min');
+        new ErrorMessage_1.ErrorMessage('step must be lower than difference between max and min');
       } else {
         this.settings.step = validatedStep;
       }
@@ -1262,10 +1295,6 @@ class Slider extends EventObservable_1.EventObservable {
     return this.thumbLabelTo;
   }
 
-  getColoredRange() {
-    return this.coloredRange.getColoredRange();
-  }
-
   setMaxRange(value) {
     this.rangeLabel.setMaxRange(value);
   }
@@ -1531,4 +1560,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.afc992ed9c6fb4379c4f.js.map
+//# sourceMappingURL=main.c355b89d5a27c9a6a1dc.js.map

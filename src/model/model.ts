@@ -4,6 +4,8 @@ import { ISettings } from './ISettings';
 import { EventObservable } from '../observers/EventObservable';
 import { Utils } from '../utils/Utils';
 import {defaultSettings} from './defaultSettings';
+import { ErrorMessage } from '../ErrorMessage/ErrorMessage';
+
 class Model extends EventObservable implements IModelFacade {
   private settings: ISettings
   
@@ -52,10 +54,10 @@ class Model extends EventObservable implements IModelFacade {
     this.settings.isRange = settings.isRange ? Utils.isBoolean(settings.isRange):this.settings.isRange;
     if(validatedMin!==undefined){
       if (validatedMin >= this.settings.max) {
-        console.error('unacceptable value,min value in settings more than max value');
+        new ErrorMessage('unacceptable value,min value in settings more than max value');
       }
       else if(validatedMin>this.settings.from){
-        console.error('unacceptable value,min value in settings more than from value');
+        new ErrorMessage('unacceptable value,min value in settings more than from value');
         this.settings.min = validatedMin;
         this.settings.from = validatedMin;
       }
@@ -65,15 +67,15 @@ class Model extends EventObservable implements IModelFacade {
     }
     if(validatedMax!==undefined){
       if(validatedMax<=this.settings.min){
-        console.error('unacceptable value,max value in settings lower than min value');
+        new ErrorMessage('unacceptable value,max value in settings lower than min value');
       }
       else if (validatedMax<=this.settings.to&&this.settings.isRange){
-        console.error('unacceptable value,max value in settings lower than to value');
+        new ErrorMessage('unacceptable value,max value in settings lower than to value');
         this.settings.max = validatedMax;
         this.settings.to = validatedMax;
       }
       else if (validatedMax <= this.settings.from){
-        console.error('unacceptable value,max value in settings lower than from value');
+        new ErrorMessage('unacceptable value,max value in settings lower than from value');
       }
       else{
         this.settings.max = validatedMax;
@@ -82,7 +84,7 @@ class Model extends EventObservable implements IModelFacade {
     if(validatedFrom!==undefined){
       const max = this.settings.isRange?this.settings.to:this.settings.max;
       if(validatedFrom<=this.settings.min+this.settings.step||validatedFrom>=max+this.settings.step){
-        console.error('from is invalid');
+        new ErrorMessage('from is invalid');
         this.settings.from = this.settings.min;
       }
       else{
@@ -91,16 +93,16 @@ class Model extends EventObservable implements IModelFacade {
     }
     if(validatedTo!==undefined){
       if(validatedTo>this.settings.max){
-        console.error('to must be lower than max');
+        new ErrorMessage('to must be lower than max');
         this.settings.to = this.settings.max;
       }
       else if(validatedTo<=this.settings.min){
-        console.error('to must be lower than max');
+        new ErrorMessage('to must be lower than max');
         this.settings.to = this.settings.max;
       }
       else if(this.settings.isRange){
         if(validatedTo<=this.settings.from){
-          console.error('to must be lower than max');
+          new ErrorMessage('to must be lower than max');
           this.settings.to = this.settings.max;
         }
         else{
@@ -113,17 +115,17 @@ class Model extends EventObservable implements IModelFacade {
         if (this.settings.to!==undefined){
           if (this.settings.to<=settings.from){
             this.settings.to = this.settings.max;
-            console.error('to must be more than from');
+            new ErrorMessage('to must be more than from');
           }
         }
       }
     }
     if(validatedStep!==undefined){
       if(validatedStep<0){
-        console.error('step must be positive');
+        new ErrorMessage('step must be positive');
       }
       else if(validatedStep>(Math.abs(this.settings.max-this.settings.min))){
-        console.error('step must be lower than difference between max and min');
+        new ErrorMessage('step must be lower than difference between max and min');
       }
       else{
         this.settings.step = validatedStep;
