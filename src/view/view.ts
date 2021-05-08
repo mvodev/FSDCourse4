@@ -93,7 +93,7 @@ class View extends EventObservable implements IObserver{
     this.slider.setColoredRange();
   }
   private convertFromValueToPercent(s:ISettings,value: number): number {
-    return +(((100-this.getThumbWidthInPercentage()) / Math.abs(s.max - s.min)) * (Math.abs(value - s.min))).toFixed(2);
+    return (((100-this.getThumbWidthInPercentage()) / Math.abs(s.max - s.min)) * (Math.abs(value - s.min)));
   }
   private setThumbToValue(s:ISettings,type: string) :void{
     if (type === 'thumbFrom') {
@@ -128,12 +128,7 @@ class View extends EventObservable implements IObserver{
   }
   
   private getThumbWidthInPercentage() {
-    if (this.viewSettings.isVertical) {
-      return +((this.getThumbFrom().offsetHeight / this.getSliderLengthInPx()) * 100).toFixed(1);
-    }
-    else {
-      return +((this.getThumbFrom().offsetWidth / this.getSliderLengthInPx()) * 100).toFixed(1);
-    }
+    return this.slider.getThumbWidthInPercentage();
   }
   private getRange() {
     return this.slider.getRange();

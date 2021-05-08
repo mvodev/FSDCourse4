@@ -47,14 +47,6 @@
   border-radius: 50%;
 }
 
-.fsd-slider__thumb-from {
-  z-index: 1;
-}
-
-.fsd-slider__thumb-to {
-  z-index: 2;
-}
-
 .fsd-slider__thumb-label {
   position: absolute;
   display: block;
@@ -139,4 +131,4 @@ body {
   align-items: center;
 }
 
-/*# sourceMappingURL=main.e6381d07628e72bf1034.css.map*/
+/*# sourceMappingURL=main.5ffc96e8cbc9cd912605.css.map*/

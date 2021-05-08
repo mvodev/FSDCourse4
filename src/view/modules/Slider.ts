@@ -80,10 +80,10 @@ setColoredRange(): void {
       this.getThumbFrom(),
       this.getThumbTo(),
       this.getRange(),
-      this.getThumbLengthInPx());
+      this.getThumbWidthInPx());
   }
-private  getThumbLengthInPx() :number{
-  return this.getThumbFrom().offsetHeight;
+private  getThumbWidthInPx() :number{
+  return this.getThumbFrom().offsetWidth;
 }
 private handleThumb(thumbType: string, e: MouseEvent): void {
     e.preventDefault();
@@ -112,7 +112,7 @@ private handleThumb(thumbType: string, e: MouseEvent): void {
           newPos = 0;
         }
       }
-      let bottom = that.getSliderLengthInPx() -that.getThumbLengthInPx();
+      let bottom = that.getSliderLengthInPx() -that.getThumbWidthInPx();
       if (that.viewSettings.isRange) {
         const toPos = that.getThumbTo().getBoundingClientRect().top - (that.getRange().getBoundingClientRect().top);
         if (thumbType === "thumbFrom") {
@@ -131,42 +131,42 @@ private handleThumb(thumbType: string, e: MouseEvent): void {
     }
     }
     else {
-    shift = e.clientX - targetElem.getBoundingClientRect().left;
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-   //eslint-disable-next-line @typescript-eslint/no-this-alias
-    const that = this;
-   //eslint-disable-next-line no-inner-declarations
-    function onMouseMove(e: MouseEvent) {
-      let newPos = e.clientX - shift - that.getRange().getBoundingClientRect().left;
-      if (thumbType === "thumbTo") {
-        const fromPos = that.getThumbFrom().getBoundingClientRect().left - (that.getRange().getBoundingClientRect().left );
-      if (newPos < fromPos) {
-        newPos = fromPos;
-      }
-      }
-      else {
-        if (newPos < 0) {
-        newPos = 0;
+      shift = e.clientX - targetElem.getBoundingClientRect().left;
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+      //eslint-disable-next-line @typescript-eslint/no-this-alias
+      const that = this;
+      //eslint-disable-next-line no-inner-declarations
+      function onMouseMove(e: MouseEvent) {
+        let newPos = e.clientX - shift - that.getRange().getBoundingClientRect().left;
+        if (thumbType === "thumbTo") {
+          const fromPos = that.getThumbFrom().getBoundingClientRect().right - that.getRange().getBoundingClientRect().left;
+          if (newPos <= fromPos) {
+            newPos = fromPos;
+          }
         }
+        else {
+          if (newPos < 0) {
+          newPos = 0;
+          }
+        }
+        let rightEdge = that.getSliderLengthInPx() - that.getThumbWidthInPx();
+        if (that.viewSettings.isRange) {
+          const toPos = that.getThumbTo().getBoundingClientRect().left - that.getRange().getBoundingClientRect().left;
+          if (thumbType === "thumbFrom") {
+            rightEdge = toPos;
+          }
+        }
+        if (newPos >= rightEdge) {
+          newPos = rightEdge;
+        }
+        that.dispatchEvent(newPos, thumbType);
       }
-      let rightEdge = that.getSliderLengthInPx() - that.getThumbLengthInPx();
-      if (that.viewSettings.isRange) {
-        const toPos = that.getThumbTo().getBoundingClientRect().left - (that.getRange().getBoundingClientRect().left );
-        if (thumbType === "thumbFrom") {
-        rightEdge = toPos;
+    // eslint-disable-next-line no-inner-declarations
+      function onMouseUp() {
+        document.removeEventListener('mouseup', onMouseUp);
+        document.removeEventListener('mousemove', onMouseMove);
       }
-      }
-      if (newPos > rightEdge) {
-        newPos = rightEdge;
-      }
-      that.dispatchEvent(newPos, thumbType);
-      }
-   // eslint-disable-next-line no-inner-declarations
-    function onMouseUp() {
-      document.removeEventListener('mouseup', onMouseUp);
-      document.removeEventListener('mousemove', onMouseMove);
-    }
   }
   this.setColoredRange();
 }
@@ -176,7 +176,7 @@ private handleRange(e: MouseEvent) {
     shift = e.clientY - this.getRange().getBoundingClientRect().top;
     fromPos = this.getThumbFrom().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top);
     if (this.viewSettings.isRange) {
-    const toPos = this.getThumbTo().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top );
+      const toPos = this.getThumbTo().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top );
     if (shift < fromPos) {
       this.dispatchEvent(shift, "thumbFrom");
     }
@@ -186,7 +186,7 @@ private handleRange(e: MouseEvent) {
     else if (shift >= fromPos && shift <= toPos) {
       const pivot = (toPos - fromPos)/2;
       if (shift < pivot+fromPos) {
-      this.dispatchEvent(shift, "thumbFrom");
+        this.dispatchEvent(shift, "thumbFrom");
       }
       else if (shift >= pivot+fromPos) {
         this.dispatchEvent(shift, "thumbTo");
@@ -204,7 +204,7 @@ private handleRange(e: MouseEvent) {
   }
   else {
     shift = e.clientX - this.getRange().getBoundingClientRect().left;
-    fromPos = this.getThumbFrom().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbLengthInPx() / 2);
+    fromPos = this.getThumbFrom().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbWidthInPx() / 2);
     if (this.viewSettings.isRange) {
       const toPos = this.getThumbTo().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left);
     if (shift < fromPos) {
@@ -230,7 +230,15 @@ private handleRange(e: MouseEvent) {
   this.setColoredRange();
 }
 private convertFromPxToPercent(valueInPX: number) {
-  return +((valueInPX / this.getSliderLengthInPx()) * 100).toFixed(2);
+  return (valueInPX / this.getSliderLengthInPx()) * 100;
+}
+getThumbWidthInPercentage() :number{
+  if (this.viewSettings.isVertical) {
+    return ((this.getThumbFrom().offsetHeight / this.getSliderLengthInPx()) * 100);
+  }
+  else {
+    return ((this.getThumbFrom().offsetWidth / this.getSliderLengthInPx()) * 100);
+  }
 }
 private getSliderLengthInPx() {
   if (this.viewSettings.isVertical) {
@@ -243,21 +251,11 @@ private getSliderLengthInPx() {
 private dispatchEvent(shift: number, type: string) {
   this.resPercentage = this.convertFromPxToPercent(shift);
   if (type === "thumbFrom") {
-    if (this.viewSettings.isVertical) {
-      this.getThumbFrom().style.top = this.resPercentage + '%';
-    }
-    else {
-      this.getThumbFrom().style.left = this.resPercentage + '%';
-    }
-  this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage }),0);
+    this.thumbFrom.setThumb(this.resPercentage,this.viewSettings.isVertical);
+    this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage }),0);
   }
   else {
-    if (this.viewSettings.isVertical) {
-      this.getThumbTo().style.top = this.resPercentage + '%';
-    }
-    else {
-      this.getThumbTo().style.left = this.resPercentage + '%';
-    }
+    this.thumbTo.setThumb(this.resPercentage,this.viewSettings.isVertical);
     this.notifyObservers(Messages.SET_TO, JSON.stringify({ to: this.resPercentage }),0);
   }
   this.setColoredRange();
@@ -276,9 +274,6 @@ getThumbLabelFrom(): ThumbLabel {
 }
 getThumbLabelTo(): ThumbLabel {
   return this.thumbLabelTo;
-}
-private getColoredRange(): HTMLDivElement {
-  return this.coloredRange.getColoredRange();
 }
 setMaxRange(value: number): void {
   this.rangeLabel.setMaxRange(value);
