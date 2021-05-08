@@ -1,4 +1,5 @@
 import { IViewSettings } from "../../model/IViewSettings";
+import { ClassNaming } from '../../utils/ClassNaming';
 
 class RangeLabel{
  private rangeLabelContainer!: HTMLDivElement;
@@ -34,7 +35,7 @@ class RangeLabel{
  }
  private initComponents() {
   this.rangeLabelContainer = document.createElement('div');
-  this.rangeLabelContainer.classList.add('fsd-slider__range-label');
+  this.rangeLabelContainer.classList.add(ClassNaming.RANGE_LABEL);
   
  }
 }

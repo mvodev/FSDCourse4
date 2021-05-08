@@ -710,6 +710,7 @@ exports.ClassNaming = void 0;
 const ClassNaming = {
   ROOT: 'fsd-slider',
   RANGE: 'fsd-slider__range',
+  RANGE_LABEL: 'fsd-slider__range-label',
   COLORED_RANGE: 'fsd-slider__colored-range',
   THUMB_TO: 'fsd-slider__thumb-to',
   THUMB_FROM: 'fsd-slider__thumb-from',
@@ -1409,6 +1410,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.RangeLabel = void 0;
 
+const ClassNaming_1 = __webpack_require__(/*! ../../utils/ClassNaming */ "./utils/ClassNaming.ts");
+
 class RangeLabel {
   constructor() {
     this.initComponents();
@@ -1446,7 +1449,7 @@ class RangeLabel {
 
   initComponents() {
     this.rangeLabelContainer = document.createElement('div');
-    this.rangeLabelContainer.classList.add('fsd-slider__range-label');
+    this.rangeLabelContainer.classList.add(ClassNaming_1.ClassNaming.RANGE_LABEL);
   }
 
 }
@@ -1548,4 +1551,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.bae1fe3527c5a8eab4ad.js.map
+//# sourceMappingURL=main.17882b4fa11d6292b310.js.map
