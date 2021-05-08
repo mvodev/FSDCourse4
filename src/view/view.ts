@@ -92,26 +92,26 @@ class View extends EventObservable implements IObserver{
   private setColoredRange(){
     this.slider.setColoredRange();
   }
-  private convertFromValueToPercent(s:ISettings,value: number): number {
-    return (((100-this.getThumbWidthInPercentage()) / Math.abs(s.max - s.min)) * (Math.abs(value - s.min)));
+  private convertFromValueToPercent(s:ISettings,value: number): string {
+    return (((100-this.getThumbWidthInPercentage()) / Math.abs(s.max - s.min)) * (Math.abs(value - s.min)))+'%';
   }
   private setThumbToValue(s:ISettings,type: string) :void{
     if (type === 'thumbFrom') {
       if (this.viewSettings.isVertical) {
-        this.getThumbFrom().style.top = this.convertFromValueToPercent(s,s.from) + '%';
+        this.getThumbFrom().style.top = this.convertFromValueToPercent(s,s.from);
       }
       else {
-        this.getThumbFrom().style.left = this.convertFromValueToPercent(s,s.from) + '%';
+        this.getThumbFrom().style.left = this.convertFromValueToPercent(s,s.from);
       }
     }
     else {
       if (this.viewSettings.isVertical) {
         this.getThumbTo().style.top = 
-          this.convertFromValueToPercent(s,s.to !== undefined ? s.to : s.from) + '%';
+          this.convertFromValueToPercent(s,s.to !== undefined ? s.to : s.from);
       }
       else {
         this.getThumbTo().style.left 
-        = this.convertFromValueToPercent(s,s.to!==undefined?s.to:s.from) + '%';
+        = this.convertFromValueToPercent(s,s.to!==undefined?s.to:s.from);
       }
     }
   }

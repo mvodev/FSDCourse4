@@ -913,21 +913,21 @@ class View extends EventObservable_1.EventObservable {
   }
 
   convertFromValueToPercent(s, value) {
-    return (100 - this.getThumbWidthInPercentage()) / Math.abs(s.max - s.min) * Math.abs(value - s.min);
+    return (100 - this.getThumbWidthInPercentage()) / Math.abs(s.max - s.min) * Math.abs(value - s.min) + '%';
   }
 
   setThumbToValue(s, type) {
     if (type === 'thumbFrom') {
       if (this.viewSettings.isVertical) {
-        this.getThumbFrom().style.top = this.convertFromValueToPercent(s, s.from) + '%';
+        this.getThumbFrom().style.top = this.convertFromValueToPercent(s, s.from);
       } else {
-        this.getThumbFrom().style.left = this.convertFromValueToPercent(s, s.from) + '%';
+        this.getThumbFrom().style.left = this.convertFromValueToPercent(s, s.from);
       }
     } else {
       if (this.viewSettings.isVertical) {
-        this.getThumbTo().style.top = this.convertFromValueToPercent(s, s.to !== undefined ? s.to : s.from) + '%';
+        this.getThumbTo().style.top = this.convertFromValueToPercent(s, s.to !== undefined ? s.to : s.from);
       } else {
-        this.getThumbTo().style.left = this.convertFromValueToPercent(s, s.to !== undefined ? s.to : s.from) + '%';
+        this.getThumbTo().style.left = this.convertFromValueToPercent(s, s.to !== undefined ? s.to : s.from);
       }
     }
   }
@@ -1548,4 +1548,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.9e3b2b0f94eaaf52d7ab.js.map
+//# sourceMappingURL=main.53c1795455399aaf286f.js.map
