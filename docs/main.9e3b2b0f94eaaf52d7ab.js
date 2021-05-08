@@ -882,17 +882,17 @@ class View extends EventObservable_1.EventObservable {
           this.slider.setValueToLabelThumbTo(settings.to !== undefined ? settings.to : settings.from);
 
           if (settings.isVertical) {
-            this.getThumbTo().style.top = Math.abs((settings.to !== undefined ? settings.to : settings.from) - settings.min) / Math.abs(settings.max - settings.min) * 100 - this.getThumbWidthInPercentage() + '%';
+            this.getThumbTo().style.top = Math.abs((settings.to !== undefined ? settings.to : settings.from) - settings.min) / Math.abs(settings.max - settings.min) * (100 - this.getThumbWidthInPercentage()) + '%';
             this.getThumbFrom().style.top = Math.abs(settings.from - settings.min) / Math.abs(settings.max - settings.min) * 100 + '%';
           } else {
-            this.getThumbTo().style.left = Math.abs((settings.to !== undefined ? settings.to : settings.from) - settings.min) / Math.abs(settings.max - settings.min) * 100 - this.getThumbWidthInPercentage() + '%';
-            this.getThumbFrom().style.left = Math.abs(settings.from - settings.min) / Math.abs(settings.max - settings.min) * 100 + '%';
+            this.getThumbTo().style.left = Math.abs((settings.to !== undefined ? settings.to : settings.from) - settings.min) / Math.abs(settings.max - settings.min) * (100 - this.getThumbWidthInPercentage()) + '%';
+            this.getThumbFrom().style.left = Math.abs(settings.from - settings.min) / Math.abs(settings.max - settings.min) * (100 - this.getThumbWidthInPercentage()) + '%';
           }
         } else {
           if (settings.isVertical) {
-            this.getThumbFrom().style.top = Math.abs(settings.from - settings.min) / Math.abs(settings.max - settings.min) * 100 + '%';
+            this.getThumbFrom().style.top = Math.abs(settings.from - settings.min) / Math.abs(settings.max - settings.min) * (100 - this.getThumbWidthInPercentage()) + '%';
           } else {
-            this.getThumbFrom().style.left = Math.abs(settings.from - settings.min) / Math.abs(settings.max - settings.min) * 100 + '%';
+            this.getThumbFrom().style.left = Math.abs(settings.from - settings.min) / Math.abs(settings.max - settings.min) * (100 - this.getThumbWidthInPercentage()) + '%';
           }
         }
 
@@ -936,20 +936,8 @@ class View extends EventObservable_1.EventObservable {
     return this.slider;
   }
 
-  getSliderLengthInPx() {
-    if (this.viewSettings.isVertical) {
-      return this.getRange().offsetHeight + this.getThumbFrom().offsetHeight;
-    } else {
-      return this.getRange().offsetWidth + this.getThumbFrom().offsetWidth;
-    }
-  }
-
   getThumbWidthInPercentage() {
     return this.slider.getThumbWidthInPercentage();
-  }
-
-  getRange() {
-    return this.slider.getRange();
   }
 
   getThumbFrom() {
@@ -1560,4 +1548,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.6fe62c30a7b5350d5de7.js.map
+//# sourceMappingURL=main.9e3b2b0f94eaaf52d7ab.js.map
