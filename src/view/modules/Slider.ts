@@ -140,7 +140,7 @@ private handleThumb(thumbType: string, e: MouseEvent): void {
       function onMouseMove(e: MouseEvent) {
         let newPos = e.clientX - shift - that.getRange().getBoundingClientRect().left;
         if (thumbType === "thumbTo") {
-          const fromPos = that.getThumbFrom().getBoundingClientRect().right - that.getRange().getBoundingClientRect().left;
+          const fromPos = that.getThumbFrom().getBoundingClientRect().left - that.getRange().getBoundingClientRect().left;
           if (newPos <= fromPos) {
             newPos = fromPos;
           }

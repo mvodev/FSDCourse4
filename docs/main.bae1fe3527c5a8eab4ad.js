@@ -1123,7 +1123,7 @@ class Slider extends EventObservable_1.EventObservable {
         let newPos = e.clientX - shift - that.getRange().getBoundingClientRect().left;
 
         if (thumbType === "thumbTo") {
-          const fromPos = that.getThumbFrom().getBoundingClientRect().right - that.getRange().getBoundingClientRect().left;
+          const fromPos = that.getThumbFrom().getBoundingClientRect().left - that.getRange().getBoundingClientRect().left;
 
           if (newPos <= fromPos) {
             newPos = fromPos;
@@ -1548,4 +1548,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.53c1795455399aaf286f.js.map
+//# sourceMappingURL=main.bae1fe3527c5a8eab4ad.js.map
