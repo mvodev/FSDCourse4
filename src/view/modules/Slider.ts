@@ -242,10 +242,10 @@ getThumbWidthInPercentage() :number{
 }
 private getSliderLengthInPx() {
   if (this.viewSettings.isVertical) {
-    return this.getRange().offsetHeight + this.getThumbFrom().offsetHeight;
+    return this.getRange().offsetHeight;
   }
   else {
-    return this.getRange().offsetWidth + this.getThumbFrom().offsetWidth;
+    return this.getRange().offsetWidth;
   }
 }
 private dispatchEvent(shift: number, type: string) {

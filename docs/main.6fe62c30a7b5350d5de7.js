@@ -1247,9 +1247,9 @@ class Slider extends EventObservable_1.EventObservable {
 
   getSliderLengthInPx() {
     if (this.viewSettings.isVertical) {
-      return this.getRange().offsetHeight + this.getThumbFrom().offsetHeight;
+      return this.getRange().offsetHeight;
     } else {
-      return this.getRange().offsetWidth + this.getThumbFrom().offsetWidth;
+      return this.getRange().offsetWidth;
     }
   }
 
@@ -1560,4 +1560,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.c355b89d5a27c9a6a1dc.js.map
+//# sourceMappingURL=main.6fe62c30a7b5350d5de7.js.map
