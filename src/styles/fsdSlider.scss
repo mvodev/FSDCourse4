@@ -6,72 +6,72 @@
   &_is_vertical{
    flex-direction: row;
   }
- &__range{
-  background-color: green;
-  height: 20px;
-  width: inherit;
-  position: relative;
-  border-radius: 10px;
- }
- &__range_is_vertical{
- height: inherit;
- width: 20px;
- }
- &__colored-range{
-  background-color: purple;
-  height: 20px;
-  width: inherit;
-  position: relative;
-  border-radius: 10px;
- }
- &__colored-range_is_vertical{
-  width: 20px;
+  &__range{
+   background-color: green;
+   height: 20px;
+   width: inherit;
+   position: relative;
+   border-radius: 10px;
+  }
+  &__range_is_vertical{
   height: inherit;
- }
-
- &__thumb-from,
- &__thumb-to{
-  position: absolute;
-  background-color: indigo;
-  height: 30px;
-  width: 30px;
-  top:-5px;
-  left: -5px;
-  cursor: pointer;
-  border-radius: 50%;
- }
- &__thumb-label{
-  position: absolute;
-  display: block;
-  color: white;
-  top:-30px;
-  left: 0px;
-  min-width: 20px;
-  min-height: 20px;
-  background-color: navy;
-  border-radius: 3px;
- }
- &__thumb-label_is_vertical{
-  top: 5px;
-  left: 35px;
- }
- &__thumb-value{
-  font-size: 16px;
-  font-family: inherit;
-  display: flex;
-  justify-content: center;
- }
- &__range-label{
-  height: 20px;
-  width: auto;
-  display: flex;
-  justify-content: space-between;
-  flex-direction: row;
-  cursor: pointer;
- }
- &__range-label_is_vertical{
-  flex-direction: column;
   width: 20px;
-  height: auto;
- }
+  }
+  &__colored-range{
+   background-color: purple;
+   height: 20px;
+   width: inherit;
+   position: relative;
+   border-radius: 10px;
+  }
+  &__colored-range_is_vertical{
+   width: 20px;
+   height: inherit;
+  }
+
+  &__thumb-from,
+  &__thumb-to{
+   position: absolute;
+   background-color: indigo;
+   height: 30px;
+   width: 30px;
+   top:-5px;
+   left: -5px;
+   cursor: pointer;
+   border-radius: 50%;
+  }
+  &__thumb-label{
+   position: absolute;
+   display: block;
+   color: white;
+   top:-30px;
+   left: 0px;
+   min-width: 20px;
+   min-height: 20px;
+   background-color: navy;
+   border-radius: 3px;
+  }
+  &__thumb-label_is_vertical{
+   top: 5px;
+   left: 35px;
+  }
+  &__thumb-value{
+   font-size: 16px;
+   font-family: inherit;
+   display: flex;
+   justify-content: center;
+  }
+  &__range-label{
+   height: 20px;
+   width: auto;
+   display: flex;
+   justify-content: space-between;
+   flex-direction: row;
+   cursor: pointer;
+  }
+  &__range-label_is_vertical{
+   flex-direction: column;
+   width: 20px;
+   height: auto;
+  }
 }
