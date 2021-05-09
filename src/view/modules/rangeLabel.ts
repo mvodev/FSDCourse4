@@ -36,7 +36,6 @@ class RangeLabel{
  private initComponents() {
   this.rangeLabelContainer = document.createElement('div');
   this.rangeLabelContainer.classList.add(ClassNaming.RANGE_LABEL);
-  
  }
 }
 export {RangeLabel}
