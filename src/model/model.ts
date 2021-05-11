@@ -58,8 +58,6 @@ class Model extends EventObservable implements IModelFacade {
       }
       else if(validatedMin>this.settings.from){
         new ErrorMessage('unacceptable value,min value in settings more than from value');
-        this.settings.min = validatedMin;
-        this.settings.from = validatedMin;
       }
       else{
         this.settings.min = validatedMin;
@@ -71,8 +69,6 @@ class Model extends EventObservable implements IModelFacade {
       }
       else if (validatedMax<=this.settings.to&&this.settings.isRange){
         new ErrorMessage('unacceptable value,max value in settings lower than to value');
-        this.settings.max = validatedMax;
-        this.settings.to = validatedMax;
       }
       else if (validatedMax <= this.settings.from){
         new ErrorMessage('unacceptable value,max value in settings lower than from value');
@@ -94,16 +90,13 @@ class Model extends EventObservable implements IModelFacade {
     if(validatedTo!==undefined){
       if(validatedTo>this.settings.max){
         new ErrorMessage('to must be lower than max');
-        this.settings.to = this.settings.max;
       }
       else if(validatedTo<=this.settings.min){
         new ErrorMessage('to must be lower than max');
-        this.settings.to = this.settings.max;
       }
       else if(this.settings.isRange){
         if(validatedTo<=this.settings.from){
           new ErrorMessage('to must be lower than max');
-          this.settings.to = this.settings.max;
         }
         else{
           this.settings.to = validatedTo;

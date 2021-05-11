@@ -442,8 +442,6 @@ class Model extends EventObservable_1.EventObservable {
         new ErrorMessage_1.ErrorMessage('unacceptable value,min value in settings more than max value');
       } else if (validatedMin > this.settings.from) {
         new ErrorMessage_1.ErrorMessage('unacceptable value,min value in settings more than from value');
-        this.settings.min = validatedMin;
-        this.settings.from = validatedMin;
       } else {
         this.settings.min = validatedMin;
       }
@@ -454,8 +452,6 @@ class Model extends EventObservable_1.EventObservable {
         new ErrorMessage_1.ErrorMessage('unacceptable value,max value in settings lower than min value');
       } else if (validatedMax <= this.settings.to && this.settings.isRange) {
         new ErrorMessage_1.ErrorMessage('unacceptable value,max value in settings lower than to value');
-        this.settings.max = validatedMax;
-        this.settings.to = validatedMax;
       } else if (validatedMax <= this.settings.from) {
         new ErrorMessage_1.ErrorMessage('unacceptable value,max value in settings lower than from value');
       } else {
@@ -477,14 +473,11 @@ class Model extends EventObservable_1.EventObservable {
     if (validatedTo !== undefined) {
       if (validatedTo > this.settings.max) {
         new ErrorMessage_1.ErrorMessage('to must be lower than max');
-        this.settings.to = this.settings.max;
       } else if (validatedTo <= this.settings.min) {
         new ErrorMessage_1.ErrorMessage('to must be lower than max');
-        this.settings.to = this.settings.max;
       } else if (this.settings.isRange) {
         if (validatedTo <= this.settings.from) {
           new ErrorMessage_1.ErrorMessage('to must be lower than max');
-          this.settings.to = this.settings.max;
         } else {
           this.settings.to = validatedTo;
         }
@@ -1557,4 +1550,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.f5853bd0cdd965f8c1f2.js.map
+//# sourceMappingURL=main.9511f4831c1a1c01fbb4.js.map
