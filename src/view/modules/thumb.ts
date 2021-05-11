@@ -10,7 +10,7 @@ class Thumb extends EventObservable{
  getThumb(): HTMLDivElement {
   return this.thumb;
  }
- setThumb(shift:number,isVertical:boolean|undefined):void{
+ setThumbPosition(shift:number,isVertical:boolean|undefined):void{
   if (isVertical) {
    this.getThumb().style.top = shift + '%';
   }

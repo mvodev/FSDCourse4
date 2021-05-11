@@ -251,11 +251,11 @@ private getSliderLengthInPx() {
 private dispatchEvent(shift: number, type: string) {
   this.resPercentage = this.convertFromPxToPercent(shift);
   if (type === "thumbFrom") {
-    this.thumbFrom.setThumb(this.resPercentage,this.viewSettings.isVertical);
+    this.thumbFrom.setThumbPosition(this.resPercentage,this.viewSettings.isVertical);
     this.notifyObservers(Messages.SET_FROM, JSON.stringify({ from: this.resPercentage }),0);
   }
   else {
-    this.thumbTo.setThumb(this.resPercentage,this.viewSettings.isVertical);
+    this.thumbTo.setThumbPosition(this.resPercentage,this.viewSettings.isVertical);
     this.notifyObservers(Messages.SET_TO, JSON.stringify({ to: this.resPercentage }),0);
   }
   this.setColoredRange();

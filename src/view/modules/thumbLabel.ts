@@ -12,17 +12,17 @@ class ThumbLabel {
   this.thumbLabelValue.classList.add(ClassNaming.THUMB_VALUE);
   this.thumbLabelContainer.appendChild(this.thumbLabelValue);
  }
- getThumbLabelContainer():HTMLDivElement {
+ getThumbLabelContainer(): HTMLDivElement {
   return this.thumbLabelContainer;
  }
- setValueToLabel(value: number) :void{
+ setValueToLabel(value: number): void {
   this.thumbLabelValue.innerText = '' + value;
  }
- hideLabel():void {
+ hideLabel(): void {
   this.thumbLabelContainer.style.display = 'none';
  }
- showLabel() :void{
+ showLabel(): void {
   this.thumbLabelContainer.style.display = 'block';
  }
 }
-export {ThumbLabel}
+export { ThumbLabel }
