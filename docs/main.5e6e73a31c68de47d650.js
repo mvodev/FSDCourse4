@@ -1045,7 +1045,7 @@ class Slider extends EventObservable_1.EventObservable {
   }
 
   setColoredRange() {
-    this.coloredRange.setColoredRange(this.viewSettings, this.getThumbFrom(), this.getThumbTo(), this.getRange(), this.getThumbWidthInPx());
+    this.coloredRange.setColoredRange(this.viewSettings, this.getThumbFrom(), this.getThumbTo(), this.getThumbWidthInPercentage());
   }
 
   getThumbWidthInPx() {
@@ -1336,20 +1336,20 @@ class ColoredRange {
     return this.coloredRange;
   }
 
-  setColoredRange(viewSettings, thumbFrom, thumbTo, range, thumbLength) {
+  setColoredRange(viewSettings, thumbFrom, thumbTo, thumbLength) {
     if (viewSettings.isRange) {
       if (viewSettings.isVertical) {
-        this.getColoredRange().style.top = thumbFrom.getBoundingClientRect().top - range.getBoundingClientRect().top + thumbLength / 2 + 'px';
-        this.getColoredRange().style.height = thumbTo.getBoundingClientRect().top - thumbFrom.getBoundingClientRect().top + thumbLength / 2 + 'px';
+        this.getColoredRange().style.top = thumbFrom.style.top;
+        this.getColoredRange().style.height = Number.parseInt(thumbTo.style.top) - Number.parseInt(thumbFrom.style.top) + thumbLength / 2 + '%';
       } else {
-        this.getColoredRange().style.left = thumbFrom.getBoundingClientRect().left - range.getBoundingClientRect().left + 'px';
-        this.getColoredRange().style.width = thumbTo.getBoundingClientRect().left - (thumbFrom.getBoundingClientRect().left - thumbLength / 2) + 'px';
+        this.getColoredRange().style.left = thumbFrom.style.left;
+        this.getColoredRange().style.width = Number.parseInt(thumbTo.style.left) - Number.parseInt(thumbFrom.style.left) + thumbLength / 2 + '%';
       }
     } else {
       if (viewSettings.isVertical) {
-        this.getColoredRange().style.height = thumbFrom.getBoundingClientRect().top - (range.getBoundingClientRect().top - thumbLength / 2) + 'px';
+        this.getColoredRange().style.height = Number.parseInt(thumbFrom.style.top) + thumbLength / 2 + '%';
       } else {
-        this.getColoredRange().style.width = thumbFrom.getBoundingClientRect().left - (range.getBoundingClientRect().left - thumbLength / 2) + 'px';
+        this.getColoredRange().style.width = Number.parseInt(thumbFrom.style.left) + thumbLength / 2 + '%';
       }
     }
   }
@@ -1550,4 +1550,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.9511f4831c1a1c01fbb4.js.map
+//# sourceMappingURL=main.5e6e73a31c68de47d650.js.map

@@ -79,8 +79,7 @@ setColoredRange(): void {
       this.viewSettings,
       this.getThumbFrom(),
       this.getThumbTo(),
-      this.getRange(),
-      this.getThumbWidthInPx());
+      this.getThumbWidthInPercentage());
 }
 private  getThumbWidthInPx() :number{
   return this.getThumbFrom().offsetWidth;

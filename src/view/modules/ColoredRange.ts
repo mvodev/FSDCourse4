@@ -14,24 +14,25 @@ class ColoredRange{
   viewSettings:IViewSettings,
   thumbFrom:HTMLDivElement,
   thumbTo:HTMLDivElement,
-  range:HTMLDivElement,
   thumbLength:number) :void {
   if (viewSettings.isRange) {
    if (viewSettings.isVertical) {
-    this.getColoredRange().style.top = (thumbFrom.getBoundingClientRect().top) - range.getBoundingClientRect().top + thumbLength / 2 + 'px';
-    this.getColoredRange().style.height = (thumbTo.getBoundingClientRect().top - thumbFrom.getBoundingClientRect().top + thumbLength / 2) + 'px';
+    this.getColoredRange().style.top = thumbFrom.style.top;
+    this.getColoredRange().style.height = (Number.parseInt(thumbTo.style.top)-Number.parseInt(thumbFrom.style.top) + thumbLength/2)+'%';
    }
    else {
-    this.getColoredRange().style.left = (thumbFrom.getBoundingClientRect().left - range.getBoundingClientRect().left) + 'px';
-    this.getColoredRange().style.width = (thumbTo.getBoundingClientRect().left - (thumbFrom.getBoundingClientRect().left - thumbLength / 2)) + 'px';
+    this.getColoredRange().style.left = thumbFrom.style.left;
+    this.getColoredRange().style.width = (Number.parseInt(thumbTo.style.left) - Number.parseInt(thumbFrom.style.left) + thumbLength/2)+'%';
    }
   }
   else {
    if (viewSettings.isVertical) {
-    this.getColoredRange().style.height = (thumbFrom.getBoundingClientRect().top - (range.getBoundingClientRect().top - thumbLength / 2)) + 'px';
+    this.getColoredRange().style.height = (Number.parseInt(thumbFrom.style.top)+thumbLength/2)+'%' ;
    }
    else {
-    this.getColoredRange().style.width = (thumbFrom.getBoundingClientRect().left - (range.getBoundingClientRect().left - thumbLength / 2)) + 'px';
+    
+    this.getColoredRange().style.width = (Number.parseInt(thumbFrom.style.left)+thumbLength/2)+'%';
+    
    }
   }
  }

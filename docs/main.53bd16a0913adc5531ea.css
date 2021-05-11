@@ -111,11 +111,15 @@ body {
   height: 400px;
 }
 
-.slider1, .slider2, .slider3 {
+.slider1, .slider2 {
   width: 300px;
   height: 300px;
   display: flex;
   align-items: center;
 }
 
-/*# sourceMappingURL=main.b69387879a256c97132d.css.map*/
+.slider3 {
+  width: 350px;
+}
+
+/*# sourceMappingURL=main.53bd16a0913adc5531ea.css.map*/
