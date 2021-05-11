@@ -20,14 +20,10 @@
 }
 .fsd-slider__colored-range {
   background-color: purple;
-  height: 20px;
-  width: inherit;
+  height: 100%;
+  width: 100%;
   position: relative;
   border-radius: 10px;
-}
-.fsd-slider__colored-range_is_vertical {
-  width: 20px;
-  height: inherit;
 }
 .fsd-slider__thumb-from, .fsd-slider__thumb-to {
   position: absolute;
@@ -122,4 +118,4 @@ body {
   align-items: center;
 }
 
-/*# sourceMappingURL=main.47d1c082e3a2a1fd8ab5.css.map*/
+/*# sourceMappingURL=main.b69387879a256c97132d.css.map*/
