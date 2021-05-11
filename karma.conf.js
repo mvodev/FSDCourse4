@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const webpackConfig = require('./webpack.config');
 
 module.exports = function (config) {
@@ -6,7 +7,7 @@ module.exports = function (config) {
   frameworks: ['jasmine'],
   files: [
    'src/test/*.*.ts',
-   { pattern: 'src/styles/fsdSlider-copy.css', included: true, watched: false },
+   { pattern: 'src/styles/fsd-slider-copy.css', included: true, watched: false },
   ],
   exclude: [],
   preprocessors: {

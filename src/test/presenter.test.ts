@@ -12,7 +12,7 @@ describe("Presenter", function () {
   from: 17,
   to:20,
   step: 5,
-  isVertical: false,
+  isVertical: true,
   hideThumbLabel: true,
   isRange: true,
  };
@@ -22,7 +22,7 @@ describe("Presenter", function () {
   from: 17,
   to:20,
   step: -3,
-  isVertical: false,
+  isVertical: true,
   hideThumbLabel: false,
   isRange: true,
  };
@@ -49,6 +49,6 @@ describe("Presenter", function () {
  });
  it("Slider is correctly set position thumbFrom after update", function () {
   presenter.update(settingsUpdated);
-  assert.equal(view.getSlider().getThumbFrom().style.left, "77.1429%");
+  assert.equal(view.getSlider().getThumbFrom().style.top, '77.1429%');
  });
 });

@@ -1,5 +1,5 @@
 import './index.scss';
-import './fsdSlider.js';
+import './fsd-slider.js';
 var $sl1 = $('.slider1');
 var $sl1_input = $('.input-result1');
 $sl1.fsdSlider({

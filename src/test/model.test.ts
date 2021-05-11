@@ -19,11 +19,11 @@ describe("Model", function () {
   assert.equal(model.getStep(), 1);
  });
  it("Model return correct from after setFrom method", function () {
-  model.setFrom(50);
+  model.setFrom(50,0);
   assert.equal(model.getFrom(), 5);
  });
  it("Model return correct from after setFrom method", function () {
-  model.setFrom(-10);
+  model.setFrom(-10,0);
   assert.equal(model.getFrom(), 0);
  });
 });

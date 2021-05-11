@@ -186,10 +186,10 @@ exports.ErrorMessage = ErrorMessage;
 
 /***/ }),
 
-/***/ "./fsdSlider.js":
-/*!**********************!*\
-  !*** ./fsdSlider.js ***!
-  \**********************/
+/***/ "./fsd-slider.js":
+/*!***********************!*\
+  !*** ./fsd-slider.js ***!
+  \***********************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -241,7 +241,7 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* WEBPACK VAR INJECTION */(function($) {/* harmony import */ var _index_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index.scss */ "./index.scss");
-/* harmony import */ var _fsdSlider_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./fsdSlider.js */ "./fsdSlider.js");
+/* harmony import */ var _fsd_slider_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./fsd-slider.js */ "./fsd-slider.js");
 
 
 var $sl1 = $('.slider1');
@@ -1557,4 +1557,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.4fd998e07163c2ad197c.js.map
+//# sourceMappingURL=main.f5853bd0cdd965f8c1f2.js.map
