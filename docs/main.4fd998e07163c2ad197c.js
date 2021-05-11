@@ -1071,6 +1071,11 @@ class Slider extends EventObservable_1.EventObservable {
 
     if (this.viewSettings.isVertical) {
       shift = e.clientY - targetElem.getBoundingClientRect().top;
+    } else {
+      shift = e.clientX - targetElem.getBoundingClientRect().left;
+    }
+
+    if (this.viewSettings.isVertical) {
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp); // eslint-disable-next-line @typescript-eslint/no-this-alias
 
@@ -1114,7 +1119,6 @@ class Slider extends EventObservable_1.EventObservable {
         document.removeEventListener('mousemove', onMouseMove);
       }
     } else {
-      shift = e.clientX - targetElem.getBoundingClientRect().left;
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp); //eslint-disable-next-line @typescript-eslint/no-this-alias
 
@@ -1167,8 +1171,13 @@ class Slider extends EventObservable_1.EventObservable {
 
     if (this.viewSettings.isVertical) {
       shift = e.clientY - this.getRange().getBoundingClientRect().top;
-      fromPos = this.getThumbFrom().getBoundingClientRect().top - this.getRange().getBoundingClientRect().top;
+      fromPos = this.getThumbFrom().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbWidthInPx() / 2);
+    } else {
+      shift = e.clientX - this.getRange().getBoundingClientRect().left;
+      fromPos = this.getThumbFrom().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbWidthInPx() / 2);
+    }
 
+    if (this.viewSettings.isVertical) {
       if (this.viewSettings.isRange) {
         const toPos = this.getThumbTo().getBoundingClientRect().top - this.getRange().getBoundingClientRect().top;
 
@@ -1194,9 +1203,6 @@ class Slider extends EventObservable_1.EventObservable {
         }
       }
     } else {
-      shift = e.clientX - this.getRange().getBoundingClientRect().left;
-      fromPos = this.getThumbFrom().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbWidthInPx() / 2);
-
       if (this.viewSettings.isRange) {
         const toPos = this.getThumbTo().getBoundingClientRect().left - this.getRange().getBoundingClientRect().left;
 
@@ -1246,14 +1252,14 @@ class Slider extends EventObservable_1.EventObservable {
     this.resPercentage = this.convertFromPxToPercent(shift);
 
     if (type === "thumbFrom") {
-      this.thumbFrom.setThumb(this.resPercentage, this.viewSettings.isVertical);
+      this.thumbFrom.setThumbPosition(this.resPercentage, this.viewSettings.isVertical);
       this.notifyObservers(4
       /* SET_FROM */
       , JSON.stringify({
         from: this.resPercentage
       }), 0);
     } else {
-      this.thumbTo.setThumb(this.resPercentage, this.viewSettings.isVertical);
+      this.thumbTo.setThumbPosition(this.resPercentage, this.viewSettings.isVertical);
       this.notifyObservers(5
       /* SET_TO */
       , JSON.stringify({
@@ -1486,7 +1492,7 @@ class Thumb extends EventObservable_1.EventObservable {
     return this.thumb;
   }
 
-  setThumb(shift, isVertical) {
+  setThumbPosition(shift, isVertical) {
     if (isVertical) {
       this.getThumb().style.top = shift + '%';
     } else {
@@ -1551,4 +1557,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.17882b4fa11d6292b310.js.map
+//# sourceMappingURL=main.4fd998e07163c2ad197c.js.map

@@ -81,19 +81,25 @@ setColoredRange(): void {
       this.getThumbTo(),
       this.getRange(),
       this.getThumbWidthInPx());
-  }
+}
 private  getThumbWidthInPx() :number{
   return this.getThumbFrom().offsetWidth;
 }
 private handleThumb(thumbType: string, e: MouseEvent): void {
     e.preventDefault();
     let targetElem: HTMLDivElement = this.getThumbFrom();
-  if (thumbType === "thumbTo") {
+    if (thumbType === "thumbTo") {
       targetElem = this.getThumbTo();
     }
     let shift: number;
     if (this.viewSettings.isVertical) {
       shift = e.clientY - targetElem.getBoundingClientRect().top;
+    }
+    else{
+      shift = e.clientX - targetElem.getBoundingClientRect().left;
+    }
+    if (this.viewSettings.isVertical) {
+      
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp);
    // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -102,10 +108,10 @@ private handleThumb(thumbType: string, e: MouseEvent): void {
     function onMouseMove(event: MouseEvent) {
       let newPos = event.clientY - shift - that.getRange().getBoundingClientRect().top;
       if (thumbType === "thumbTo") {
-      const fromPos = that.getThumbFrom().getBoundingClientRect().top - (that.getRange().getBoundingClientRect().top);
-      if (newPos < fromPos) {
-        newPos = fromPos;
-      }
+        const fromPos = that.getThumbFrom().getBoundingClientRect().top - (that.getRange().getBoundingClientRect().top);
+        if (newPos < fromPos) {
+          newPos = fromPos;
+        }
       }
       else {
         if (newPos < 0) {
@@ -116,8 +122,8 @@ private handleThumb(thumbType: string, e: MouseEvent): void {
       if (that.viewSettings.isRange) {
         const toPos = that.getThumbTo().getBoundingClientRect().top - (that.getRange().getBoundingClientRect().top);
         if (thumbType === "thumbFrom") {
-        bottom = toPos;
-      }
+          bottom = toPos;
+        }
       }
       if (newPos > bottom) {
         newPos = bottom;
@@ -131,7 +137,6 @@ private handleThumb(thumbType: string, e: MouseEvent): void {
     }
     }
     else {
-      shift = e.clientX - targetElem.getBoundingClientRect().left;
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp);
       //eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -174,7 +179,13 @@ private handleRange(e: MouseEvent) {
   let shift: number, fromPos: number;
   if (this.viewSettings.isVertical) {
     shift = e.clientY - this.getRange().getBoundingClientRect().top;
-    fromPos = this.getThumbFrom().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top);
+    fromPos = this.getThumbFrom().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top - this.getThumbWidthInPx()/2);
+  }
+  else{
+    shift = e.clientX - this.getRange().getBoundingClientRect().left;
+    fromPos = this.getThumbFrom().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbWidthInPx() / 2);
+  }
+  if (this.viewSettings.isVertical) {
     if (this.viewSettings.isRange) {
       const toPos = this.getThumbTo().getBoundingClientRect().top - (this.getRange().getBoundingClientRect().top );
     if (shift < fromPos) {
@@ -203,8 +214,6 @@ private handleRange(e: MouseEvent) {
     }
   }
   else {
-    shift = e.clientX - this.getRange().getBoundingClientRect().left;
-    fromPos = this.getThumbFrom().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left - this.getThumbWidthInPx() / 2);
     if (this.viewSettings.isRange) {
       const toPos = this.getThumbTo().getBoundingClientRect().left - (this.getRange().getBoundingClientRect().left);
     if (shift < fromPos) {
