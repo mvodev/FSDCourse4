@@ -70,7 +70,7 @@ setVertical():void {
   this.rangeLabel.getRangeLabel().classList.add(ClassNaming.RANGE_LABEL_IS_VERTICAL);
   this.thumbLabelFrom.getThumbLabelContainer().classList.add(ClassNaming.THUMB_LABEL_IS_VERTICAL);
   if (this.viewSettings.isRange) {
-   this.thumbLabelTo.getThumbLabelContainer().classList.add(ClassNaming.THUMB_LABEL_IS_VERTICAL);
+    this.thumbLabelTo.getThumbLabelContainer().classList.add(ClassNaming.THUMB_LABEL_IS_VERTICAL);
   }
 }
 

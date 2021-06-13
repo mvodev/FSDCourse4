@@ -54,10 +54,10 @@ class Model extends EventObservable implements IModelFacade {
     this.settings.isRange = settings.isRange ? Utils.isBoolean(settings.isRange):this.settings.isRange;
     if(validatedMin!==undefined){
       if (validatedMin >= this.settings.max) {
-        new ErrorMessage('unacceptable value,min value in settings more than max value');
+        new ErrorMessage('unacceptable value,min value in settings more than max value','validate settings method of Model');
       }
       else if(validatedMin>this.settings.from){
-        new ErrorMessage('unacceptable value,min value in settings more than from value');
+        new ErrorMessage('unacceptable value,min value in settings more than from value', 'validate settings method of Model');
       }
       else{
         this.settings.min = validatedMin;
@@ -65,13 +65,13 @@ class Model extends EventObservable implements IModelFacade {
     }
     if(validatedMax!==undefined){
       if(validatedMax<=this.settings.min){
-        new ErrorMessage('unacceptable value,max value in settings lower than min value');
+        new ErrorMessage('unacceptable value,max value in settings lower than min value', 'validate settings method of Model');
       }
       else if (validatedMax<=this.settings.to&&this.settings.isRange){
-        new ErrorMessage('unacceptable value,max value in settings lower than to value');
+        new ErrorMessage('unacceptable value,max value in settings lower than to value', 'validate settings method of Model');
       }
       else if (validatedMax <= this.settings.from){
-        new ErrorMessage('unacceptable value,max value in settings lower than from value');
+        new ErrorMessage('unacceptable value,max value in settings lower than from value', 'validate settings method of Model');
       }
       else{
         this.settings.max = validatedMax;
@@ -80,7 +80,7 @@ class Model extends EventObservable implements IModelFacade {
     if(validatedFrom!==undefined){
       const max = this.settings.isRange?this.settings.to:this.settings.max;
       if(validatedFrom<=this.settings.min+this.settings.step||validatedFrom>=max+this.settings.step){
-        new ErrorMessage('from is invalid');
+        new ErrorMessage('from is invalid', 'validate settings method of Model');
         this.settings.from = this.settings.min;
       }
       else{
@@ -89,14 +89,14 @@ class Model extends EventObservable implements IModelFacade {
     }
     if(validatedTo!==undefined){
       if(validatedTo>this.settings.max){
-        new ErrorMessage('to must be lower than max');
+        new ErrorMessage('to must be lower than max', 'validate settings method of Model');
       }
       else if(validatedTo<=this.settings.min){
-        new ErrorMessage('to must be lower than max');
+        new ErrorMessage('to must be lower than max', 'validate settings method of Model');
       }
       else if(this.settings.isRange){
         if(validatedTo<=this.settings.from){
-          new ErrorMessage('to must be lower than max');
+          new ErrorMessage('to must be lower than max', 'validate settings method of Model');
         }
         else{
           this.settings.to = validatedTo;
@@ -108,17 +108,17 @@ class Model extends EventObservable implements IModelFacade {
         if (this.settings.to!==undefined){
           if (this.settings.to<=settings.from){
             this.settings.to = this.settings.max;
-            new ErrorMessage('to must be more than from');
+            new ErrorMessage('to must be more than from', 'validate settings method of Model');
           }
         }
       }
     }
     if(validatedStep!==undefined){
       if(validatedStep<0){
-        new ErrorMessage('step must be positive');
+        new ErrorMessage('step must be positive', 'validate settings method of Model');
       }
       else if(validatedStep>(Math.abs(this.settings.max-this.settings.min))){
-        new ErrorMessage('step must be lower than difference between max and min');
+        new ErrorMessage('step must be lower than difference between max and min', 'validate settings method of Model');
       }
       else{
         this.settings.step = validatedStep;
