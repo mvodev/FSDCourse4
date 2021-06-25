@@ -178,7 +178,7 @@ class ErrorMessage {
   }
 
   showMessage() {
-    console.error(this.message + ' ' + this.timestamp + ' ' + new Date());
+    console.error(this.message + ', ' + this.timestamp + ' ' + new Date());
   }
 
 }
@@ -429,58 +429,58 @@ class Model extends EventObservable_1.EventObservable {
   }
 
   validateSettings(settings) {
-    const validatedMin = Utils_1.Utils.isNumber(settings.min);
-    const validatedMax = Utils_1.Utils.isNumber(settings.max);
-    const validatedFrom = Utils_1.Utils.isNumber(settings.from);
-    const validatedTo = Utils_1.Utils.isNumber(settings.to);
-    const validatedStep = Utils_1.Utils.isNumber(settings.step);
-    const validatedIsVertical = Utils_1.Utils.isBoolean(settings.isVertical);
-    const validatedHideThumbLabel = Utils_1.Utils.isBoolean(settings.hideThumbLabel);
-    this.settings.isRange = settings.isRange ? Utils_1.Utils.isBoolean(settings.isRange) : this.settings.isRange;
+    const newMin = Utils_1.Utils.convertFromInputToNumber(settings.min);
+    const newMax = Utils_1.Utils.convertFromInputToNumber(settings.max);
+    const newFrom = Utils_1.Utils.convertFromInputToNumber(settings.from);
+    const newTo = Utils_1.Utils.convertFromInputToNumber(settings.to);
+    const newStep = Utils_1.Utils.convertFromInputToNumber(settings.step);
+    const newIsVertical = Utils_1.Utils.convertFromInputToBoolean(settings.isVertical);
+    const newHideThumbLabel = Utils_1.Utils.convertFromInputToBoolean(settings.hideThumbLabel);
+    this.settings.isRange = settings.isRange ? Utils_1.Utils.convertFromInputToBoolean(settings.isRange) : this.settings.isRange;
 
-    if (validatedMin !== undefined) {
-      if (validatedMin >= this.settings.max) {
+    if (newMin) {
+      if (newMin >= this.settings.max) {
         new ErrorMessage_1.ErrorMessage('unacceptable value,min value in settings more than max value', 'validate settings method of Model');
-      } else if (validatedMin > this.settings.from) {
+      } else if (newMin > this.settings.from) {
         new ErrorMessage_1.ErrorMessage('unacceptable value,min value in settings more than from value', 'validate settings method of Model');
       } else {
-        this.settings.min = validatedMin;
+        this.settings.min = newMin;
       }
     }
 
-    if (validatedMax !== undefined) {
-      if (validatedMax <= this.settings.min) {
+    if (newMax) {
+      if (newMax <= this.settings.min) {
         new ErrorMessage_1.ErrorMessage('unacceptable value,max value in settings lower than min value', 'validate settings method of Model');
-      } else if (validatedMax <= this.settings.to && this.settings.isRange) {
+      } else if (newMax <= this.settings.to && this.settings.isRange) {
         new ErrorMessage_1.ErrorMessage('unacceptable value,max value in settings lower than to value', 'validate settings method of Model');
-      } else if (validatedMax <= this.settings.from) {
+      } else if (newMax <= this.settings.from) {
         new ErrorMessage_1.ErrorMessage('unacceptable value,max value in settings lower than from value', 'validate settings method of Model');
       } else {
-        this.settings.max = validatedMax;
+        this.settings.max = newMax;
       }
     }
 
-    if (validatedFrom !== undefined) {
+    if (newFrom) {
       const max = this.settings.isRange ? this.settings.to : this.settings.max;
 
-      if (validatedFrom <= this.settings.min + this.settings.step || validatedFrom >= max + this.settings.step) {
+      if (newFrom <= this.settings.min + this.settings.step || newFrom >= max + this.settings.step) {
         new ErrorMessage_1.ErrorMessage('from is invalid', 'validate settings method of Model');
         this.settings.from = this.settings.min;
       } else {
-        this.settings.from = validatedFrom;
+        this.settings.from = newFrom;
       }
     }
 
-    if (validatedTo !== undefined) {
-      if (validatedTo > this.settings.max) {
+    if (newTo) {
+      if (newTo > this.settings.max) {
         new ErrorMessage_1.ErrorMessage('to must be lower than max', 'validate settings method of Model');
-      } else if (validatedTo <= this.settings.min) {
+      } else if (newTo <= this.settings.min) {
         new ErrorMessage_1.ErrorMessage('to must be lower than max', 'validate settings method of Model');
       } else if (this.settings.isRange) {
-        if (validatedTo <= this.settings.from) {
+        if (newTo <= this.settings.from) {
           new ErrorMessage_1.ErrorMessage('to must be lower than max', 'validate settings method of Model');
         } else {
-          this.settings.to = validatedTo;
+          this.settings.to = newTo;
         }
       }
     } else {
@@ -494,22 +494,22 @@ class Model extends EventObservable_1.EventObservable {
       }
     }
 
-    if (validatedStep !== undefined) {
-      if (validatedStep < 0) {
+    if (newStep) {
+      if (newStep < 0) {
         new ErrorMessage_1.ErrorMessage('step must be positive', 'validate settings method of Model');
-      } else if (validatedStep > Math.abs(this.settings.max - this.settings.min)) {
+      } else if (newStep > Math.abs(this.settings.max - this.settings.min)) {
         new ErrorMessage_1.ErrorMessage('step must be lower than difference between max and min', 'validate settings method of Model');
       } else {
-        this.settings.step = validatedStep;
+        this.settings.step = newStep;
       }
     }
 
     if (settings.isVertical !== undefined) {
-      this.settings.isVertical = validatedIsVertical;
+      this.settings.isVertical = newIsVertical;
     }
 
     if (settings.hideThumbLabel !== undefined) {
-      this.settings.hideThumbLabel = validatedHideThumbLabel;
+      this.settings.hideThumbLabel = newHideThumbLabel;
     }
   }
 
@@ -765,7 +765,7 @@ class Utils {
     } else return 0;
   }
 
-  static isNumber(value) {
+  static convertFromInputToNumber(value) {
     const number = parseFloat(String(value));
 
     if (isNaN(number)) {
@@ -775,7 +775,7 @@ class Utils {
     return number;
   }
 
-  static isBoolean(value) {
+  static convertFromInputToBoolean(value) {
     return Boolean(value);
   }
 
@@ -1551,4 +1551,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.b9f953f39d388d1e9c7b.js.map
+//# sourceMappingURL=main.ae1e9cb54432e54d7c4b.js.map

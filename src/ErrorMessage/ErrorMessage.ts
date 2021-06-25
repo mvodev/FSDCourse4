@@ -7,7 +7,7 @@ class ErrorMessage{
   this.showMessage();
  }
  showMessage():void {
-  console.error(this.message+' '+this.timestamp+' '+new Date());
+  console.error(this.message+', '+this.timestamp+' '+new Date());
  }
 }
 export {ErrorMessage};
