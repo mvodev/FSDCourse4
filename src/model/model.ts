@@ -60,7 +60,6 @@ class Model extends EventObservable implements IModelFacade {
     this.validateStepOrError(newStep);
     this.validateIsVerticalOrError(newIsVertical);
     this.validateThumbLabelOrError(newHideThumbLabel);
-    
   }
   private validateMinOrError(newMin:number|undefined):void{
     if (newMin) {
