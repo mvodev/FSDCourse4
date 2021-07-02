@@ -437,7 +437,16 @@ class Model extends EventObservable_1.EventObservable {
     const newIsVertical = Utils_1.Utils.convertFromInputToBoolean(settings.isVertical);
     const newHideThumbLabel = Utils_1.Utils.convertFromInputToBoolean(settings.hideThumbLabel);
     this.settings.isRange = settings.isRange ? Utils_1.Utils.convertFromInputToBoolean(settings.isRange) : this.settings.isRange;
+    this.validateMinOrError(newMin);
+    this.validateMaxOrError(newMax);
+    this.validateFromOrError(newFrom);
+    this.validateToOrError(newTo);
+    this.validateStepOrError(newStep);
+    this.validateIsVerticalOrError(newIsVertical);
+    this.validateThumbLabelOrError(newHideThumbLabel);
+  }
 
+  validateMinOrError(newMin) {
     if (newMin) {
       if (newMin >= this.settings.max) {
         new ErrorMessage_1.ErrorMessage('unacceptable value,min value in settings more than max value', 'validate settings method of Model');
@@ -447,7 +456,9 @@ class Model extends EventObservable_1.EventObservable {
         this.settings.min = newMin;
       }
     }
+  }
 
+  validateMaxOrError(newMax) {
     if (newMax) {
       if (newMax <= this.settings.min) {
         new ErrorMessage_1.ErrorMessage('unacceptable value,max value in settings lower than min value', 'validate settings method of Model');
@@ -459,7 +470,9 @@ class Model extends EventObservable_1.EventObservable {
         this.settings.max = newMax;
       }
     }
+  }
 
+  validateFromOrError(newFrom) {
     if (newFrom) {
       const max = this.settings.isRange ? this.settings.to : this.settings.max;
 
@@ -470,7 +483,9 @@ class Model extends EventObservable_1.EventObservable {
         this.settings.from = newFrom;
       }
     }
+  }
 
+  validateToOrError(newTo) {
     if (newTo) {
       if (newTo > this.settings.max) {
         new ErrorMessage_1.ErrorMessage('to must be lower than max', 'validate settings method of Model');
@@ -483,17 +498,10 @@ class Model extends EventObservable_1.EventObservable {
           this.settings.to = newTo;
         }
       }
-    } else {
-      if (this.settings.isRange) {
-        if (this.settings.to !== undefined) {
-          if (this.settings.to <= settings.from) {
-            this.settings.to = this.settings.max;
-            new ErrorMessage_1.ErrorMessage('to must be more than from', 'validate settings method of Model');
-          }
-        }
-      }
     }
+  }
 
+  validateStepOrError(newStep) {
     if (newStep) {
       if (newStep < 0) {
         new ErrorMessage_1.ErrorMessage('step must be positive', 'validate settings method of Model');
@@ -503,12 +511,16 @@ class Model extends EventObservable_1.EventObservable {
         this.settings.step = newStep;
       }
     }
+  }
 
-    if (settings.isVertical !== undefined) {
+  validateIsVerticalOrError(newIsVertical) {
+    if (newIsVertical !== undefined) {
       this.settings.isVertical = newIsVertical;
     }
+  }
 
-    if (settings.hideThumbLabel !== undefined) {
+  validateThumbLabelOrError(newHideThumbLabel) {
+    if (newHideThumbLabel !== undefined) {
       this.settings.hideThumbLabel = newHideThumbLabel;
     }
   }
@@ -1551,4 +1563,4 @@ exports.ThumbLabel = ThumbLabel;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=main.ae1e9cb54432e54d7c4b.js.map
+//# sourceMappingURL=main.2a9f2f78eeee214cc73e.js.map
